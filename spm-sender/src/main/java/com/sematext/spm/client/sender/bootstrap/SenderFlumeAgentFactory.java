@@ -1,0 +1,254 @@
+/*
+ * Licensed to Sematext Group, Inc
+ *
+ * See the NOTICE file distributed with
+ * this work for additional information regarding copyright
+ * ownership. Sematext Group, Inc licenses this file to you under
+ * the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package com.sematext.spm.client.sender.bootstrap;
+
+import com.google.common.collect.Maps;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.flume.sink.elasticsearch.ElasticSearchSinkConstants;
+import org.apache.flume.sink.elasticsearch.client.ElasticSearchClientFactory;
+
+import java.io.File;
+import java.util.Map;
+import java.util.Properties;
+
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
+import com.sematext.spm.client.MonitorUtil;
+import com.sematext.spm.client.sender.SenderUtil;
+import com.sematext.spm.client.sender.config.Configuration;
+import com.sematext.spm.client.sender.config.SenderConfig;
+import com.sematext.spm.client.sender.flume.SenderEmbeddedAgent;
+import com.sematext.spm.client.sender.flume.SinkConstants;
+import com.sematext.spm.client.sender.flume.es.CustomElasticSearchRestClient;
+import com.sematext.spm.client.sender.flume.es.CustomElasticSearchSink;
+import com.sematext.spm.client.sender.flume.influx.InfluxClient;
+import com.sematext.spm.client.sender.flume.influx.InfluxSink;
+import com.sematext.spm.client.util.FileUtil;
+
+public final class SenderFlumeAgentFactory {
+  private static final Log LOG = LogFactory.getLog(SenderFlumeAgentFactory.class);
+
+  private SenderFlumeAgentFactory() {
+  }
+
+  public static SenderEmbeddedAgent createAgent(SenderConfig senderConfig, Configuration globalConfig,
+                                                File monitorPropertiesFile, Properties monitorProperties,
+                                                boolean metainfoSender, boolean tagsSender) {
+    SenderEmbeddedAgent flumeSenderAgent = new SenderEmbeddedAgent();
+
+    final Map<String, String> properties = Maps.newHashMap();
+    populateCommonProperties(properties, senderConfig, monitorPropertiesFile, monitorProperties, metainfoSender, tagsSender);
+
+    if (!metainfoSender && !tagsSender) {
+      properties.put(SinkConstants.URL_PARAM_CONTENT_TYPE, senderConfig.getContentType());
+    }
+
+    String owner = MonitorUtil.findProcessOwner();
+    String ownerAlternative = MonitorUtil.findProcessOwnerAlternative();
+
+    LOG.info("Resolved owner: " + owner + ", ownerAlernative: " + ownerAlternative);
+
+    if (StringUtils.isNotBlank(senderConfig.getFlumeSubdir())) {
+      if (owner != null) {
+        properties.put("checkpointDir", FileUtil
+            .path(globalConfig.getBaseMonitorDir(), "flume", owner, "checkpointDir", senderConfig.getFlumeSubdir()));
+        properties.put("dataDirs", FileUtil
+            .path(globalConfig.getBaseMonitorDir(), "flume", owner, "dataDirs", senderConfig.getFlumeSubdir()));
+      } else {
+        properties.put("checkpointDir", FileUtil
+            .path(globalConfig.getBaseMonitorDir(), "flume", "checkpointDir", senderConfig.getFlumeSubdir()));
+        properties.put("dataDirs", FileUtil
+            .path(globalConfig.getBaseMonitorDir(), "flume", "dataDirs", senderConfig.getFlumeSubdir()));
+      }
+
+      if (ownerAlternative != null) {
+        properties.put("checkpointDirAlter", FileUtil
+            .path(globalConfig.getBaseMonitorDir(), "flume", ownerAlternative, "checkpointDir", senderConfig
+                .getFlumeSubdir()));
+        properties.put("dataDirsAlter", FileUtil
+            .path(globalConfig.getBaseMonitorDir(), "flume", ownerAlternative, "dataDirs", senderConfig
+                .getFlumeSubdir()));
+      }
+    } else {
+      properties.put("checkpointDir", null);
+      properties.put("dataDirs", null);
+      properties.put("checkpointDirAlter", null);
+      properties.put("dataDirsAlter", null);
+    }
+
+    flumeSenderAgent.configure(properties);
+
+    LOG.info("Created SenderEmbeddedAgent for " + senderConfig.getContentType().toLowerCase() + " stats for tokens: "
+                 + StringUtils.join(senderConfig.getTokens(), ","));
+
+    return flumeSenderAgent;
+  }
+
+  private static void populateCommonProperties(Map<String, String> properties, SenderConfig senderConfig,
+                                               File monitorPropertiesFile, Properties monitorProperties,
+                                               boolean metainfoSender, boolean tagsSender) {
+    // channel properties
+    if (metainfoSender) {
+      // small capacity for metainfo
+      properties.put("memoryCapacity", "1000");
+      properties.put("overflowCapacity", "25000");
+      properties.put("overflowTimeout", "1");
+      properties.put("avgEventSize", "100");
+      properties.put("transactionCapacity", "1000");
+
+      // file properties
+      properties.put("maxFileSize", "200000");
+    } else if (tagsSender) {
+      // even smaller capacity for tags
+      properties.put("memoryCapacity", "100");
+      properties.put("overflowCapacity", "2500");
+      properties.put("overflowTimeout", "1");
+      properties.put("avgEventSize", "100");
+      properties.put("transactionCapacity", "100");
+
+      // file properties
+      properties.put("maxFileSize", "20000");
+    } else {
+      properties.put("memoryCapacity", "20000");
+      properties.put("overflowCapacity", "500000");
+      properties.put("overflowTimeout", "1");
+      properties.put("avgEventSize", "100");
+
+      // file properties
+      properties.put("maxFileSize", "100000000");
+    }
+
+    String receiverUrl = senderConfig.getReceiverUrl().trim();
+    String metricsPath = senderConfig.getReceiverMetricsPath().trim();
+    String receiverHost;
+    String contextRoot;
+    boolean useHttps = receiverUrl.indexOf("https://") == 0;
+
+    if (receiverUrl.startsWith("http://") || receiverUrl.startsWith("https://")) {
+      receiverUrl = receiverUrl.substring(receiverUrl.indexOf("//") + 2);
+    }
+    if (receiverUrl.contains("/") && receiverUrl.indexOf("/") != (receiverUrl.length() - 1)) {
+      contextRoot = receiverUrl.substring(receiverUrl.indexOf("/") + 1);
+      receiverHost = receiverUrl.substring(0, receiverUrl.indexOf("/"));
+    } else {
+      contextRoot = null;
+      receiverHost = receiverUrl;
+    }
+    receiverHost = (useHttps ? "https://" : "http://") + receiverHost;
+
+    if (!metricsPath.equals("")) {
+      if (contextRoot == null) {
+        contextRoot = metricsPath;
+      } else {
+        if (!contextRoot.endsWith("/") && !metricsPath.startsWith("/")) {
+          contextRoot = contextRoot + "/";
+        } else if (contextRoot.endsWith("/") && metricsPath.startsWith("/")) {
+          contextRoot = contextRoot.substring(0, contextRoot.length() - 1);
+        }
+        contextRoot = contextRoot + metricsPath;
+      }
+    }
+
+    if (metainfoSender) {
+      if (contextRoot == null) {
+        contextRoot = "metainfo";
+      } else {
+        contextRoot = contextRoot + "/metainfo";
+      }
+    }
+
+    if (tagsSender) {
+      if (contextRoot == null) {
+        contextRoot = "tags";
+      } else {
+        contextRoot = contextRoot + "/tags";
+      }
+    }
+
+    properties.put("sinkClass", senderConfig.getSinkClass());
+    properties.put("http.post.sink.url", senderConfig.getReceiverUrl() + "/thrift");
+    properties.put("http.post.sink.batch.size", "100");
+
+    populateInfluxSinkProperties(properties, senderConfig, receiverHost, contextRoot);
+
+    // for now just fill all, but one day allow users to choose which sink should output the data
+    populateEsSinkProperties(properties, senderConfig, monitorPropertiesFile, monitorProperties, receiverHost, contextRoot);
+  }
+
+  private static void populateInfluxSinkProperties(Map<String, String> properties, SenderConfig senderConfig,
+                                                   String receiverHost, String contextRoot) {
+    properties.put(InfluxSink.INFLUX_SERVER, receiverHost);
+    properties.put(InfluxSink.INFLUX_SERVER_CONTEXT_ROOT, contextRoot);
+
+    properties
+        .put(InfluxClient.URL_PARAM_VERSION, SenderFlumeAgentFactory.class.getPackage().getSpecificationVersion());
+
+    if (senderConfig.getProxyHost() != null) {
+      properties.put(InfluxSink.PROXY_HOST, senderConfig.getProxyHost());
+      properties.put(InfluxSink.PROXY_PORT,
+                     senderConfig.getProxyPort() != null ? String.valueOf(senderConfig.getProxyPort()) : null);
+      properties.put(InfluxSink.PROXY_USERNAME, senderConfig.getProxyUser());
+      properties.put(InfluxSink.PROXY_PASSWORD, senderConfig.getProxyPassword());
+    }
+  }
+
+  public static void populateEsSinkProperties(Map<String, String> properties, SenderConfig senderConfig,
+                                              File monitorPropertiesFile, Properties monitorProperties,
+                                              String receiverHost, String contextRoot) {
+    // sink properties
+    properties.put(ElasticSearchSinkConstants.HOSTNAMES, receiverHost);
+    properties.put(CustomElasticSearchSink.ES_CONTEXT_ROOT_PARAM, contextRoot);
+
+    // properties.put(ElasticSearchSinkConstants.INDEX_NAME, "%{appTokens}");
+    // properties.put(ElasticSearchSinkConstants.INDEX_TYPE, "%{hostname}");
+    properties.put(ElasticSearchSinkConstants.INDEX_NAME, "spm-receiver");
+    properties.put(ElasticSearchSinkConstants.CLIENT_TYPE, ElasticSearchClientFactory.RestClient);
+    properties
+        .put(ElasticSearchSinkConstants.INDEX_NAME_BUILDER, "org.apache.flume.sink.elasticsearch.SimpleIndexNameBuilder");
+    properties
+        .put(ElasticSearchSinkConstants.SERIALIZER, "com.sematext.spm.client.sender.flume.sink.elasticsearch.ElasticSearchDynamicSerializer");
+
+    // interceptor config for SPM agent
+    // cpCtx.put("interceptors", "hostInterceptor eventTimestampInterceptor");
+    // properties.put("interceptors", "hostInterceptor");
+    // properties.put("interceptors.hostInterceptor.type", "com.sematext.spm.client.sender.flume.interceptor.SenderHostnameInterceptorBuilder");
+    // cpCtx.put("interceptors.eventTimestampInterceptor.type", "com.sematext.spm.client.sender.flume.interceptor.EventTimestampAppenderInterceptor$Builder");
+    // NOTE: hostname interceptor not used anymore since we try to optimize creation of bulk URLs (recreate only when hostname changes)
+
+    properties.put(CustomElasticSearchRestClient.URL_PARAM_HOST, SenderUtil
+        .calculateHostParameterValue(monitorPropertiesFile, monitorProperties));
+    properties.put(CustomElasticSearchRestClient.URL_PARAM_DOCKER_HOSTNAME, SenderUtil.getDockerHostname());
+    properties.put(CustomElasticSearchRestClient.URL_PARAM_CONTAINER_HOSTNAME, MonitorUtil
+        .getContainerHostname(monitorPropertiesFile, monitorProperties));
+
+    // properties.put(CustomElasticSearchRestClient.URL_PARAM_VERSION, MonitorAgent.class.getPackage().getSpecificationVersion());
+    properties.put(CustomElasticSearchRestClient.URL_PARAM_VERSION, SenderFlumeAgentFactory.class.getPackage()
+        .getSpecificationVersion());
+
+    if (senderConfig.getProxyHost() != null) {
+      properties.put(CustomElasticSearchSink.PROXY_HOST, senderConfig.getProxyHost());
+      properties.put(CustomElasticSearchSink.PROXY_PORT,
+                     senderConfig.getProxyPort() != null ? String.valueOf(senderConfig.getProxyPort()) : null);
+      properties.put(CustomElasticSearchSink.PROXY_USERNAME, senderConfig.getProxyUser());
+      properties.put(CustomElasticSearchSink.PROXY_PASSWORD, senderConfig.getProxyPassword());
+    }
+  }
+}

@@ -1,0 +1,145 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.sematext.spm</groupId>
+  <artifactId>spm-client-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>3.0.0</version>
+  <name>SPM Client Parent Pom</name>
+  <url>https://github.com/sematext/spm-client</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compile.source>1.6</maven.compile.source>
+    <maven.compile.target>1.6</maven.compile.target>
+    <maven.compile.test.source>1.6</maven.compile.test.source>
+    <maven.compile.test.target>1.6</maven.compile.test.target>
+    <commons-logging.version>1.1.1</commons-logging.version>
+    <junit.version>4.12</junit.version>
+    <log4j.version>1.2.15</log4j.version>
+    <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
+  </properties>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${maven.compile.source}</source>
+          <target>${maven.compile.target}</target>
+          <testSource>${maven.compile.test.source}</testSource>
+          <testTarget>${maven.compile.test.target}</testTarget>
+        </configuration>
+        <version>3.3</version>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>2.12</version>
+          <executions>
+            <execution>
+              <phase>compile</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>5.7</version>
+            </dependency>
+            <dependency>
+              <groupId>xerces</groupId>
+              <artifactId>xercesImpl</artifactId>
+              <version>2.8.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.9</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.12</version>
+        <configuration>
+          <configLocation>${checkstyle.config.location}</configLocation>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <modules>
+    <module>spm-monitor-utils</module>
+    <module>spm-thrift-data</module>
+    <module>spm-monitor-starter</module>
+    <module>spm-client-common-libs-parent</module>
+    <module>spm-monitor-parent</module>
+    <module>spm-client-common-libs</module>
+    <module>spm-monitor</module>
+    <module>spm-monitor-generic</module>
+    <module>spm-sender</module>
+    <module>spm-transfer</module>
+    <module>spm-monitor-redis</module>
+    <module>spm-monitor-storm</module>
+    <module>spm-tracing-agent</module>
+    <module>spm-tracing-testing</module>
+    <module>spm-tracing-agent-impl</module>
+    <module>spm-monitor-haproxy</module>
+  </modules>
+
+  <dependencies>
+    <!-- TEST -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>default</id>
+      <url>http://repo1.maven.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>apache_dev_repo</id>
+      <url>http://repository.apache.org/snapshots</url>
+    </repository>
+    <repository>
+      <id>apache_dev_repo_alternate</id>
+      <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+    </repository>
+    <repository>
+      <id>java_net_repo</id>
+      <url>http://download.java.net/maven/2/</url>
+    </repository>
+    <repository>
+      <id>cdh-maven-repo</id>
+      <url>https://repository.cloudera.com/content/groups/public/</url>
+    </repository>
+
+  </repositories>
+</project>

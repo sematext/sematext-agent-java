@@ -1,0 +1,21 @@
+type: jmx
+
+observation:
+  - name: jvmMemory
+    metricNamespace: jvm
+    objectName: java.lang:type=Memory
+
+    metric:
+      - name: heap.used
+        source: complex:HeapMemoryUsage.used
+        type: gauge
+        label: jvm heap used
+        description: jvm heap used memory
+        unit: bytes
+
+      - name: nonheap.used
+        source: complex:NonHeapMemoryUsage.used
+        type: gauge
+        label: jvm non-heap used
+        description: jvm non-heap used memory
+        unit: bytes

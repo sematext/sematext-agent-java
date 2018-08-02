@@ -1,0 +1,20 @@
+{
+  "cluster_name": "mycluster",
+  "master_node": "Fnx_IDEKS2i8M0v4z8nVOg",
+  "nodes": {
+    "Fnx_IDEKS2i8M0v4z8nVOg": {
+      "name": "Crimson and the Raven",
+      "transport_address": "127.0.0.1:9300",
+      "attributes": {}
+    }
+  },
+  "routing_table": {
+    "indices": {}
+  },
+  "routing_nodes": {
+    "unassigned": [],
+    "nodes": {
+      "Fnx_IDEKS2i8M0v4z8nVOg": []
+    }
+  }
+}

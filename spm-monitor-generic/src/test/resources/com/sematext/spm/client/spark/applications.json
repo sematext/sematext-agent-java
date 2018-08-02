@@ -1,0 +1,47 @@
+[
+  {
+    "id": "local-1521103731960",
+    "name": "Spark Pi",
+    "attempts": [
+      {
+        "startTime": "2018-03-22T10:48:49.411GMT",
+        "endTime": "1969-12-31T23:59:59.999GMT",
+        "lastUpdated": "2018-03-22T10:48:49.411GMT",
+        "duration": 0,
+        "sparkUser": "root",
+        "completed": false,
+        "startTimeEpoch": 1521103729411,
+        "lastUpdatedEpoch": 1521103729411,
+        "endTimeEpoch": -1
+      }
+    ]
+  },
+  {
+    "id": "local-1521105805856",
+    "name": "NetworkWordCount",
+    "attempts": [
+      {
+        "startTime": "2018-03-22T11:23:23.984GMT",
+        "endTime": "1969-12-31T23:59:59.999GMT",
+        "lastUpdated": "2018-03-22T11:23:23.984GMT",
+        "duration": 0,
+        "sparkUser": "root",
+        "completed": false,
+        "startTimeEpoch": 1521105803984,
+        "endTimeEpoch": -1,
+        "lastUpdatedEpoch": 1521105803984
+      },
+      {
+        "startTime": "2018-03-22T11:23:24.143GMT",
+        "endTime": "1969-12-31T23:59:59.999GMT",
+        "lastUpdated": "2018-03-22T11:23:24.143GMT",
+        "duration": 0,
+        "sparkUser": "root",
+        "completed": false,
+        "startTimeEpoch": 1521105804229,
+        "endTimeEpoch": -1,
+        "lastUpdatedEpoch": 1521105804229
+      }
+    ]
+  }
+]

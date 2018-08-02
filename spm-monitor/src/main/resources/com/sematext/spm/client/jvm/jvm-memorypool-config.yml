@@ -1,0 +1,25 @@
+type: jmx
+
+observation:
+  - name: jvmMemoryPool
+    metricNamespace: jvm
+    objectName: java.lang:type=MemoryPool,name=${poolName}
+
+    metric:
+      - name: pool.used
+        source: complex:Usage.used
+        type: gauge
+        label: jvm pool used
+        description: jvm pool used memory
+        unit: bytes
+
+      - name: pool.max
+        source: complex:Usage.max
+        type: gauge
+        label: jvm pool used max
+        description: jvm pool max memory
+        unit: bytes
+
+    tag:
+      - name: jvm.memory.pool
+        value: ${poolName}

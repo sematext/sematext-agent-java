@@ -1,0 +1,760 @@
+{
+  "ok": true,
+  "_shards": {
+    "total": 31,
+    "successful": 8,
+    "failed": 0
+  },
+  "_all": {
+    "primaries": {
+      "docs": {
+        "count": 13,
+        "deleted": 0
+      },
+      "store": {
+        "size": "8kb",
+        "size_in_bytes": 8195
+      },
+      "indexing": {
+        "index_total": 0,
+        "index_time": "0s",
+        "index_time_in_millis": 0,
+        "index_current": 0,
+        "delete_total": 0,
+        "delete_time": "0s",
+        "delete_time_in_millis": 0,
+        "delete_current": 0
+      },
+      "get": {
+        "total": 0,
+        "time": "0s",
+        "time_in_millis": 0,
+        "exists_total": 0,
+        "exists_time": "0s",
+        "exists_time_in_millis": 0,
+        "missing_total": 0,
+        "missing_time": "0s",
+        "missing_time_in_millis": 0,
+        "current": 0
+      },
+      "search": {
+        "query_total": 0,
+        "query_time": "0s",
+        "query_time_in_millis": 0,
+        "query_current": 0,
+        "fetch_total": 0,
+        "fetch_time": "0s",
+        "fetch_time_in_millis": 0,
+        "fetch_current": 0
+      }
+    },
+    "total": {
+      "docs": {
+        "count": 13,
+        "deleted": 0
+      },
+      "store": {
+        "size": "8kb",
+        "size_in_bytes": 8195
+      },
+      "indexing": {
+        "index_total": 0,
+        "index_time": "0s",
+        "index_time_in_millis": 0,
+        "index_current": 0,
+        "delete_total": 0,
+        "delete_time": "0s",
+        "delete_time_in_millis": 0,
+        "delete_current": 0
+      },
+      "get": {
+        "total": 0,
+        "time": "0s",
+        "time_in_millis": 0,
+        "exists_total": 0,
+        "exists_time": "0s",
+        "exists_time_in_millis": 0,
+        "missing_total": 0,
+        "missing_time": "0s",
+        "missing_time_in_millis": 0,
+        "current": 0
+      },
+      "search": {
+        "query_total": 0,
+        "query_time": "0s",
+        "query_time_in_millis": 0,
+        "query_current": 0,
+        "fetch_total": 0,
+        "fetch_time": "0s",
+        "fetch_time_in_millis": 0,
+        "fetch_current": 0
+      }
+    },
+    "indices": {
+      "twitter": {
+        "primaries": {
+          "docs": {
+            "count": 0,
+            "deleted": 0
+          },
+          "store": {
+            "size": "66b",
+            "size_in_bytes": 66
+          },
+          "indexing": {
+            "index_total": 0,
+            "index_time": "0s",
+            "index_time_in_millis": 0,
+            "index_current": 0,
+            "delete_total": 0,
+            "delete_time": "0s",
+            "delete_time_in_millis": 0,
+            "delete_current": 0
+          },
+          "get": {
+            "total": 0,
+            "time": "0s",
+            "time_in_millis": 0,
+            "exists_total": 0,
+            "exists_time": "0s",
+            "exists_time_in_millis": 0,
+            "missing_total": 0,
+            "missing_time": "0s",
+            "missing_time_in_millis": 0,
+            "current": 0
+          },
+          "search": {
+            "query_total": 0,
+            "query_time": "0s",
+            "query_time_in_millis": 0,
+            "query_current": 0,
+            "fetch_total": 0,
+            "fetch_time": "0s",
+            "fetch_time_in_millis": 0,
+            "fetch_current": 0
+          }
+        },
+        "total": {
+          "docs": {
+            "count": 0,
+            "deleted": 0
+          },
+          "store": {
+            "size": "66b",
+            "size_in_bytes": 66
+          },
+          "indexing": {
+            "index_total": 0,
+            "index_time": "0s",
+            "index_time_in_millis": 0,
+            "index_current": 0,
+            "delete_total": 0,
+            "delete_time": "0s",
+            "delete_time_in_millis": 0,
+            "delete_current": 0
+          },
+          "get": {
+            "total": 0,
+            "time": "0s",
+            "time_in_millis": 0,
+            "exists_total": 0,
+            "exists_time": "0s",
+            "exists_time_in_millis": 0,
+            "missing_total": 0,
+            "missing_time": "0s",
+            "missing_time_in_millis": 0,
+            "current": 0
+          },
+          "search": {
+            "query_total": 0,
+            "query_time": "0s",
+            "query_time_in_millis": 0,
+            "query_current": 0,
+            "fetch_total": 0,
+            "fetch_time": "0s",
+            "fetch_time_in_millis": 0,
+            "fetch_current": 0
+          }
+        },
+        "shards": {
+          "0": [
+            {
+              "routing": {
+                "state": "STARTED",
+                "primary": true,
+                "node": "zxLtHNnBT4ushzwDg2lh2A",
+                "relocating_node": null
+              },
+              "docs": {
+                "count": 0,
+                "deleted": 0
+              },
+              "store": {
+                "size": "66b",
+                "size_in_bytes": 66
+              },
+              "indexing": {
+                "index_total": 0,
+                "index_time": "0s",
+                "index_time_in_millis": 0,
+                "index_current": 0,
+                "delete_total": 0,
+                "delete_time": "0s",
+                "delete_time_in_millis": 0,
+                "delete_current": 0
+              },
+              "get": {
+                "total": 0,
+                "time": "0s",
+                "time_in_millis": 0,
+                "exists_total": 0,
+                "exists_time": "0s",
+                "exists_time_in_millis": 0,
+                "missing_total": 0,
+                "missing_time": "0s",
+                "missing_time_in_millis": 0,
+                "current": 0
+              },
+              "search": {
+                "query_total": 0,
+                "query_time": "0s",
+                "query_time_in_millis": 0,
+                "query_current": 0,
+                "fetch_total": 0,
+                "fetch_time": "0s",
+                "fetch_time_in_millis": 0,
+                "fetch_current": 0
+              }
+            }
+          ]
+        }
+      },
+      "twitter2": {
+        "primaries": {
+          "docs": {
+            "count": 1,
+            "deleted": 0
+          },
+          "store": {
+            "size": "1.1kb",
+            "size_in_bytes": 1154
+          },
+          "indexing": {
+            "index_total": 0,
+            "index_time": "0s",
+            "index_time_in_millis": 0,
+            "index_current": 0,
+            "delete_total": 0,
+            "delete_time": "0s",
+            "delete_time_in_millis": 0,
+            "delete_current": 0
+          },
+          "get": {
+            "total": 0,
+            "time": "0s",
+            "time_in_millis": 0,
+            "exists_total": 0,
+            "exists_time": "0s",
+            "exists_time_in_millis": 0,
+            "missing_total": 0,
+            "missing_time": "0s",
+            "missing_time_in_millis": 0,
+            "current": 0
+          },
+          "search": {
+            "query_total": 0,
+            "query_time": "0s",
+            "query_time_in_millis": 0,
+            "query_current": 0,
+            "fetch_total": 0,
+            "fetch_time": "0s",
+            "fetch_time_in_millis": 0,
+            "fetch_current": 0
+          }
+        },
+        "total": {
+          "docs": {
+            "count": 1,
+            "deleted": 0
+          },
+          "store": {
+            "size": "1.1kb",
+            "size_in_bytes": 1154
+          },
+          "indexing": {
+            "index_total": 0,
+            "index_time": "0s",
+            "index_time_in_millis": 0,
+            "index_current": 0,
+            "delete_total": 0,
+            "delete_time": "0s",
+            "delete_time_in_millis": 0,
+            "delete_current": 0
+          },
+          "get": {
+            "total": 0,
+            "time": "0s",
+            "time_in_millis": 0,
+            "exists_total": 0,
+            "exists_time": "0s",
+            "exists_time_in_millis": 0,
+            "missing_total": 0,
+            "missing_time": "0s",
+            "missing_time_in_millis": 0,
+            "current": 0
+          },
+          "search": {
+            "query_total": 0,
+            "query_time": "0s",
+            "query_time_in_millis": 0,
+            "query_current": 0,
+            "fetch_total": 0,
+            "fetch_time": "0s",
+            "fetch_time_in_millis": 0,
+            "fetch_current": 0
+          }
+        },
+        "shards": {
+          "2": [
+            {
+              "routing": {
+                "state": "STARTED",
+                "primary": true,
+                "node": "zxLtHNnBT4ushzwDg2lh2A",
+                "relocating_node": null
+              },
+              "docs": {
+                "count": 1,
+                "deleted": 0
+              },
+              "store": {
+                "size": "1kb",
+                "size_in_bytes": 1088
+              },
+              "indexing": {
+                "index_total": 0,
+                "index_time": "0s",
+                "index_time_in_millis": 0,
+                "index_current": 0,
+                "delete_total": 0,
+                "delete_time": "0s",
+                "delete_time_in_millis": 0,
+                "delete_current": 0
+              },
+              "get": {
+                "total": 0,
+                "time": "0s",
+                "time_in_millis": 0,
+                "exists_total": 0,
+                "exists_time": "0s",
+                "exists_time_in_millis": 0,
+                "missing_total": 0,
+                "missing_time": "0s",
+                "missing_time_in_millis": 0,
+                "current": 0
+              },
+              "search": {
+                "query_total": 0,
+                "query_time": "0s",
+                "query_time_in_millis": 0,
+                "query_current": 0,
+                "fetch_total": 0,
+                "fetch_time": "0s",
+                "fetch_time_in_millis": 0,
+                "fetch_current": 0
+              }
+            }
+          ],
+          "4": [
+            {
+              "routing": {
+                "state": "STARTED",
+                "primary": true,
+                "node": "zxLtHNnBT4ushzwDg2lh2A",
+                "relocating_node": null
+              },
+              "docs": {
+                "count": 0,
+                "deleted": 0
+              },
+              "store": {
+                "size": "66b",
+                "size_in_bytes": 66
+              },
+              "indexing": {
+                "index_total": 0,
+                "index_time": "0s",
+                "index_time_in_millis": 0,
+                "index_current": 0,
+                "delete_total": 0,
+                "delete_time": "0s",
+                "delete_time_in_millis": 0,
+                "delete_current": 0
+              },
+              "get": {
+                "total": 0,
+                "time": "0s",
+                "time_in_millis": 0,
+                "exists_total": 0,
+                "exists_time": "0s",
+                "exists_time_in_millis": 0,
+                "missing_total": 0,
+                "missing_time": "0s",
+                "missing_time_in_millis": 0,
+                "current": 0
+              },
+              "search": {
+                "query_total": 0,
+                "query_time": "0s",
+                "query_time_in_millis": 0,
+                "query_current": 0,
+                "fetch_total": 0,
+                "fetch_time": "0s",
+                "fetch_time_in_millis": 0,
+                "fetch_current": 0
+              }
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "primaries": {
+          "docs": {
+            "count": 12,
+            "deleted": 0
+          },
+          "store": {
+            "size": "6.8kb",
+            "size_in_bytes": 6975
+          },
+          "indexing": {
+            "index_total": 0,
+            "index_time": "0s",
+            "index_time_in_millis": 0,
+            "index_current": 0,
+            "delete_total": 0,
+            "delete_time": "0s",
+            "delete_time_in_millis": 0,
+            "delete_current": 0
+          },
+          "get": {
+            "total": 0,
+            "time": "0s",
+            "time_in_millis": 0,
+            "exists_total": 0,
+            "exists_time": "0s",
+            "exists_time_in_millis": 0,
+            "missing_total": 0,
+            "missing_time": "0s",
+            "missing_time_in_millis": 0,
+            "current": 0
+          },
+          "search": {
+            "query_total": 0,
+            "query_time": "0s",
+            "query_time_in_millis": 0,
+            "query_current": 0,
+            "fetch_total": 0,
+            "fetch_time": "0s",
+            "fetch_time_in_millis": 0,
+            "fetch_current": 0
+          }
+        },
+        "total": {
+          "docs": {
+            "count": 12,
+            "deleted": 0
+          },
+          "store": {
+            "size": "6.8kb",
+            "size_in_bytes": 6975
+          },
+          "indexing": {
+            "index_total": 0,
+            "index_time": "0s",
+            "index_time_in_millis": 0,
+            "index_current": 0,
+            "delete_total": 0,
+            "delete_time": "0s",
+            "delete_time_in_millis": 0,
+            "delete_current": 0
+          },
+          "get": {
+            "total": 0,
+            "time": "0s",
+            "time_in_millis": 0,
+            "exists_total": 0,
+            "exists_time": "0s",
+            "exists_time_in_millis": 0,
+            "missing_total": 0,
+            "missing_time": "0s",
+            "missing_time_in_millis": 0,
+            "current": 0
+          },
+          "search": {
+            "query_total": 0,
+            "query_time": "0s",
+            "query_time_in_millis": 0,
+            "query_current": 0,
+            "fetch_total": 0,
+            "fetch_time": "0s",
+            "fetch_time_in_millis": 0,
+            "fetch_current": 0
+          }
+        },
+        "shards": {
+          "0": [
+            {
+              "routing": {
+                "state": "STARTED",
+                "primary": true,
+                "node": "zxLtHNnBT4ushzwDg2lh2A",
+                "relocating_node": null
+              },
+              "docs": {
+                "count": 2,
+                "deleted": 0
+              },
+              "store": {
+                "size": "1.4kb",
+                "size_in_bytes": 1533
+              },
+              "indexing": {
+                "index_total": 0,
+                "index_time": "0s",
+                "index_time_in_millis": 0,
+                "index_current": 0,
+                "delete_total": 0,
+                "delete_time": "0s",
+                "delete_time_in_millis": 0,
+                "delete_current": 0
+              },
+              "get": {
+                "total": 0,
+                "time": "0s",
+                "time_in_millis": 0,
+                "exists_total": 0,
+                "exists_time": "0s",
+                "exists_time_in_millis": 0,
+                "missing_total": 0,
+                "missing_time": "0s",
+                "missing_time_in_millis": 0,
+                "current": 0
+              },
+              "search": {
+                "query_total": 0,
+                "query_time": "0s",
+                "query_time_in_millis": 0,
+                "query_current": 0,
+                "fetch_total": 0,
+                "fetch_time": "0s",
+                "fetch_time_in_millis": 0,
+                "fetch_current": 0
+              }
+            }
+          ],
+          "1": [
+            {
+              "routing": {
+                "state": "STARTED",
+                "primary": true,
+                "node": "zxLtHNnBT4ushzwDg2lh2A",
+                "relocating_node": null
+              },
+              "docs": {
+                "count": 2,
+                "deleted": 0
+              },
+              "store": {
+                "size": "967b",
+                "size_in_bytes": 967
+              },
+              "indexing": {
+                "index_total": 0,
+                "index_time": "0s",
+                "index_time_in_millis": 0,
+                "index_current": 0,
+                "delete_total": 0,
+                "delete_time": "0s",
+                "delete_time_in_millis": 0,
+                "delete_current": 0
+              },
+              "get": {
+                "total": 0,
+                "time": "0s",
+                "time_in_millis": 0,
+                "exists_total": 0,
+                "exists_time": "0s",
+                "exists_time_in_millis": 0,
+                "missing_total": 0,
+                "missing_time": "0s",
+                "missing_time_in_millis": 0,
+                "current": 0
+              },
+              "search": {
+                "query_total": 0,
+                "query_time": "0s",
+                "query_time_in_millis": 0,
+                "query_current": 0,
+                "fetch_total": 0,
+                "fetch_time": "0s",
+                "fetch_time_in_millis": 0,
+                "fetch_current": 0
+              }
+            }
+          ],
+          "2": [
+            {
+              "routing": {
+                "state": "STARTED",
+                "primary": true,
+                "node": "zxLtHNnBT4ushzwDg2lh2A",
+                "relocating_node": null
+              },
+              "docs": {
+                "count": 2,
+                "deleted": 0
+              },
+              "store": {
+                "size": "1016b",
+                "size_in_bytes": 1016
+              },
+              "indexing": {
+                "index_total": 0,
+                "index_time": "0s",
+                "index_time_in_millis": 0,
+                "index_current": 0,
+                "delete_total": 0,
+                "delete_time": "0s",
+                "delete_time_in_millis": 0,
+                "delete_current": 0
+              },
+              "get": {
+                "total": 0,
+                "time": "0s",
+                "time_in_millis": 0,
+                "exists_total": 0,
+                "exists_time": "0s",
+                "exists_time_in_millis": 0,
+                "missing_total": 0,
+                "missing_time": "0s",
+                "missing_time_in_millis": 0,
+                "current": 0
+              },
+              "search": {
+                "query_total": 0,
+                "query_time": "0s",
+                "query_time_in_millis": 0,
+                "query_current": 0,
+                "fetch_total": 0,
+                "fetch_time": "0s",
+                "fetch_time_in_millis": 0,
+                "fetch_current": 0
+              }
+            }
+          ],
+          "3": [
+            {
+              "routing": {
+                "state": "STARTED",
+                "primary": true,
+                "node": "zxLtHNnBT4ushzwDg2lh2A",
+                "relocating_node": null
+              },
+              "docs": {
+                "count": 3,
+                "deleted": 0
+              },
+              "store": {
+                "size": "1.6kb",
+                "size_in_bytes": 1718
+              },
+              "indexing": {
+                "index_total": 0,
+                "index_time": "0s",
+                "index_time_in_millis": 0,
+                "index_current": 0,
+                "delete_total": 0,
+                "delete_time": "0s",
+                "delete_time_in_millis": 0,
+                "delete_current": 0
+              },
+              "get": {
+                "total": 0,
+                "time": "0s",
+                "time_in_millis": 0,
+                "exists_total": 0,
+                "exists_time": "0s",
+                "exists_time_in_millis": 0,
+                "missing_total": 0,
+                "missing_time": "0s",
+                "missing_time_in_millis": 0,
+                "current": 0
+              },
+              "search": {
+                "query_total": 0,
+                "query_time": "0s",
+                "query_time_in_millis": 0,
+                "query_current": 0,
+                "fetch_total": 0,
+                "fetch_time": "0s",
+                "fetch_time_in_millis": 0,
+                "fetch_current": 0
+              }
+            }
+          ],
+          "4": [
+            {
+              "routing": {
+                "state": "STARTED",
+                "primary": true,
+                "node": "zxLtHNnBT4ushzwDg2lh2A",
+                "relocating_node": null
+              },
+              "docs": {
+                "count": 3,
+                "deleted": 0
+              },
+              "store": {
+                "size": "1.7kb",
+                "size_in_bytes": 1741
+              },
+              "indexing": {
+                "index_total": 0,
+                "index_time": "0s",
+                "index_time_in_millis": 0,
+                "index_current": 0,
+                "delete_total": 0,
+                "delete_time": "0s",
+                "delete_time_in_millis": 0,
+                "delete_current": 0
+              },
+              "get": {
+                "total": 0,
+                "time": "0s",
+                "time_in_millis": 0,
+                "exists_total": 0,
+                "exists_time": "0s",
+                "exists_time_in_millis": 0,
+                "missing_total": 0,
+                "missing_time": "0s",
+                "missing_time_in_millis": 0,
+                "current": 0
+              },
+              "search": {
+                "query_total": 0,
+                "query_time": "0s",
+                "query_time_in_millis": 0,
+                "query_current": 0,
+                "fetch_total": 0,
+                "fetch_time": "0s",
+                "fetch_time_in_millis": 0,
+                "fetch_current": 0
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

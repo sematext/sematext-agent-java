@@ -1,0 +1,19 @@
+type: jmx
+
+observation:
+  - name: jvmOS
+    metricNamespace: jvm
+    objectName: java.lang:type=OperatingSystem
+
+    metric:
+      - name: files.open
+        source: OpenFileDescriptorCount
+        type: gauge
+        label: open files
+        description: jvm currently open files
+
+      - name: files.max
+        source: MaxFileDescriptorCount
+        type: gauge
+        label: max open files
+        description: jvm max open files limit

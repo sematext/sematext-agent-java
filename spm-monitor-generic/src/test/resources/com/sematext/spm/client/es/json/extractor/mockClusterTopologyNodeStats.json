@@ -1,0 +1,443 @@
+{
+  "cluster_name": "elasticsearch2",
+  "master_node": "0vemL9wHQ1erNCqwJvkZ4g",
+  "blocks": {
+  },
+  "nodes": {
+    "0vemL9wHQ1erNCqwJvkZ4g": {
+      "name": "SematextES1_try2",
+      "transport_address": "inet[/192.168.56.80:9300]",
+      "attributes": {
+      }
+    }
+  },
+  "metadata": {
+    "templates": {
+    },
+    "indices": {
+      "dashboard": {
+        "state": "open",
+        "settings": {
+          "index.number_of_shards": "5",
+          "index.number_of_replicas": "1"
+        },
+        "mappings": {
+          "article": {
+            "properties": {
+              "tags": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "aliases": []
+      },
+      "dashboard1": {
+        "state": "open",
+        "settings": {
+          "index.number_of_shards": "5",
+          "index.number_of_replicas": "1"
+        },
+        "mappings": {
+          "article": {
+            "properties": {
+              "tags": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "aliases": []
+      }
+    }
+  },
+  "routing_table": {
+    "indices": {
+      "ac": {
+        "shards": {
+          "0": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "dashboard"
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "shards": {
+          "0": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "dashboard"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 0,
+              "index": "dashboard"
+            }
+          ],
+          "1": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "dashboard"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 1,
+              "index": "dashboard"
+            }
+          ],
+          "2": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "dashboard"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 2,
+              "index": "dashboard"
+            }
+          ],
+          "3": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "dashboard"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 3,
+              "index": "dashboard"
+            }
+          ],
+          "4": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "dashboard"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 4,
+              "index": "dashboard"
+            }
+          ]
+        }
+      },
+      "dashboard1": {
+        "shards": {
+          "0": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "dashboard1"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 0,
+              "index": "dashboard1"
+            }
+          ],
+          "1": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "dashboard1"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 1,
+              "index": "dashboard1"
+            }
+          ],
+          "2": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "dashboard1"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 2,
+              "index": "dashboard1"
+            }
+          ],
+          "3": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "dashboard1"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 3,
+              "index": "dashboard1"
+            }
+          ],
+          "4": [
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "0vemL9wHQ1erNCqwJvkZ4g",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "dashboard1"
+            },
+            {
+              "state": "UNASSIGNED",
+              "primary": false,
+              "node": null,
+              "relocating_node": null,
+              "shard": 4,
+              "index": "dashboard1"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "routing_nodes": {
+    "unassigned": [
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 0,
+        "index": "dashboard"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 1,
+        "index": "dashboard"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 2,
+        "index": "dashboard"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 3,
+        "index": "dashboard"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 4,
+        "index": "dashboard"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 0,
+        "index": "dashboard1"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 1,
+        "index": "dashboard1"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 2,
+        "index": "dashboard1"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 3,
+        "index": "dashboard1"
+      },
+      {
+        "state": "UNASSIGNED",
+        "primary": false,
+        "node": null,
+        "relocating_node": null,
+        "shard": 4,
+        "index": "dashboard1"
+      }
+    ],
+    "nodes": {
+      "0vemL9wHQ1erNCqwJvkZ4g": [
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "dashboard"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "dashboard"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "dashboard"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "ac"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "dashboard"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "dashboard"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "dashboard1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "dashboard1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "dashboard1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "dashboard1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "0vemL9wHQ1erNCqwJvkZ4g",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "dashboard1"
+        }
+      ]
+    }
+  },
+  "allocations": []
+}

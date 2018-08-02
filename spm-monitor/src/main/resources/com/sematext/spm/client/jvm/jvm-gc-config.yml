@@ -1,0 +1,24 @@
+type: jmx
+
+observation:
+  - name: jvmGC
+    metricNamespace: jvm
+    objectName: java.lang:type=GarbageCollector,name=${gcName}
+
+    metric:
+      - name: gc.collection.count
+        source: CollectionCount
+        type: counter
+        label: gc collection count
+        description: count of GC collections
+
+      - name: gc.collection.time
+        source: CollectionTime
+        type: counter
+        label: gc collection time
+        description: duration of GC collections
+        unit: ms
+
+    tag:
+      - name: jvm.gc
+        value: ${gcName}

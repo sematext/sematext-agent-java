@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.sematext.spm</groupId>
+    <artifactId>spm-client-common-libs-parent</artifactId>
+    <version>3.0.0</version>
+    <relativePath>../spm-client-common-libs-parent/pom.xml</relativePath>
+  </parent>
+
+  <properties>
+    <common.lib.scope>compile</common.lib.scope>
+    <tracing.agent.lib.scope>provided</tracing.agent.lib.scope>
+    <tracing.agent.impl.lib.scope>provided</tracing.agent.impl.lib.scope>
+    <sender.lib.scope>provided</sender.lib.scope>
+  </properties>
+
+  <artifactId>spm-client-common-libs</artifactId>
+  <packaging>jar</packaging>
+  <name>SPM Client Common Libs</name>
+  <description>SPM system monitoring tool common libs</description>
+  <url>http://maven.apache.org</url>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <outputDirectory>
+            ${project.build.directory}
+          </outputDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <finalName>${project.artifactId}-${project.version}-withdeps</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

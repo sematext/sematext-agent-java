@@ -1,0 +1,20 @@
+[
+  {
+    "jobId": 0,
+    "name": "reduce at SparkPi.scala:38",
+    "submissionTime": "2018-03-22T11:48:53.102GMT",
+    "stageIds": [
+      0
+    ],
+    "status": "RUNNING",
+    "numTasks": 10000,
+    "numActiveTasks": 3,
+    "numCompletedTasks": 8394,
+    "numSkippedTasks": 0,
+    "numFailedTasks": 0,
+    "numActiveStages": 1,
+    "numCompletedStages": 0,
+    "numSkippedStages": 0,
+    "numFailedStages": 0
+  }
+]

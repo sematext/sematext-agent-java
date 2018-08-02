@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.sematext.spm</groupId>
+    <artifactId>spm-client-parent</artifactId>
+    <version>3.0.0</version>
+  </parent>
+
+  <artifactId>spm-transfer</artifactId>
+  <packaging>jar</packaging>
+  <name>SPM Transfer</name>
+  <description>SPM transfer data structures, utils, etc.</description>
+  <url>http://maven.apache.org</url>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <outputDirectory>
+            ${project.build.directory}
+          </outputDirectory>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.sematext.spm</groupId>
+      <artifactId>spm-thrift-data</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>

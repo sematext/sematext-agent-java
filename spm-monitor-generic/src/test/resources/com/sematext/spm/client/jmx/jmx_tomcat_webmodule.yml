@@ -1,0 +1,16 @@
+type: jmx
+observation:
+  - name: tomcat1
+    objectName: Catalina:j2eeType=WebModule,name=//${host_name}/${webapp_name},J2EEApplication=none,J2EEServer=none
+    metricNamespace: tomcat
+    
+    metric:
+      - name: requestsCount
+        type: counter
+        source: Count
+    
+    tag:
+      - name: host
+        value: ${host_name}
+      - name: web.app
+        value: ${webapp_name}

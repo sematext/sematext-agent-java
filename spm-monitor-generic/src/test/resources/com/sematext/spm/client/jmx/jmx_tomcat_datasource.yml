@@ -1,0 +1,17 @@
+type: jmx
+observation:
+  - name: tomcat1
+    objectName: Catalina:type=DataSource,class=${ds_class},name=${ds_name}
+    metricNamespace: tomcat
+    
+    metric:
+      - name: requestsCount
+        type: counter
+        source: Count
+    
+    tag:
+      - name: dsn
+        value: ${ds_name}
+      - name: dsc
+        value: ${ds_class}
+        

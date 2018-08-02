@@ -1,0 +1,866 @@
+{
+  "cluster_name": "sematext-es",
+  "master_node": "ZnKXutkCQJ-TQRKTCuPEgA",
+  "nodes": {
+    "ZnKXutkCQJ-TQRKTCuPEgA": {
+      "name": "EventNode01",
+      "transport_address": "inet[/10.208.51.64:9300]",
+      "attributes": {}
+    },
+    "QTuLgeFwSbaGgn6DKjO3zA": {
+      "name": "EventNode02",
+      "transport_address": "inet[/10.208.51.64:9300]",
+      "attributes": {}
+    }
+  },
+  "routing_table": {
+    "indices": {
+      "twitter": {
+        "shards": {
+          "2": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "twitter"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "twitter"
+            }
+          ],
+          "0": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "twitter"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "twitter"
+            }
+          ],
+          "3": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "twitter"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "twitter"
+            }
+          ],
+          "1": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "twitter"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "twitter"
+            }
+          ],
+          "4": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "twitter"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "twitter"
+            }
+          ]
+        }
+      },
+      "twitter22": {
+        "shards": {
+          "2": [
+            {
+              "state": "RELOCATING",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "twitter"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "twitter"
+            }
+          ],
+          "0": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "twitter"
+            },
+            {
+              "state": "INITIALIZING",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "twitter"
+            }
+          ],
+          "3": [
+            {
+              "state": "RELOCATING",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "twitter"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "twitter"
+            }
+          ],
+          "1": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "twitter"
+            },
+            {
+              "state": "INITIALIZING",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "twitter"
+            }
+          ],
+          "4": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "twitter"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "twitter"
+            }
+          ]
+        }
+      },
+      "test1": {
+        "shards": {
+          "4": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "test1"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "test1"
+            }
+          ],
+          "0": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "test1"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "test1"
+            }
+          ],
+          "3": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "test1"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "test1"
+            }
+          ],
+          "1": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "test1"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "test1"
+            }
+          ],
+          "2": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "test1"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "test1"
+            }
+          ]
+        }
+      },
+      "event": {
+        "shards": {
+          "0": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "event"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "event"
+            }
+          ],
+          "3": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "event"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "event"
+            }
+          ],
+          "1": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "event"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "event"
+            }
+          ],
+          "2": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "event"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "event"
+            }
+          ]
+        }
+      },
+      "test2": {
+        "shards": {
+          "2": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "test2"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 2,
+              "index": "test2"
+            }
+          ],
+          "0": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "test2"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 0,
+              "index": "test2"
+            }
+          ],
+          "3": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "test2"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 3,
+              "index": "test2"
+            }
+          ],
+          "1": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "test2"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 1,
+              "index": "test2"
+            }
+          ],
+          "4": [
+            {
+              "state": "STARTED",
+              "primary": false,
+              "node": "QTuLgeFwSbaGgn6DKjO3zA",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "test2"
+            },
+            {
+              "state": "STARTED",
+              "primary": true,
+              "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+              "relocating_node": null,
+              "shard": 4,
+              "index": "test2"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "routing_nodes": {
+    "unassigned": [],
+    "nodes": {
+      "QTuLgeFwSbaGgn6DKjO3zA": [
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "twitter"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "twitter"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "twitter"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "twitter"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "twitter"
+        },
+        {
+          "state": "RELOCATING",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "twitter22"
+        },
+        {
+          "state": "RELOCATING",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "twitter22"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "twitter22"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "twitter22"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "twitter22"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "event"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "event"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "event"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "event"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "test2"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "test2"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "test2"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "test2"
+        },
+        {
+          "state": "STARTED",
+          "primary": false,
+          "node": "QTuLgeFwSbaGgn6DKjO3zA",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "test2"
+        }
+      ],
+      "ZnKXutkCQJ-TQRKTCuPEgA": [
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "twitter"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "twitter"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "twitter"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "twitter"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "twitter"
+        },
+        {
+          "state": "INITIALIZING",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "twitter22"
+        },
+        {
+          "state": "INITIALIZING",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "twitter22"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "twitter22"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "twitter22"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "twitter22"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "test1"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "event"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "event"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "event"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "event"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 2,
+          "index": "test2"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 0,
+          "index": "test2"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 3,
+          "index": "test2"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 1,
+          "index": "test2"
+        },
+        {
+          "state": "STARTED",
+          "primary": true,
+          "node": "ZnKXutkCQJ-TQRKTCuPEgA",
+          "relocating_node": null,
+          "shard": 4,
+          "index": "test2"
+        }
+      ]
+    }
+  },
+  "allocations": []
+}

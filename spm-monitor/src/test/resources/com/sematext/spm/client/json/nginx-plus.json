@@ -1,0 +1,1492 @@
+{
+  "version": 8,
+  "nginx_version": "1.13.7",
+  "nginx_build": "nginx-plus-r14",
+  "address": "127.0.0.1",
+  "generation": 6,
+  "load_timestamp": 1519466400581,
+  "timestamp": 1519720278941,
+  "pid": 35745,
+  "ppid": 34336,
+  "processes": {
+    "respawned": 0
+  },
+  "connections": {
+    "accepted": 13315359,
+    "dropped": 0,
+    "active": 5,
+    "idle": 1467
+  },
+  "ssl": {
+    "handshakes": 1530328,
+    "handshakes_failed": 260123,
+    "session_reuses": 426699
+  },
+  "requests": {
+    "total": 137072442,
+    "current": 5
+  },
+  "server_zones": {
+    "hg.nginx.org": {
+      "processing": 2,
+      "requests": 431379,
+      "responses": {
+        "1xx": 0,
+        "2xx": 381998,
+        "3xx": 17344,
+        "4xx": 5030,
+        "5xx": 12566,
+        "total": 416938
+      },
+      "discarded": 14439,
+      "received": 103088459,
+      "sent": 10546593006
+    },
+    "trac.nginx.org": {
+      "processing": 2,
+      "requests": 186455,
+      "responses": {
+        "1xx": 0,
+        "2xx": 84163,
+        "3xx": 41176,
+        "4xx": 2383,
+        "5xx": 31095,
+        "total": 158817
+      },
+      "discarded": 27636,
+      "received": 47966609,
+      "sent": 2386143417
+    },
+    "lxr.nginx.org": {
+      "processing": 0,
+      "requests": 4351,
+      "responses": {
+        "1xx": 0,
+        "2xx": 2615,
+        "3xx": 209,
+        "4xx": 484,
+        "5xx": 736,
+        "total": 4044
+      },
+      "discarded": 307,
+      "received": 1486945,
+      "sent": 124018930
+    }
+  },
+  "slabs": {
+    "nginx_plus_versions": {
+      "pages": {
+        "used": 3,
+        "free": 28
+      },
+      "slots": {
+        "8": {
+          "used": 26,
+          "free": 478,
+          "reqs": 26,
+          "fails": 0
+        },
+        "16": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "32": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "64": {
+          "used": 1,
+          "free": 63,
+          "reqs": 1,
+          "fails": 0
+        },
+        "128": {
+          "used": 14,
+          "free": 18,
+          "reqs": 14,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "bot": {
+      "pages": {
+        "used": 2,
+        "free": 29
+      },
+      "slots": {
+        "8": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "16": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "32": {
+          "used": 1,
+          "free": 126,
+          "reqs": 1,
+          "fails": 0
+        },
+        "64": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "128": {
+          "used": 6,
+          "free": 26,
+          "reqs": 1020,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "ban": {
+      "pages": {
+        "used": 2,
+        "free": 29
+      },
+      "slots": {
+        "8": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "16": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "32": {
+          "used": 1,
+          "free": 126,
+          "reqs": 1,
+          "fails": 0
+        },
+        "64": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "128": {
+          "used": 1,
+          "free": 31,
+          "reqs": 1,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "one": {
+      "pages": {
+        "used": 2,
+        "free": 252
+      },
+      "slots": {
+        "8": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "16": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "32": {
+          "used": 1,
+          "free": 126,
+          "reqs": 1,
+          "fails": 0
+        },
+        "64": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "128": {
+          "used": 16,
+          "free": 16,
+          "reqs": 254237,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "http_cache": {
+      "pages": {
+        "used": 604,
+        "free": 3467
+      },
+      "slots": {
+        "8": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "16": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "32": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "64": {
+          "used": 1,
+          "free": 63,
+          "reqs": 1,
+          "fails": 0
+        },
+        "128": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "256": {
+          "used": 9621,
+          "free": 11,
+          "reqs": 4327493,
+          "fails": 0
+        },
+        "512": {
+          "used": 1,
+          "free": 7,
+          "reqs": 1,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "SSL": {
+      "pages": {
+        "used": 9684,
+        "free": 3041
+      },
+      "slots": {
+        "8": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "16": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "32": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "64": {
+          "used": 1,
+          "free": 63,
+          "reqs": 1,
+          "fails": 0
+        },
+        "128": {
+          "used": 59453,
+          "free": 43811,
+          "reqs": 378643,
+          "fails": 0
+        },
+        "256": {
+          "used": 59447,
+          "free": 43801,
+          "reqs": 378559,
+          "fails": 0
+        },
+        "512": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 1,
+          "fails": 0
+        },
+        "2048": {
+          "used": 5,
+          "free": 1,
+          "reqs": 81,
+          "fails": 0
+        }
+      }
+    },
+    "trac-backend": {
+      "pages": {
+        "used": 6,
+        "free": 1
+      },
+      "slots": {
+        "8": {
+          "used": 1,
+          "free": 503,
+          "reqs": 1,
+          "fails": 0
+        },
+        "16": {
+          "used": 2,
+          "free": 252,
+          "reqs": 2,
+          "fails": 0
+        },
+        "32": {
+          "used": 4,
+          "free": 123,
+          "reqs": 4,
+          "fails": 0
+        },
+        "64": {
+          "used": 1,
+          "free": 63,
+          "reqs": 1,
+          "fails": 0
+        },
+        "128": {
+          "used": 6,
+          "free": 26,
+          "reqs": 6,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 2,
+          "free": 6,
+          "reqs": 2,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "hg-backend": {
+      "pages": {
+        "used": 5,
+        "free": 2
+      },
+      "slots": {
+        "8": {
+          "used": 1,
+          "free": 503,
+          "reqs": 1,
+          "fails": 0
+        },
+        "16": {
+          "used": 2,
+          "free": 252,
+          "reqs": 2,
+          "fails": 0
+        },
+        "32": {
+          "used": 5,
+          "free": 122,
+          "reqs": 5,
+          "fails": 0
+        },
+        "64": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "128": {
+          "used": 6,
+          "free": 26,
+          "reqs": 6,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 2,
+          "free": 6,
+          "reqs": 2,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "lxr-backend": {
+      "pages": {
+        "used": 5,
+        "free": 2
+      },
+      "slots": {
+        "8": {
+          "used": 1,
+          "free": 503,
+          "reqs": 1,
+          "fails": 0
+        },
+        "16": {
+          "used": 2,
+          "free": 252,
+          "reqs": 2,
+          "fails": 0
+        },
+        "32": {
+          "used": 5,
+          "free": 122,
+          "reqs": 5,
+          "fails": 0
+        },
+        "64": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "128": {
+          "used": 6,
+          "free": 26,
+          "reqs": 6,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 2,
+          "free": 6,
+          "reqs": 2,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "demo-backend": {
+      "pages": {
+        "used": 6,
+        "free": 1
+      },
+      "slots": {
+        "8": {
+          "used": 1,
+          "free": 503,
+          "reqs": 1,
+          "fails": 0
+        },
+        "16": {
+          "used": 2,
+          "free": 252,
+          "reqs": 2,
+          "fails": 0
+        },
+        "32": {
+          "used": 2,
+          "free": 125,
+          "reqs": 2,
+          "fails": 0
+        },
+        "64": {
+          "used": 1,
+          "free": 63,
+          "reqs": 1,
+          "fails": 0
+        },
+        "128": {
+          "used": 4,
+          "free": 28,
+          "reqs": 4,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 1,
+          "free": 7,
+          "reqs": 1,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "dynamic": {
+      "pages": {
+        "used": 5,
+        "free": 2
+      },
+      "slots": {
+        "8": {
+          "used": 1,
+          "free": 503,
+          "reqs": 1,
+          "fails": 0
+        },
+        "16": {
+          "used": 1,
+          "free": 253,
+          "reqs": 1,
+          "fails": 0
+        },
+        "32": {
+          "used": 6,
+          "free": 121,
+          "reqs": 6,
+          "fails": 0
+        },
+        "64": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "128": {
+          "used": 10,
+          "free": 22,
+          "reqs": 10,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 4,
+          "free": 4,
+          "reqs": 4,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "dns_backends": {
+      "pages": {
+        "used": 5,
+        "free": 2
+      },
+      "slots": {
+        "8": {
+          "used": 1,
+          "free": 503,
+          "reqs": 1,
+          "fails": 0
+        },
+        "16": {
+          "used": 5,
+          "free": 249,
+          "reqs": 5,
+          "fails": 0
+        },
+        "32": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "64": {
+          "used": 1,
+          "free": 63,
+          "reqs": 1,
+          "fails": 0
+        },
+        "128": {
+          "used": 8,
+          "free": 24,
+          "reqs": 8,
+          "fails": 0
+        },
+        "256": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "512": {
+          "used": 3,
+          "free": 5,
+          "reqs": 3,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    },
+    "nginxorg": {
+      "pages": {
+        "used": 6,
+        "free": 1
+      },
+      "slots": {
+        "8": {
+          "used": 1,
+          "free": 503,
+          "reqs": 1,
+          "fails": 0
+        },
+        "16": {
+          "used": 7,
+          "free": 247,
+          "reqs": 7,
+          "fails": 0
+        },
+        "32": {
+          "used": 2,
+          "free": 125,
+          "reqs": 2,
+          "fails": 0
+        },
+        "64": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "128": {
+          "used": 12,
+          "free": 20,
+          "reqs": 12,
+          "fails": 0
+        },
+        "256": {
+          "used": 1,
+          "free": 15,
+          "reqs": 1,
+          "fails": 0
+        },
+        "512": {
+          "used": 5,
+          "free": 3,
+          "reqs": 5,
+          "fails": 0
+        },
+        "1024": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        },
+        "2048": {
+          "used": 0,
+          "free": 0,
+          "reqs": 0,
+          "fails": 0
+        }
+      }
+    }
+  },
+  "upstreams": {
+    "trac-backend": {
+      "peers": [
+        {
+          "id": 0,
+          "server": "10.0.0.1:8080",
+          "name": "10.0.0.1:8080",
+          "backup": false,
+          "weight": 1,
+          "state": "up",
+          "active": 0,
+          "requests": 43793,
+          "header_time": 153,
+          "response_time": 162,
+          "responses": {
+            "1xx": 0,
+            "2xx": 41994,
+            "3xx": 1655,
+            "4xx": 140,
+            "5xx": 4,
+            "total": 43793
+          },
+          "sent": 19275387,
+          "received": 2041390787,
+          "fails": 0,
+          "unavail": 0,
+          "health_checks": {
+            "checks": 25341,
+            "fails": 0,
+            "unhealthy": 0,
+            "last_passed": true
+          },
+          "downtime": 0,
+          "downstart": 0,
+          "selected": 1519720272000
+        },
+        {
+          "id": 1,
+          "server": "10.0.0.1:8081",
+          "name": "10.0.0.1:8081",
+          "backup": true,
+          "weight": 1,
+          "state": "unhealthy",
+          "active": 0,
+          "requests": 0,
+          "responses": {
+            "1xx": 0,
+            "2xx": 0,
+            "3xx": 0,
+            "4xx": 0,
+            "5xx": 0,
+            "total": 0
+          },
+          "sent": 0,
+          "received": 0,
+          "fails": 0,
+          "unavail": 0,
+          "health_checks": {
+            "checks": 25377,
+            "fails": 25377,
+            "unhealthy": 1,
+            "last_passed": false
+          },
+          "downtime": 253877443,
+          "downstart": 1519466401498,
+          "selected": 0
+        }
+      ],
+      "keepalive": 0,
+      "zombies": 0,
+      "zone": "trac-backend"
+    },
+    "hg-backend": {
+      "peers": [
+        {
+          "id": 0,
+          "server": "10.0.0.1:8088",
+          "name": "10.0.0.1:8088",
+          "backup": false,
+          "weight": 5,
+          "state": "up",
+          "active": 0,
+          "requests": 361675,
+          "header_time": 33,
+          "response_time": 47,
+          "responses": {
+            "1xx": 0,
+            "2xx": 356644,
+            "3xx": 0,
+            "4xx": 5030,
+            "5xx": 1,
+            "total": 361675
+          },
+          "sent": 132554217,
+          "received": 11445411085,
+          "fails": 0,
+          "unavail": 0,
+          "health_checks": {
+            "checks": 25269,
+            "fails": 0,
+            "unhealthy": 0,
+            "last_passed": true
+          },
+          "downtime": 0,
+          "downstart": 0,
+          "selected": 1519720277000
+        },
+        {
+          "id": 1,
+          "server": "10.0.0.1:8089",
+          "name": "10.0.0.1:8089",
+          "backup": true,
+          "weight": 1,
+          "state": "unhealthy",
+          "active": 0,
+          "requests": 0,
+          "responses": {
+            "1xx": 0,
+            "2xx": 0,
+            "3xx": 0,
+            "4xx": 0,
+            "5xx": 0,
+            "total": 0
+          },
+          "sent": 0,
+          "received": 0,
+          "fails": 0,
+          "unavail": 0,
+          "health_checks": {
+            "checks": 25377,
+            "fails": 25377,
+            "unhealthy": 1,
+            "last_passed": false
+          },
+          "downtime": 253877443,
+          "downstart": 1519466401498,
+          "selected": 0
+        }
+      ],
+      "keepalive": 0,
+      "zombies": 0,
+      "zone": "hg-backend"
+    },
+    "lxr-backend": {
+      "peers": [
+        {
+          "id": 0,
+          "server": "unix:/tmp/cgi.sock",
+          "name": "unix:/tmp/cgi.sock",
+          "backup": false,
+          "weight": 1,
+          "state": "up",
+          "active": 0,
+          "requests": 1891,
+          "header_time": 130,
+          "response_time": 147,
+          "responses": {
+            "1xx": 0,
+            "2xx": 1764,
+            "3xx": 0,
+            "4xx": 0,
+            "5xx": 0,
+            "total": 1764
+          },
+          "sent": 1646560,
+          "received": 123376560,
+          "fails": 124,
+          "unavail": 58,
+          "health_checks": {
+            "checks": 0,
+            "fails": 0,
+            "unhealthy": 0
+          },
+          "downtime": 16994281,
+          "downstart": 0,
+          "selected": 1519720267000
+        },
+        {
+          "id": 1,
+          "server": "unix:/tmp/cgib.sock",
+          "name": "unix:/tmp/cgib.sock",
+          "backup": true,
+          "weight": 1,
+          "state": "unavail",
+          "active": 0,
+          "max_conns": 42,
+          "requests": 68,
+          "header_time": 0,
+          "response_time": 0,
+          "responses": {
+            "1xx": 0,
+            "2xx": 0,
+            "3xx": 0,
+            "4xx": 0,
+            "5xx": 0,
+            "total": 0
+          },
+          "sent": 0,
+          "received": 0,
+          "fails": 68,
+          "unavail": 1,
+          "health_checks": {
+            "checks": 0,
+            "fails": 0,
+            "unhealthy": 0
+          },
+          "downtime": 251993799,
+          "downstart": 1519468285142,
+          "selected": 1519684772000
+        }
+      ],
+      "keepalive": 0,
+      "zombies": 0,
+      "zone": "lxr-backend"
+    },
+    "demo-backend": {
+      "peers": [
+        {
+          "id": 0,
+          "server": "10.0.0.2:15431",
+          "name": "10.0.0.2:15431",
+          "backup": false,
+          "weight": 1,
+          "state": "unhealthy",
+          "active": 0,
+          "requests": 0,
+          "responses": {
+            "1xx": 0,
+            "2xx": 0,
+            "3xx": 0,
+            "4xx": 0,
+            "5xx": 0,
+            "total": 0
+          },
+          "sent": 0,
+          "received": 0,
+          "fails": 0,
+          "unavail": 0,
+          "health_checks": {
+            "checks": 253193,
+            "fails": 253188,
+            "unhealthy": 1,
+            "last_passed": false
+          },
+          "downtime": 253872412,
+          "downstart": 1519466406529,
+          "selected": 0
+        }
+      ],
+      "keepalive": 0,
+      "zombies": 0,
+      "zone": "demo-backend"
+    }
+  },
+  "caches": {
+    "http_cache": {
+      "size": 536424448,
+      "max_size": 536870912,
+      "cold": false,
+      "hit": {
+        "responses": 902654,
+        "bytes": 16213714740
+      },
+      "stale": {
+        "responses": 0,
+        "bytes": 0
+      },
+      "updating": {
+        "responses": 0,
+        "bytes": 0
+      },
+      "revalidated": {
+        "responses": 0,
+        "bytes": 0
+      },
+      "miss": {
+        "responses": 4314046,
+        "bytes": 168502238930,
+        "responses_written": 3660865,
+        "bytes_written": 142147513336
+      },
+      "expired": {
+        "responses": 185604,
+        "bytes": 5727038256,
+        "responses_written": 182773,
+        "bytes_written": 5713028047
+      },
+      "bypass": {
+        "responses": 551375,
+        "bytes": 9971834988,
+        "responses_written": 551345,
+        "bytes_written": 9971828893
+      }
+    }
+  },
+  "stream": {
+    "server_zones": {
+      "postgresql_loadbalancer": {
+        "processing": 0,
+        "connections": 253193,
+        "sessions": {
+          "2xx": 5,
+          "4xx": 0,
+          "5xx": 253188,
+          "total": 253193
+        },
+        "discarded": 0,
+        "received": 530,
+        "sent": 71094
+      },
+      "dns_loadbalancer": {
+        "processing": 0,
+        "connections": 145206,
+        "sessions": {
+          "2xx": 145206,
+          "4xx": 0,
+          "5xx": 0,
+          "total": 145206
+        },
+        "discarded": 0,
+        "received": 3920562,
+        "sent": 24061992
+      }
+    },
+    "upstreams": {
+      "postgresql_backends": {
+        "peers": [
+          {
+            "id": 0,
+            "server": "10.0.0.2:15432",
+            "name": "10.0.0.2:15432",
+            "backup": false,
+            "weight": 1,
+            "state": "unhealthy",
+            "active": 0,
+            "max_conns": 42,
+            "connections": 1,
+            "connect_time": 23,
+            "first_byte_time": 24,
+            "response_time": 24,
+            "sent": 106,
+            "received": 13991,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 25370,
+              "fails": 25370,
+              "unhealthy": 1,
+              "last_passed": false
+            },
+            "downtime": 253872439,
+            "downstart": 1519466406502,
+            "selected": 1519466401000
+          },
+          {
+            "id": 1,
+            "server": "10.0.0.2:15433",
+            "name": "10.0.0.2:15433",
+            "backup": false,
+            "weight": 1,
+            "state": "unhealthy",
+            "active": 0,
+            "connections": 2,
+            "connect_time": 0,
+            "first_byte_time": 0,
+            "response_time": 0,
+            "sent": 212,
+            "received": 28486,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 25370,
+              "fails": 25370,
+              "unhealthy": 1,
+              "last_passed": false
+            },
+            "downtime": 253872439,
+            "downstart": 1519466406502,
+            "selected": 1519466404000
+          },
+          {
+            "id": 2,
+            "server": "10.0.0.2:15434",
+            "name": "10.0.0.2:15434",
+            "backup": false,
+            "weight": 1,
+            "state": "unhealthy",
+            "active": 0,
+            "connections": 2,
+            "connect_time": 0,
+            "first_byte_time": 1,
+            "response_time": 1,
+            "sent": 212,
+            "received": 28617,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 25370,
+              "fails": 25370,
+              "unhealthy": 1,
+              "last_passed": false
+            },
+            "downtime": 253872439,
+            "downstart": 1519466406502,
+            "selected": 1519466405000
+          },
+          {
+            "id": 3,
+            "server": "10.0.0.2:15435",
+            "name": "10.0.0.2:15435",
+            "backup": false,
+            "weight": 1,
+            "state": "down",
+            "active": 0,
+            "connections": 0,
+            "sent": 0,
+            "received": 0,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 0,
+              "fails": 0,
+              "unhealthy": 0
+            },
+            "downtime": 0,
+            "downstart": 0,
+            "selected": 0
+          }
+        ],
+        "zombies": 0,
+        "zone": "dynamic"
+      },
+      "dns_udp_backends": {
+        "peers": [
+          {
+            "id": 0,
+            "server": "10.0.0.5:53",
+            "name": "10.0.0.5:53",
+            "backup": false,
+            "weight": 2,
+            "state": "up",
+            "active": 0,
+            "connections": 96804,
+            "connect_time": 0,
+            "first_byte_time": 10,
+            "response_time": 10,
+            "sent": 2613708,
+            "received": 16041816,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 50706,
+              "fails": 0,
+              "unhealthy": 0,
+              "last_passed": true
+            },
+            "downtime": 0,
+            "downstart": 0,
+            "selected": 1519720278000
+          },
+          {
+            "id": 1,
+            "server": "10.0.0.2:53",
+            "name": "10.0.0.2:53",
+            "backup": false,
+            "weight": 1,
+            "state": "up",
+            "active": 0,
+            "connections": 48402,
+            "connect_time": 0,
+            "first_byte_time": 10,
+            "response_time": 10,
+            "sent": 1306854,
+            "received": 8020176,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 50706,
+              "fails": 0,
+              "unhealthy": 0,
+              "last_passed": true
+            },
+            "downtime": 0,
+            "downstart": 0,
+            "selected": 1519720278000
+          },
+          {
+            "id": 2,
+            "server": "10.0.0.7:53",
+            "name": "10.0.0.7:53",
+            "backup": false,
+            "weight": 1,
+            "state": "down",
+            "active": 0,
+            "connections": 0,
+            "sent": 0,
+            "received": 0,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 0,
+              "fails": 0,
+              "unhealthy": 0
+            },
+            "downtime": 0,
+            "downstart": 0,
+            "selected": 0
+          }
+        ],
+        "zombies": 0,
+        "zone": "dns_backends"
+      },
+      "unused_tcp_backends": {
+        "peers": [
+          {
+            "id": 1,
+            "server": "206.251.255.63:80",
+            "name": "nginx.org:80",
+            "backup": false,
+            "weight": 1,
+            "state": "down",
+            "active": 0,
+            "connections": 0,
+            "sent": 0,
+            "received": 0,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 0,
+              "fails": 0,
+              "unhealthy": 0
+            },
+            "downtime": 0,
+            "downstart": 0,
+            "selected": 0
+          },
+          {
+            "id": 2,
+            "server": "95.211.80.227:80",
+            "name": "nginx.org:80",
+            "backup": false,
+            "weight": 1,
+            "state": "down",
+            "active": 0,
+            "connections": 0,
+            "sent": 0,
+            "received": 0,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 0,
+              "fails": 0,
+              "unhealthy": 0
+            },
+            "downtime": 0,
+            "downstart": 0,
+            "selected": 0
+          },
+          {
+            "id": 3,
+            "server": "[2001:1af8:4060:a004:21::e3]:80",
+            "name": "nginx.org:80",
+            "backup": false,
+            "weight": 1,
+            "state": "down",
+            "active": 0,
+            "connections": 0,
+            "sent": 0,
+            "received": 0,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 0,
+              "fails": 0,
+              "unhealthy": 0
+            },
+            "downtime": 0,
+            "downstart": 0,
+            "selected": 0
+          },
+          {
+            "id": 4,
+            "server": "[2606:7100:1:69::3f]:80",
+            "name": "nginx.org:80",
+            "backup": false,
+            "weight": 1,
+            "state": "down",
+            "active": 0,
+            "connections": 0,
+            "sent": 0,
+            "received": 0,
+            "fails": 0,
+            "unavail": 0,
+            "health_checks": {
+              "checks": 0,
+              "fails": 0,
+              "unhealthy": 0
+            },
+            "downtime": 0,
+            "downstart": 0,
+            "selected": 0
+          }
+        ],
+        "zombies": 0,
+        "zone": "nginxorg"
+      }
+    }
+  }
+}

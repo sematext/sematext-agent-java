@@ -1,0 +1,11 @@
+<insrumentation-descriptor name="sample-instrumentation">
+  <pointcuts>
+    <pointcut name="ping-service">
+      <method match="void phi.PingService#ping()"/>
+      <method match="void phi.PingService#pong()"/>
+    </pointcut>
+    <pointcut name="background-job">
+      <method match="void phi.BackgroundJob#job()"/>
+    </pointcut>
+  </pointcuts>
+</insrumentation-descriptor>

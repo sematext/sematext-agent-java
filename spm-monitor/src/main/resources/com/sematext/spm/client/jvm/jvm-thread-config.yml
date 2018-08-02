@@ -1,0 +1,31 @@
+type: jmx
+
+observation:
+  - name: jvmThread
+    metricNamespace: jvm
+    objectName: java.lang:type=Threading
+
+    metric:
+      - name: threads
+        source: ThreadCount
+        type: gauge
+        label: jvm threads
+        description: current jvm thread count
+
+      - name: threads.peak
+        source: PeakThreadCount
+        type: gauge
+        label: jvm peak threads
+        description: peak jvm thread count
+
+      - name: threads.deamon
+        source: DaemonThreadCount
+        type: gauge
+        label: jvm daemon threads
+        description: current jvm daemon thread count
+
+      - name: threads.started.total
+        source: TotalStartedThreadCount
+        type: gauge
+        label: jvm total started threads
+        description: total started jvm thread count

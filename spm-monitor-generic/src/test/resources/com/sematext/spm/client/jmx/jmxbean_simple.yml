@@ -1,0 +1,22 @@
+type: jmx
+observation:
+  - name: searchhandler1
+    objectName: solr:dom1=core,dom2=${collection},dom3=${shard},dom4=${replica},category=QUERY,scope=${searchHandler},name=requests
+    metricNamespace: solr
+    
+    metric:
+      - name: requestsCount
+        type: counter
+        source: Count
+    
+    tag:
+      - name: collection
+        value: ${collection}
+      - name: shard
+        value: ${shard}
+      - name: replica
+        value: ${replica}
+      - name: searchHandler
+        value: ${searchHandler}
+      - name: exampleTag
+        value: ${requestsCount}

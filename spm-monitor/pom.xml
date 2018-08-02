@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.sematext.spm</groupId>
+    <artifactId>spm-client-common-libs-parent</artifactId>
+    <version>3.0.0</version>
+    <relativePath>../spm-client-common-libs-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>spm-monitor</artifactId>
+  <packaging>jar</packaging>
+  <name>SPM Monitor</name>
+  <description>SPM system monitoring tool</description>
+  <url>http://maven.apache.org</url>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.tngtech.java</groupId>
+      <artifactId>junit-dataprovider</artifactId>
+      <version>1.10.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- for some reason needed only when building fpm packages -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.5</version>
+      <scope>${common.lib.scope}</scope>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>4.4.9</version>
+      <type>jar</type>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sematext.spm</groupId>
+      <artifactId>spm-thrift-data</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!--<dependency>-->
+    <!--<groupId>com.sematext.spm</groupId>-->
+    <!--<artifactId>spm-transfer</artifactId>-->
+    <!--<version>1.29.0-SNAPSHOT</version>-->
+    <!--</dependency>-->
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <outputDirectory>
+            ${project.build.directory}
+          </outputDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "driver",
+    "hostPort": "172.18.0.3:46401",
+    "isActive": true,
+    "rddBlocks": 1,
+    "memoryUsed": 1172,
+    "diskUsed": 0,
+    "totalCores": 3,
+    "maxTasks": 3,
+    "activeTasks": 3,
+    "failedTasks": 0,
+    "completedTasks": 9080,
+    "totalTasks": 9083,
+    "totalDuration": 717609,
+    "totalGCTime": 2572,
+    "totalInputBytes": 0,
+    "totalShuffleRead": 0,
+    "totalShuffleWrite": 0,
+    "isBlacklisted": false,
+    "maxMemory": 384093388,
+    "executorLogs": {},
+    "memoryMetrics": {
+      "usedOnHeapStorageMemory": 1172,
+      "usedOffHeapStorageMemory": 0,
+      "totalOnHeapStorageMemory": 384093388,
+      "totalOffHeapStorageMemory": 0
+    }
+  }
+]
