@@ -108,6 +108,7 @@ public enum Tracers {
   JETTY(new JettyTracer()),
   TOMCAT(new TomcatTracer()),
   ES_TRANSPORT_CLIENT(new ESTransportClient()),
+  SOLR_7_CLIENT(new Solrj7Tracer()),
   SOLR_6_CLIENT(new Solrj6Tracer()),
   SOLR_5_CLIENT(new Solrj5Tracer()),
   SOLR_4_CLIENT(new Solrj4Tracer());
@@ -534,6 +535,37 @@ public enum Tracers {
     }
   }
 
+  public static class Solrj7Tracer extends BaseTracer {
+    @Override
+    public String[] getUnloggers() {
+      return new String[] {
+          com.sematext.spm.client.tracing.agent.pointcuts.solrj7.HttpSolrClientCtorPointcut.class.getName(),
+          ConcurrentUpdateSolrClientPointcut.class.getName()
+      };
+    }
+
+    @Override
+    public String getName() {
+      return "solr-7-client";
+    }
+
+    @Override
+    public TracingTransform[] getStructuralTransforms() {
+      return new TracingTransform[]{
+          new MixinTransform("org.apache.solr.common.params.SolrParams", SolrParamsAccess.class),
+          new MixinTransform("org.apache.solr.client.solrj.impl.HttpSolrClient", HttpSolrClientAccess.class),
+          new MixinTransform("org.apache.solr.client.solrj.SolrRequest", SolrRequestAccess.class),
+          new MixinTransform("org.apache.solr.client.solrj.request.UpdateRequest", UpdateRequestAccess.class),
+          new MixinTransform("org.apache.solr.client.solrj.response.SolrResponseBase", SolrResponseBaseAccess.class)
+      };
+    }
+  
+    @Override
+    public boolean enabled(Config config) {
+      return true;
+    }
+  }
+    
   public static class Solrj6Tracer extends BaseTracer {
 
     @Override
