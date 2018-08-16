@@ -137,66 +137,31 @@ public final class SenderFlumeAgentFactory {
     }
 
     String receiverUrl = senderConfig.getReceiverUrl().trim();
-    String metricsPath = senderConfig.getReceiverMetricsPath().trim();
-    String receiverHost;
-    String contextRoot;
-    boolean useHttps = receiverUrl.indexOf("https://") == 0;
-
-    if (receiverUrl.startsWith("http://") || receiverUrl.startsWith("https://")) {
-      receiverUrl = receiverUrl.substring(receiverUrl.indexOf("//") + 2);
-    }
-    if (receiverUrl.contains("/") && receiverUrl.indexOf("/") != (receiverUrl.length() - 1)) {
-      contextRoot = receiverUrl.substring(receiverUrl.indexOf("/") + 1);
-      receiverHost = receiverUrl.substring(0, receiverUrl.indexOf("/"));
-    } else {
-      contextRoot = null;
-      receiverHost = receiverUrl;
-    }
-    receiverHost = (useHttps ? "https://" : "http://") + receiverHost;
-
-    if (!metricsPath.equals("")) {
-      if (contextRoot == null) {
-        contextRoot = metricsPath;
-      } else {
-        if (!contextRoot.endsWith("/") && !metricsPath.startsWith("/")) {
-          contextRoot = contextRoot + "/";
-        } else if (contextRoot.endsWith("/") && metricsPath.startsWith("/")) {
-          contextRoot = contextRoot.substring(0, contextRoot.length() - 1);
-        }
-        contextRoot = contextRoot + metricsPath;
-      }
-    }
-
+    String metricsPath = senderConfig.getMetricsEndpoint().trim();
+    String tagsPath = senderConfig.getTagsEndpoint().trim();
+    String metainfoPath = senderConfig.getMetainfoEndpoint().trim();
+    
+    String endpointPath = metricsPath;
     if (metainfoSender) {
-      if (contextRoot == null) {
-        contextRoot = "metainfo";
-      } else {
-        contextRoot = contextRoot + "/metainfo";
-      }
-    }
-
-    if (tagsSender) {
-      if (contextRoot == null) {
-        contextRoot = "tags";
-      } else {
-        contextRoot = contextRoot + "/tags";
-      }
+      endpointPath = metainfoPath;
+    } else if (tagsSender) {
+      endpointPath = tagsPath;
     }
 
     properties.put("sinkClass", senderConfig.getSinkClass());
     properties.put("http.post.sink.url", senderConfig.getReceiverUrl() + "/thrift");
     properties.put("http.post.sink.batch.size", "100");
 
-    populateInfluxSinkProperties(properties, senderConfig, receiverHost, contextRoot);
+    populateInfluxSinkProperties(properties, senderConfig, receiverUrl, endpointPath);
 
     // for now just fill all, but one day allow users to choose which sink should output the data
-    populateEsSinkProperties(properties, senderConfig, monitorPropertiesFile, monitorProperties, receiverHost, contextRoot);
+    populateEsSinkProperties(properties, senderConfig, monitorPropertiesFile, monitorProperties, receiverUrl, endpointPath);
   }
 
   private static void populateInfluxSinkProperties(Map<String, String> properties, SenderConfig senderConfig,
-                                                   String receiverHost, String contextRoot) {
-    properties.put(InfluxSink.INFLUX_SERVER, receiverHost);
-    properties.put(InfluxSink.INFLUX_SERVER_CONTEXT_ROOT, contextRoot);
+                                                   String receiverUrl, String receiverPath) {
+    properties.put(InfluxSink.INFLUX_SERVER, receiverUrl);
+    properties.put(InfluxSink.INFLUX_ENDPOINT_PATH, receiverPath);
 
     properties
         .put(InfluxClient.URL_PARAM_VERSION, SenderFlumeAgentFactory.class.getPackage().getSpecificationVersion());

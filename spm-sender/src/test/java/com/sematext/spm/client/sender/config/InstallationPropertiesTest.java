@@ -59,15 +59,15 @@ public class InstallationPropertiesTest {
     final TmpFS fs = TmpFS.fs();
     try {
       final Map<String, String> props = Maps.newHashMap();
-      props.put("spm_sender_proxy_host", "");
-      props.put("spm_sender_receiver_url", "https://spm-receiver.sematext.com/receiver/v1");
+      props.put("proxy_host", "");
+      props.put("server_base_url", "https://spm-receiver.sematext.com/receiver/v1");
 
       final File spmHome = fs.createDirectory();
       final File propertiesDir = fs.createDirectory(spmHome, "properties");
       final File p1 = fs.createFile(propertiesDir, "spm-sender.properties", serialize(props));
-      props.put("spm_sender_receiver_url", "https://spm-receiver.sematext.com/receiver/v2");
+      props.put("server_base_url", "https://spm-receiver.sematext.com/receiver/v2");
       final File p2 = fs.createFile(propertiesDir, "spm-setup-1.properties", serialize(props));
-      props.put("spm_sender_receiver_url", "https://spm-receiver.sematext.com/receiver/v3");
+      props.put("server_base_url", "https://spm-receiver.sematext.com/receiver/v3");
       final File p3 = fs.createFile(propertiesDir, "spm-setup-2.properties", serialize(props));
 
       final Configuration config = Configuration.configuration(spmHome.getAbsolutePath());
@@ -76,7 +76,7 @@ public class InstallationPropertiesTest {
       assertNotNull(properties);
 
       assertEquals("https://spm-receiver.sematext.com/receiver/v1", properties.getProperties()
-          .get("spm_sender_receiver_url"));
+          .get("server_base_url"));
 
       assertTrue(p1.delete());
 
@@ -87,15 +87,15 @@ public class InstallationPropertiesTest {
       properties = InstallationProperties.loadSpmSenderInstallationProperties(config);
 
       assertEquals("https://spm-receiver.sematext.com/receiver/v3", properties.getProperties()
-          .get("spm_sender_receiver_url"));
+          .get("server_base_url"));
 
-      props.remove("spm_sender_receiver_url");
+      props.remove("server_base_url");
       FileUtil.write(serialize(props), p3);
 
       properties = InstallationProperties.loadSpmSenderInstallationProperties(config);
 
-      assertEquals(config.getDefaultReceiverUrl(), properties.getProperties().get("spm_sender_receiver_url"));
-      assertEquals(config.getDefaultMetricsPath(), properties.getProperties().get("spm_sender_receiver_metrics_path"));
+      assertEquals(config.getDefaultReceiverUrl(), properties.getProperties().get("server_base_url"));
+      assertEquals(config.getDefaultMetricsEndpoint(), properties.getProperties().get("metrics_endpoint"));
     } finally {
       fs.cleanup();
     }
@@ -106,8 +106,8 @@ public class InstallationPropertiesTest {
     final TmpFS fs = TmpFS.fs();
     try {
       final Map<String, String> props = Maps.newHashMap();
-      props.put("spm_sender_proxy_host", "");
-      props.put("spm_sender_receiver_url", "https://spm-receiver.sematext.com/receiver/v1");
+      props.put("proxy_host", "");
+      props.put("server_base_url", "https://spm-receiver.sematext.com/receiver/v1");
 
       final File spmHome = fs.createDirectory();
       final File propertiesDir = fs.createDirectory(spmHome, "properties");
@@ -119,16 +119,16 @@ public class InstallationPropertiesTest {
       final InstallationProperties properties = InstallationProperties.loadSpmSenderInstallationProperties(config);
 
       assertEquals("https://spm-receiver.sematext.com/receiver/v1", properties.getProperties()
-          .get("spm_sender_receiver_url"));
+          .get("server_base_url"));
 
-      props.put("spm_sender_receiver_url", "https://spm-receiver.sematext.com/receiver/v3");
+      props.put("server_base_url", "https://spm-receiver.sematext.com/receiver/v3");
 
       FileUtil.write(serialize(props), spmSenderConfig);
 
       assertTrue(spmSenderConfig.setLastModified(System.currentTimeMillis()));
 
       assertEquals("https://spm-receiver.sematext.com/receiver/v3", properties.getProperties()
-          .get("spm_sender_receiver_url"));
+          .get("server_base_url"));
     } finally {
       fs.cleanup();
     }

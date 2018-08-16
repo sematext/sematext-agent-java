@@ -19,6 +19,7 @@
  */
 package com.sematext.spm.client.sender.config;
 
+import com.sematext.spm.client.sender.SenderUtil;
 import com.sematext.spm.client.util.FileUtil;
 
 public final class Configuration {
@@ -26,8 +27,10 @@ public final class Configuration {
   private final String baseMonitorDir;
   private final String applicationsBaseDir;
   private final String senderApplicationsConfTemplateDir;
-  private final String defaultReceiverUrl = "http://spm-receiver.sematext.com";
-  private final String defaultMetricsPath = "";
+  private final String defaultReceiverUrl = "https://spm-receiver.sematext.com";
+  private final String defaultMetricsEndpoint = SenderUtil.DEFAULT_SAAS_PROD_RECEIVER_METRICS_ENDPOINT;
+  private final String defaultTagsEndpoint = SenderUtil.DEFAULT_SAAS_PROD_RECEIVER_TAGS_ENDPOINT;
+  private final String defaultMetainfoEndpoint = SenderUtil.DEFAULT_SAAS_PROD_RECEIVER_METAINFO_ENDPOINT;
   private final String configurationDir;
   private final String propertiesDir;
   private final String monitorConfigDir;
@@ -74,8 +77,16 @@ public final class Configuration {
     return defaultReceiverUrl;
   }
 
-  public String getDefaultMetricsPath() {
-    return defaultMetricsPath;
+  public String getDefaultMetricsEndpoint() {
+    return defaultMetricsEndpoint;
+  }
+
+  public String getDefaultTagsEndpoint() {
+    return defaultTagsEndpoint;
+  }
+
+  public String getDefaultMetainfoEndpoint() {
+    return defaultMetainfoEndpoint;
   }
 
   public String getMonitorConfigDir() {
