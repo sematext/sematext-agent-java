@@ -42,7 +42,7 @@ import com.sematext.spm.client.sender.util.DynamicUrlParamSink;
 /*CHECKSTYLE:OFF*/
 public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
   public static final String INFLUX_SERVER = "influxServer";
-  public static final String INFLUX_SERVER_CONTEXT_ROOT = "influxContextRoot";
+  public static final String INFLUX_ENDPOINT_PATH = "influxEndpointPath";
 
   public static final String PROXY_HOST = "proxyHost";
   public static final String PROXY_PORT = "proxyPort";
@@ -68,7 +68,7 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
   private InfluxClient client = null;
 
   private ProxyContext proxyContext = new ProxyContext();
-  private String contextRoot;
+  private String urlPath;
 
   private SinkCounter sinkCounter;
 
@@ -169,7 +169,7 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
     }
 
     influxHost = context.getString(INFLUX_SERVER);
-    contextRoot = context.getString(INFLUX_SERVER_CONTEXT_ROOT);
+    urlPath = context.getString(INFLUX_ENDPOINT_PATH);
 
     proxyContext.setHost(context.getString(PROXY_HOST, null));
     proxyContext.setPort(context.getInteger(PROXY_PORT, null));
@@ -191,7 +191,7 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
     logger.info("Influx sink {} started");
     sinkCounter.start();
     try {
-      client = new HttpInfluxClient(influxHost, contextRoot, additionalUrlParams, proxyContext);
+      client = new HttpInfluxClient(influxHost, urlPath, additionalUrlParams, proxyContext);
 
       sinkCounter.incrementConnectionCreatedCount();
     } catch (Exception ex) {

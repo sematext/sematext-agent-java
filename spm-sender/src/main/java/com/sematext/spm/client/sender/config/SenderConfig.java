@@ -28,7 +28,9 @@ public final class SenderConfig {
   private String host;
   private Set<String> tokens;
   private String receiverUrl;
-  private String receiverMetricsPath;
+  private String metricsEndpoint;
+  private String tagsEndpoint;
+  private String metainfoEndpoint;
   private String proxyHost;
   private Integer proxyPort;
   private String proxyUser;
@@ -96,6 +98,9 @@ public final class SenderConfig {
     if (proxyPort != null ? !proxyPort.equals(that.proxyPort) : that.proxyPort != null) return false;
     if (proxyUser != null ? !proxyUser.equals(that.proxyUser) : that.proxyUser != null) return false;
     if (receiverUrl != null ? !receiverUrl.equals(that.receiverUrl) : that.receiverUrl != null) return false;
+    if (metricsEndpoint != null ? !metricsEndpoint.equals(that.metricsEndpoint) : that.metricsEndpoint != null) return false;
+    if (tagsEndpoint != null ? !tagsEndpoint.equals(that.tagsEndpoint) : that.tagsEndpoint != null) return false;
+    if (metainfoEndpoint != null ? !metainfoEndpoint.equals(that.metainfoEndpoint) : that.metainfoEndpoint != null) return false;
     if (tokens != null ? !tokens.equals(that.tokens) : that.tokens != null) return false;
 
     return true;
@@ -106,7 +111,9 @@ public final class SenderConfig {
     int result = host != null ? host.hashCode() : 0;
     result = 31 * result + (tokens != null ? tokens.hashCode() : 0);
     result = 31 * result + (receiverUrl != null ? receiverUrl.hashCode() : 0);
-    result = 31 * result + (receiverMetricsPath != null ? receiverMetricsPath.hashCode() : 0);
+    result = 31 * result + (metricsEndpoint != null ? metricsEndpoint.hashCode() : 0);
+    result = 31 * result + (tagsEndpoint != null ? tagsEndpoint.hashCode() : 0);
+    result = 31 * result + (metainfoEndpoint != null ? metainfoEndpoint.hashCode() : 0);
     result = 31 * result + (proxyHost != null ? proxyHost.hashCode() : 0);
     result = 31 * result + (proxyPort != null ? proxyPort.hashCode() : 0);
     result = 31 * result + (proxyUser != null ? proxyUser.hashCode() : 0);
@@ -121,7 +128,9 @@ public final class SenderConfig {
         "host='" + host + '\'' +
         ", tokens=" + tokens +
         ", receiverUrl='" + receiverUrl + '\'' +
-        ", receiverMetricsPath='" + receiverMetricsPath + '\'' +
+        ", metricsEndpoint='" + metricsEndpoint + '\'' +
+        ", tagsEndpoint='" + tagsEndpoint + '\'' +
+        ", metainfoEndpoint='" + metainfoEndpoint + '\'' +
         ", proxyHost='" + proxyHost + '\'' +
         ", proxyPort=" + proxyPort +
         ", proxyUser='" + proxyUser + '\'' +
@@ -153,8 +162,18 @@ public final class SenderConfig {
       return this;
     }
 
-    public Builder setReceiverMetricsPath(String receiverMetricsPath) {
-      this.config.receiverMetricsPath = receiverMetricsPath;
+    public Builder setMetricsEndpoint(String metricsEndpoint) {
+      this.config.metricsEndpoint = metricsEndpoint;
+      return this;
+    }
+
+    public Builder setTagsEndpoint(String tagsEndpoint) {
+      this.config.tagsEndpoint = tagsEndpoint;
+      return this;
+    }
+
+    public Builder setMetainfoEndpoint(String metainfoEndpoint) {
+      this.config.metainfoEndpoint = metainfoEndpoint;
       return this;
     }
 
@@ -198,11 +217,19 @@ public final class SenderConfig {
     }
   }
 
-  public String getReceiverMetricsPath() {
-    return receiverMetricsPath;
-  }
-
   public long getCreationTime() {
     return creationTime;
+  }
+
+  public String getMetricsEndpoint() {
+    return metricsEndpoint;
+  }
+
+  public String getTagsEndpoint() {
+    return tagsEndpoint;
+  }
+
+  public String getMetainfoEndpoint() {
+    return metainfoEndpoint;
   }
 }

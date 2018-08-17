@@ -55,7 +55,7 @@ public abstract class InfluxClient {
   public static final String URL_PARAM_CONTENT_TYPE = "sct";
 
   protected StringBuilder bulkBuilder;
-  protected String contextRoot;
+  protected String urlPath;
   protected String urlParamsString;
 
   protected Map<String, String> urlParams = new HashMap<String, String>();
