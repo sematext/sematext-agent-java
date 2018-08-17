@@ -128,9 +128,9 @@ public final class SenderConfig {
         "host='" + host + '\'' +
         ", tokens=" + tokens +
         ", receiverUrl='" + receiverUrl + '\'' +
-        ", receiverMetricsPath='" + metricsEndpoint + '\'' +
-        ", receiverMetricsPath='" + tagsEndpoint + '\'' +
-        ", receiverMetricsPath='" + metainfoEndpoint + '\'' +
+        ", metricsEndpoint='" + metricsEndpoint + '\'' +
+        ", tagsEndpoint='" + tagsEndpoint + '\'' +
+        ", metainfoEndpoint='" + metainfoEndpoint + '\'' +
         ", proxyHost='" + proxyHost + '\'' +
         ", proxyPort=" + proxyPort +
         ", proxyUser='" + proxyUser + '\'' +
