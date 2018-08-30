@@ -136,7 +136,9 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
       }
 
       // TODO externalize this a bit to live in separate handlers
-      if (types.contains("jvm")) {
+      // note: JvmNotifBasedGcStatsCollector depends on sun.management package which was moved to com.sun.management in
+      // Java 9 and also became internal API so --add-exports would also have to be used to make it available to agent
+      if (types.contains("jvm") && MonitorUtil.JAVA_MAJOR_VERSION < 9) {
         updateCollector(currentCollectors, collectors, JvmNotifBasedGcStatsCollector.class, jvmName,
                         new FunctionT<String, JvmNotifBasedGcStatsCollector, StatsCollectorBadConfigurationException>() {
                           @Override
