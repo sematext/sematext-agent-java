@@ -100,7 +100,7 @@ public final class Sender {
 
         final InstallationProperties spmSenderProperties =
             InstallationProperties.loadSpmSenderInstallationProperties(globalConfig)
-                .fallbackTo(InstallationProperties.fromResource("/spm-sender.default.properties"));
+                .fallbackTo(InstallationProperties.fromResource("/agent.default.properties"));
 
         final InstallationProperties tracingProperties =
             InstallationProperties.fromFile(new File(globalConfig.getTracingPropertiesFile()))

@@ -60,7 +60,7 @@ public final class BasicCommandPollingSetup {
 
     static SenderConfiguration load() {
       final File spmSenderPropsFile = new File(FileUtil.path(System
-                                                                 .getProperty("spm.home", "/opt/spm"), "properties", "spm-sender.properties"));
+                                                                 .getProperty("spm.home", "/opt/spm"), "properties", "agent.properties"));
       Map<String, String> properties = PropertiesReader.tryRead(spmSenderPropsFile);
       SenderConfiguration config = new SenderConfiguration();
       config.proxyHost = properties.get("proxy_host");
