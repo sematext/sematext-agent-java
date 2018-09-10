@@ -64,7 +64,7 @@ public class InstallationPropertiesTest {
 
       final File spmHome = fs.createDirectory();
       final File propertiesDir = fs.createDirectory(spmHome, "properties");
-      final File p1 = fs.createFile(propertiesDir, "spm-sender.properties", serialize(props));
+      final File p1 = fs.createFile(propertiesDir, "agent.properties", serialize(props));
       props.put("server_base_url", "https://spm-receiver.sematext.com/receiver/v2");
       final File p2 = fs.createFile(propertiesDir, "spm-setup-1.properties", serialize(props));
       props.put("server_base_url", "https://spm-receiver.sematext.com/receiver/v3");
@@ -111,7 +111,7 @@ public class InstallationPropertiesTest {
 
       final File spmHome = fs.createDirectory();
       final File propertiesDir = fs.createDirectory(spmHome, "properties");
-      final File spmSenderConfig = fs.createFile(propertiesDir, "spm-sender.properties", serialize(props));
+      final File spmSenderConfig = fs.createFile(propertiesDir, "agent.properties", serialize(props));
 
       assertTrue(spmSenderConfig.setLastModified(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
 
@@ -180,7 +180,7 @@ public class InstallationPropertiesTest {
       assertTrue(f3.delete());
 
       final File dir = fs.createDirectory();
-      fs.createFile(fs.createDirectory(dir, "properties"), "spm-sender.properties", "name=jack\n" +
+      fs.createFile(fs.createDirectory(dir, "properties"), "agent.properties", "name=jack\n" +
           "city=istambul\n" +
           "country=turkey");
 

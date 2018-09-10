@@ -52,7 +52,7 @@ public final class SenderUtil {
   public static final String DEFAULT_SAAS_PROD_RECEIVER_TAGS_ENDPOINT = "/write?db=tags";
   public static final String DEFAULT_SAAS_PROD_RECEIVER_METAINFO_ENDPOINT = "/write?db=metainfo";
 
-  public static final File DATA_SENDER_PROPERTIES_FILE = new File(SPM_SETUP_PROPERTIES_DIR, "spm-sender.properties");
+  public static final File DATA_SENDER_PROPERTIES_FILE = new File(SPM_SETUP_PROPERTIES_DIR, "agent.properties");
 
   public static final AtomicLong INSTALLATION_PROPERTIES_FILE_LAST_MODIFIED_TIME = new AtomicLong(-1);
 
@@ -67,7 +67,7 @@ public final class SenderUtil {
   }
 
   public static void loadInstallationProperties() {
-    // use spm-sender.properties as a source of proxy properties and receiver_url property
+    // use agent.properties as a source of proxy properties and receiver_url property
 
     File[] propsFiles = findSpmSetupPropertiesFiles();
 
@@ -75,7 +75,7 @@ public final class SenderUtil {
     File freshestAppPropsFile = null;
 
     for (File propsFile : propsFiles) {
-      if (propsFile.getName().equalsIgnoreCase("spm-sender.properties")) {
+      if (propsFile.getName().equalsIgnoreCase("agent.properties")) {
         proxyPropsFile = propsFile;
       }
       if (propsFile.getName().startsWith("spm-setup") && propsFile.getName().endsWith(".properties")) {

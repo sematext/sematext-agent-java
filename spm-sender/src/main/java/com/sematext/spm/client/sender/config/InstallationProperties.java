@@ -249,7 +249,7 @@ public final class InstallationProperties {
 
   public static InstallationProperties loadSpmSenderInstallationProperties(Configuration config) {
     final File dir = new File(config.getPropertiesDir());
-    final File spmProperties = new File(dir, "spm-sender.properties");
+    final File spmProperties = new File(dir, "agent.properties");
     final List<File> propertyFiles = Lists.newArrayList();
     final List<File> legacyPropertyFiles = Lists.newArrayList();
     final File[] files = dir.listFiles();

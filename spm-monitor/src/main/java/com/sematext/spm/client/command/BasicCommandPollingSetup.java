@@ -59,9 +59,9 @@ public final class BasicCommandPollingSetup {
     String receiverUrl;
 
     static SenderConfiguration load() {
-      final File spmSenderPropsFile = new File(FileUtil.path(System
-                                                                 .getProperty("spm.home", "/opt/spm"), "properties", "spm-sender.properties"));
-      Map<String, String> properties = PropertiesReader.tryRead(spmSenderPropsFile);
+      final File agentPropsFile = new File(FileUtil.path(System
+                                                                 .getProperty("spm.home", "/opt/spm"), "properties", "agent.properties"));
+      Map<String, String> properties = PropertiesReader.tryRead(agentPropsFile);
       SenderConfiguration config = new SenderConfiguration();
       config.proxyHost = properties.get("proxy_host");
       String proxyPort = properties.get("proxy_port");
@@ -73,7 +73,7 @@ public final class BasicCommandPollingSetup {
       config.hostnameAlias = properties.get("hostname_alias");
       config.receiverUrl = properties.get("server_base_url");
       if (config.receiverUrl == null) {
-        throw new IllegalStateException("Missing 'server_base_url' property at " + spmSenderPropsFile);
+        throw new IllegalStateException("Missing 'server_base_url' property at " + agentPropsFile);
       }
       if (config.receiverUrl.endsWith("/")) {
         config.receiverUrl = config.receiverUrl.substring(0, config.receiverUrl.length() - 1);
