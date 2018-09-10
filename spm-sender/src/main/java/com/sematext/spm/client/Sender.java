@@ -98,21 +98,21 @@ public final class Sender {
       try {
         final Configuration globalConfig = Configuration.defaultConfig();
 
-        final InstallationProperties spmSenderProperties =
+        final InstallationProperties agentPropsFile =
             InstallationProperties.loadSpmSenderInstallationProperties(globalConfig)
                 .fallbackTo(InstallationProperties.fromResource("/agent.default.properties"));
 
         final InstallationProperties tracingProperties =
             InstallationProperties.fromFile(new File(globalConfig.getTracingPropertiesFile()))
                 .fallbackTo(InstallationProperties.fromResource("/tracing.default.properties"))
-                .fallbackTo(spmSenderProperties);
+                .fallbackTo(agentPropsFile);
 
         InstallationProperties properties =
             senderType == SenderType.STATS || senderType == SenderType.METRICS_METAINFO ||
                 senderType == SenderType.TAGS ?
-                spmSenderProperties :
+                agentPropsFile :
                 senderType == SenderType.TRACING ? tracingProperties :
-                    spmSenderProperties;
+                    agentPropsFile;
 
         final BaseSenderConfigFactory factory;
 
