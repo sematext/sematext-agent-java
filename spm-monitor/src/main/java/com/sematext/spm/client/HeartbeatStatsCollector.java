@@ -77,8 +77,10 @@ public class HeartbeatStatsCollector extends MultipleStatsCollector<Integer> {
     statValues.getMetrics().put("alive", 1);
     statValues.setTags(new UnifiedMap<String, String>());
     
-    // currently heartbeat stats are gathered on the level of whole agent
-    // statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
+    // currently each agent monitors one specific MonitorConfig, but if we move to 1 agent monitoring
+    // N configs, this tag will have to be removed (unless we refactor other things) because
+    // CollectionStats.CURRENT_RUN_GATHERED_LINES is on the level of whole agent
+    statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
 
     StatValuesHelper.fillHostTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
