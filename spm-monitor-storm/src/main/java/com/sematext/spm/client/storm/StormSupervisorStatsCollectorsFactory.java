@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import com.sematext.spm.client.HeartbeatStatsCollector;
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.MonitorConfig;
@@ -36,6 +37,7 @@ import com.sematext.spm.client.StatsCollectorBadConfigurationException;
 import com.sematext.spm.client.StatsCollectorsFactory;
 import com.sematext.spm.client.jmx.configurator.JvmJmxBasedMonitorConfigurator;
 import com.sematext.spm.client.tracing.TracingMonitorConfigurator;
+import com.sematext.spm.client.util.CollectionUtils.FunctionT;
 
 public class StormSupervisorStatsCollectorsFactory extends StatsCollectorsFactory<StatsCollector<?>> {
   private static final Log LOG = LogFactory.getLog(StormSupervisorStatsCollectorsFactory.class);
@@ -72,6 +74,15 @@ public class StormSupervisorStatsCollectorsFactory extends StatsCollectorsFactor
           }
         }
       }
+
+      // as last collector add HeartbeatCollector
+      updateCollector(currentCollectors, collectors, HeartbeatStatsCollector.class, jvmName,
+          new FunctionT<String, HeartbeatStatsCollector, StatsCollectorBadConfigurationException>() {
+            @Override
+            public HeartbeatStatsCollector apply(String id) {
+              return new HeartbeatStatsCollector(Serializer.INFLUX, appToken, jvmName, subType);
+            }
+          });      
 
       return collectors;
     } catch (StatsCollectorBadConfigurationException e) {

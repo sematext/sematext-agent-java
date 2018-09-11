@@ -26,11 +26,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import com.sematext.spm.client.HeartbeatStatsCollector;
 import com.sematext.spm.client.MonitorConfig;
 import com.sematext.spm.client.MonitorUtil;
+import com.sematext.spm.client.Serializer;
 import com.sematext.spm.client.StatsCollector;
 import com.sematext.spm.client.StatsCollectorBadConfigurationException;
 import com.sematext.spm.client.StatsCollectorsFactory;
+import com.sematext.spm.client.util.CollectionUtils.FunctionT;
 
 public class RedisStatsCollectorsFactory extends StatsCollectorsFactory<StatsCollector> {
   private static String makeId(String host, String port, String password) {
@@ -79,7 +82,11 @@ public class RedisStatsCollectorsFactory extends StatsCollectorsFactory<StatsCol
           .asList(new RedisStatsCollector(infoSource, id, monitorConfig.getAppToken(), monitorConfig.getJvmName(),
                                           monitorConfig.getSubType()),
                   new RedisDbStatsCollector(infoSource, id, monitorConfig.getAppToken(),monitorConfig.getJvmName(),
-                                            monitorConfig.getSubType()));
+                                            monitorConfig.getSubType()),
+                  // as last collector add HeartbeatCollector
+                  new HeartbeatStatsCollector(
+                      Serializer.INFLUX, monitorConfig.getAppToken(), monitorConfig.getAppToken(),
+                      monitorConfig.getSubType()));
     }
   }
 }
