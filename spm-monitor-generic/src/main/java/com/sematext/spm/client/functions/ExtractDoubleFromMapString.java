@@ -20,13 +20,13 @@
 package com.sematext.spm.client.functions;
 
 /**
- * Example: func: ExtractDoubleFromMap(Value,cumulative_hits) - from monitored object with
+ * Example: func: ExtractDoubleFromMapString(Value,cumulative_hits) - from monitored object with
  * name 'Value' (which is in key-value format), extracts and returns value of key
  * 'cumulative_hits'. Result will be of type 'double'.
  *
  * @author sematext, http://www.sematext.com/
  */
-public class ExtractDoubleFromMap extends ExtractValueFromMap<Double> {
+public class ExtractDoubleFromMapString extends ExtractValueFromMapString<Double> {
   @Override
   protected Double convertToResult(String value) {
     return Double.valueOf(value);

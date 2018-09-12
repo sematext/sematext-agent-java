@@ -28,7 +28,7 @@ import com.sematext.spm.client.observation.CalculationFunction;
  * Extracts value of key specified with function parameter. Function assumes monitored value
  * (from which resuting attribute is extracted) is in key-value format.
  */
-public abstract class ExtractValueFromMap<T> implements CalculationFunction {
+public abstract class ExtractValueFromMapString<T> implements CalculationFunction {
   private static final String MAP_SEPARATOR = ", ";
   private static final int LENGTH_OF_MAP_SEPARATOR = MAP_SEPARATOR.length();
   

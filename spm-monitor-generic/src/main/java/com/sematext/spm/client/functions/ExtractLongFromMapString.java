@@ -19,21 +19,16 @@
  */
 package com.sematext.spm.client.functions;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
-
-public class ExtractValueFromMapTest {
-  @Test
-  public void testCalculate() {
-    ExtractLongFromMap functionLong = new ExtractLongFromMap();
-    ExtractDoubleFromMap functionDouble = new ExtractDoubleFromMap();
-    
-    Map<String, Object> metrics = new HashMap<String, Object>();
-    metrics.put("Value", "{metric1=1, metric2=1.23, metric3=abc}");
-    Assert.assertEquals(1l, functionLong.calculateAttribute(metrics, new Object [] {"Value", "metric1", "long"}));
-    Assert.assertEquals(1.23d, functionDouble.calculateAttribute(metrics, new Object [] {"Value", "metric2", "double"}));
+/**
+ * Example: func: ExtractLongFromMapString(Value,cumulative_hits) - from monitored object with
+ * name 'Value' (which is in key-value format), extracts and returns value of key
+ * 'cumulative_hits'. Result will be of type 'long'.
+ *
+ * @author sematext, http://www.sematext.com/
+ */
+public class ExtractLongFromMapString extends ExtractValueFromMapString<Long> {
+  @Override
+  protected Long convertToResult(String value) {
+    return Long.valueOf(value);
   }
 }
