@@ -27,7 +27,9 @@ import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.ResolverHelper;
 import com.sematext.spm.client.aggregation.AgentAggregationFunction;
+import com.sematext.spm.client.attributes.DoubleCounterValueHolder;
 import com.sematext.spm.client.attributes.MetricType;
+import com.sematext.spm.client.attributes.RealCounterValueHolder;
 import com.sematext.spm.client.json.JsonObservation;
 
 public class DerivedAttribute {
@@ -39,6 +41,10 @@ public class DerivedAttribute {
   private ObservationBean parentObservation;
   private Object[] args;
 
+  private boolean asCounter;
+  private RealCounterValueHolder counterValueHolder;
+  private DoubleCounterValueHolder doubleCounterValueHolder;
+
   private AgentAggregationFunction agentAggregationFunction;
   private MetricType metricType;
 
@@ -49,7 +55,7 @@ public class DerivedAttribute {
   // and there are objectNameTags which can be used for resolving
   public DerivedAttribute(String name, String expression, boolean stateful, Map<String, String> objectNameTags,
                           ObservationBean parentObservation, AgentAggregationFunction agentAggregationFunction,
-                          MetricType metricType) {
+                          MetricType metricType, boolean asCounter) {
     if (name == null || "".equals(name.trim())) {
       throw new IllegalArgumentException("DerivedAttribute name missing, expression was: " + expression);
     }
@@ -58,6 +64,7 @@ public class DerivedAttribute {
     this.stateful = stateful;
     this.parentObservation = parentObservation;
     this.expression = expression;
+    this.asCounter = asCounter;
 
     this.agentAggregationFunction = agentAggregationFunction;
     this.metricType = metricType;
@@ -97,7 +104,7 @@ public class DerivedAttribute {
 
   public DerivedAttribute(DerivedAttribute original, Map<String, String> objectNameTags) {
     this(original.name, original.expression, original.stateful, objectNameTags,
-         original.parentObservation, original.agentAggregationFunction, original.metricType);
+         original.parentObservation, original.agentAggregationFunction, original.metricType, original.asCounter);
   }
 
   public String resolveExpression(String expression, Map<String, String> objectNameTags) {
@@ -131,7 +138,7 @@ public class DerivedAttribute {
     return args;
   }
 
-  public CalculationFunction getFunction(String expression) {
+  private CalculationFunction getFunction(String expression) {
     expression = expression.trim();
     String className;
     if (expression.startsWith("func:")) {
@@ -177,11 +184,32 @@ public class DerivedAttribute {
   public Object apply(Map<String, Object> metrics, Map<String, Object> outerMetrics) {
     if (function != null) {
       try {
+        Object attrib;
         if (function instanceof OuterMetricCalculation) {
           // special case
-          return function.calculateAttribute(metrics, outerMetrics);
+          attrib = function.calculateAttribute(metrics, outerMetrics);
         } else {
-          return function.calculateAttribute(metrics, args);
+          attrib = function.calculateAttribute(metrics, args);
+        }
+        
+        if (asCounter) {
+          if (attrib instanceof Long) {
+            if (counterValueHolder == null) {
+              counterValueHolder = new RealCounterValueHolder();
+            }
+            return counterValueHolder.getValue(attrib);
+          } else if (attrib instanceof Double) {
+            if (doubleCounterValueHolder == null) {
+              doubleCounterValueHolder = new DoubleCounterValueHolder();
+            }
+            return doubleCounterValueHolder.getValue(attrib);            
+          } else {
+            LOG.warn("Can't process 'as_counter' since attribute type " + attrib.getClass().getName() +
+                " is not supported, returning value as received from function. Metrics: " + metrics);
+            return attrib;
+          }
+        } else {
+          return attrib;          
         }
       } catch (Throwable thr) {
         LOG.error("Error while calculating with function " + function + ", metrics: " + metrics, thr);

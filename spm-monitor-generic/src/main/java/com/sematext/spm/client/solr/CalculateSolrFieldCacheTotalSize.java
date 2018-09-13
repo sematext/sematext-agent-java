@@ -33,6 +33,6 @@ public class CalculateSolrFieldCacheTotalSize implements CalculationFunction {
   public Number calculateAttribute(Map<String, Object> metrics, Object... params) {
     String size = (String) metrics.get("total_size");
     //The value of field cache size will always be in bytes.
-    return Long.valueOf(size.split(" ")[0].trim());
+    return size == null ? null : Long.valueOf(size.split(" ")[0].trim());
   }
 }

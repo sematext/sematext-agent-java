@@ -48,11 +48,20 @@ public abstract class ObservationBean<T extends AttributeObservation<?>, DATA_PR
 
   public static final String ATTRIBUTE_NAME_MAPPING_MARKER = "#attributeNameMapping";
 
+  public static final String SOURCE_TYPE_AS_COUNTER = "as_counter";
+  public static final String SOURCE_TYPE_AS_COUNTER_PREFIX = SOURCE_TYPE_AS_COUNTER + ":";
+  public static final int SOURCE_TYPE_AS_COUNTER_PREFIX_LENGTH = SOURCE_TYPE_AS_COUNTER_PREFIX.length();
+  
   public static final String SOURCE_TYPE_FUNCTION = "func";
+  public static final String SOURCE_TYPE_FUNCTION_PREFIX = SOURCE_TYPE_FUNCTION + ":";
   public static final String SOURCE_TYPE_EVAL = "eval";
+  public static final String SOURCE_TYPE_EVAL_PREFIX = SOURCE_TYPE_EVAL + ":";
   public static final String SOURCE_TYPE_JMX = "jmx";
+  public static final String SOURCE_TYPE_JMX_PREFIX = SOURCE_TYPE_JMX + ":";
   public static final String SOURCE_TYPE_JSON = "json";
+  public static final String SOURCE_TYPE_JSON_PREFIX = SOURCE_TYPE_JSON + ":";
   public static final String SOURCE_TYPE_OUTER = "outer";
+  public static final String SOURCE_TYPE_OUTER_PREFIX = SOURCE_TYPE_OUTER + ":";
 
   private String metricNamespace;
   private List<T> attributeObservations;
@@ -293,9 +302,16 @@ public abstract class ObservationBean<T extends AttributeObservation<?>, DATA_PR
       T attributeObservation = null;
       DerivedAttribute derivedAttribute = null;
 
-      if (source.startsWith(SOURCE_TYPE_EVAL + ":") ||
-          source.startsWith(SOURCE_TYPE_FUNCTION + ":") || source.startsWith(SOURCE_TYPE_JMX + ":") ||
-          source.startsWith(SOURCE_TYPE_JSON + ":") || source.startsWith(SOURCE_TYPE_OUTER + ":")) {
+      boolean asCounter = false;
+      
+      if (source.startsWith(SOURCE_TYPE_AS_COUNTER_PREFIX)) {
+        asCounter = true;
+        source = source.substring(SOURCE_TYPE_AS_COUNTER_PREFIX_LENGTH).trim();
+      }
+      
+      if (source.startsWith(SOURCE_TYPE_EVAL_PREFIX) ||
+          source.startsWith(SOURCE_TYPE_FUNCTION_PREFIX) || source.startsWith(SOURCE_TYPE_JMX_PREFIX) ||
+          source.startsWith(SOURCE_TYPE_JSON_PREFIX) || source.startsWith(SOURCE_TYPE_OUTER_PREFIX)) {
         if (getDerivedAttributes() == null) {
           setDerivedAttributes(new FastList<DerivedAttribute>());
         }
@@ -315,8 +331,11 @@ public abstract class ObservationBean<T extends AttributeObservation<?>, DATA_PR
         AgentAggregationFunction agentAggregationFunction = AttributeObservation.getAgentAggregationFunction(
             metricType, metric.getAgentAggregation());
 
-        derivedAttribute = new DerivedAttribute(finalAttributeName, source,
-                                                metric.isStateful(), null, this, agentAggregationFunction, metricType);
+        // derived attribute has to be stateful either if it is marked as such in config or if modifier 'as_counter'
+        // is used on it (this implicitly means it has to be stateful so it can record previous value and return
+        // fresh values like counter attributes do)
+        derivedAttribute = new DerivedAttribute(finalAttributeName, source, metric.isStateful() || asCounter, null, this, 
+                                                agentAggregationFunction, metricType, asCounter);
         getDerivedAttributes().add(derivedAttribute);
       } else {
         attributeObservation = createAttributeObservation(type);
