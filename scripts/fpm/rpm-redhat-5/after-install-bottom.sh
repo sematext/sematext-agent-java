@@ -15,10 +15,10 @@ echo SPM client installer done
 echo
 tput setab 2
 tput setaf 7
-echo "                                                                                                          "
-echo "IMPORTANT: If doing a first installation on this machine, remember to complete the remaining installation          "
-echo "           steps (from step 2) listed at: https://apps.sematext.com/ui/monitoring (click Actions->Install Monitor) "
-echo "                                                                                                          "
+echo "                                                                                                                   "
+echo "IMPORTANT: Prepare monitor configuration by running setup-spm command.                                             "
+echo "           For more info refer to https://github.com/sematext/sematext-agent-java/docs/                            "
+echo "                                                                                                                   "
 tput op
 tput setab 3
 tput setaf 0
@@ -27,8 +27,8 @@ echo "WARN: If your server accesses Internet via proxy, set proxy host, port, us
 echo "  sudo bash /opt/spm/bin/setup-env --proxy-host \"www.myproxyhost.com\" --proxy-port \"1234\" --proxy-user \"myuser\" --proxy-password \"mypassword123\""
 tput op
 echo
-echo When done with all steps, go to https://apps.sematext.com/ui/monitoring to see your performance charts
-echo If you do not see your graphs in a few minutes, run: sudo bash /opt/spm/bin/spm-client-diagnostics.sh
+echo When done with all steps, go to the configured destination to see your performance metrics
+echo If you do not see your metrics in a few minutes, run: sudo bash /opt/spm/bin/spm-client-diagnostics.sh
 echo
 echo -------------------------------------------------------------------------------
 echo

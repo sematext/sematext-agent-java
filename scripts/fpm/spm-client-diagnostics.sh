@@ -112,7 +112,7 @@ spmReceiverHosts=$(getent hosts $spmReceiver | wc -l)
 if [ $spmReceiverHosts -lt 1 ]; then
   echo "ERROR: Cannot look up $spmReceiver -- check your DNS" | tee -a $ERRORS_DIAG_DIR/connectivity-errors.log
   echo
-  echo $spmReceiver:$spmReceiverPort is where SPM agent sends metrics
+  echo $spmReceiver:$spmReceiverPort is where agent sends metrics
 fi
 
 # check Network
@@ -122,9 +122,9 @@ if [ $? -eq 0 ]; then
   if [ $? -ne 0 ]; then
     echo "ERROR: Cannot connect to $spmReceiver:$spmReceiverPort -- check your Network / Firewall / Proxy" | tee -a $ERRORS_DIAG_DIR/connectivity-errors.log
     echo
-    echo $spmReceiver:$spmReceiverPort is where SPM agent sends metrics
-    echo How to configure SPM agent to send metrics through a proxy:
-    echo "    https://sematext.com/docs/monitoring/spm-faq/#can-spm-client-send-data-out-from-servers-that-are-behind-a-proxy"
+    echo $spmReceiver:$spmReceiverPort is where agent sends metrics
+    echo To configure agent to send metrics through a proxy, run:
+    echo "  sudo bash /opt/spm/bin/setup-env --proxy-host \"www.myproxyhost.com\" --proxy-port \"1234\" --proxy-user \"myuser\" --proxy-password \"mypassword123\""
   fi
 fi
 
@@ -148,7 +148,7 @@ echo
 
 # if spm-monitor/conf is empty, display message about step 2 being skipped
 if [ ! "$(ls -A $SPM_HOME/spm-monitor/conf)" ]; then
-  echo "ERROR: Directory $SPM_HOME/spm-monitor/conf is empty because SPM Agent setup was not completed. Go to https://apps.sematext.com/ui/monitoring, click Actions->Install Monitor, follow the instructions from Step 2" | tee -a $ERRORS_DIAG_DIR/config-errors.log
+  echo "ERROR: Directory $SPM_HOME/spm-monitor/conf is empty because agent setup was not completed. Execute setup-spm command to create monitor configuration" | tee -a $ERRORS_DIAG_DIR/config-errors.log
   echo
 fi
 
