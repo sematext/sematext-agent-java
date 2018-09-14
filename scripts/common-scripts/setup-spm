@@ -1,0 +1,274 @@
+#!/usr/bin/env bash
+
+function support {
+    echo
+    echo "If you are having difficulties installing SPM, we want to help you!"
+    echo " * email spm-support@sematext.com"
+    echo " * ping @sematext on Twitter"
+    echo " * call +1 347 480 1610"
+    echo
+}
+
+function parse_param {
+  TMP_PARAM=$1
+  
+  if [[ "$TMP_PARAM" == --* ]]; then
+    CURRENT_PARAM_NAME=${TMP_PARAM:2}
+  else
+    CURRENT_PARAM_VALUE=$TMP_PARAM
+    
+    if [ -z $CURRENT_PARAM_NAME ]; then
+      echo "WARN: Found param value $CURRENT_PARAM_VALUE without preceding param name"
+    else
+      if [ "$CURRENT_PARAM_NAME" == "app-token" ]; then
+        APP_TOKEN=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "region" ]; then
+        REGION_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "tracing-receiver" ]; then
+        SPM_TRACING_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "metrics-receiver" ]; then
+        SPM_METRICS_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "app-type" ]; then
+        APP_TYPE=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "agent-type" ]; then
+        MONITOR_TYPE=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "jvm-name" ]; then
+        JVM_NAME=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "app-subtype" ]; then
+        CONFIG_SUBTYPE=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "jmx-params" ]; then
+        SPM_MONITOR_JMX_PARAMS=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "jmx-host" ]; then
+        JMX_HOST=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "jmx-port" ]; then
+        JMX_PORT=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "jmx-pass-file" ]; then
+        JMX_PASS_FILE=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "jmx-trust-store" ]; then
+        JMX_TRUSTSTORE=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "jmx-trust-store-pass" ]; then
+        JMX_TRUSTSTORE_PASS=$CURRENT_PARAM_VALUE
+      else
+        ADDITIONAL_PARAMS[${#ADDITIONAL_PARAMS[@]}]="$CURRENT_PARAM_NAME=$CURRENT_PARAM_VALUE"
+      fi  
+    
+      CURRENT_PARAM_NAME=""
+      CURRENT_PARAM_VALUE=""
+    fi
+  fi
+}
+
+function setup_conf {
+    CONFIG_SUBTYPE=
+    PROPERTY_FILE_PATH=
+    JVM_NAME="default"
+
+    declare -a ADDITIONAL_PARAMS
+
+    cd $( cd "$( dirname "$0" )" && pwd )
+    . env.sh
+
+    if [ -z "$SPM_HOME" ]
+    then
+      echo "Variable SPM_HOME not set, using default /opt/spm"
+      SPM_HOME="/opt/spm"
+    fi
+
+    # check java is present
+    if [ -z "$JAVA" ]
+    then
+      JAVA=$(command -v java)
+    fi
+
+    # read params
+    while test ${#} -gt 0; do
+      parse_param "$1"
+      shift
+    done
+
+    if [ "$MONITOR_TYPE" == "standalone" ]
+    then
+      if [ -z "$JAVA" ]
+      then
+        JAVA=$(su - spmmon -c "command -v java")
+      fi
+  
+      if [ -z "$JAVA" ]
+      then
+        tput setab 3
+        tput setaf 0
+        echo
+        echo "WARNING: Please check if Java is available for spmmon user." 
+        echo "         Without Java, SPM Monitor can't start. Please install Java or make it available to SPM client by"
+        echo "         setting JAVA_HOME in /opt/spm/properties/java.properties file. Once the Java is made available,"
+        echo "         please also restart SPM monitor with:"
+        echo
+        echo "         sudo service spm-monitor restart"
+        echo
+        echo "         and re-run this setup-spm script"
+        tput op
+        echo
+      fi
+    fi
+    
+    if [ -z "$APP_TOKEN" ]; then
+      tput setab 1
+      tput setaf 7
+      echo "Parameter --app-token is missing"
+      tput op
+      support
+      exit 1
+    fi
+
+    if [ -z "$APP_TYPE" ]; then
+      tput setab 1
+      tput setaf 7
+      echo "Parameter --app-type is missing"
+      tput op
+      support
+      exit 1
+    fi
+
+    if [ -z "$MONITOR_TYPE" ]; then
+      tput setab 1
+      tput setaf 7
+      echo "Parameter --agent-type is missing"
+      tput op
+      support
+      exit 1
+    fi
+
+    if [[ "$JVM_NAME" == *-* ]]; then
+      tput setab 1
+      tput setaf 7
+      echo "Parameter --jvm-name can't contain -";
+      tput op
+      support
+      exit 1
+    fi
+
+    if [ ! -z "$CONFIG_SUBTYPE" ]; then
+      CONFIG_SUBTYPE="-$CONFIG_SUBTYPE"
+    fi
+
+    cp -p $SPM_HOME/spm-monitor/templates/monitor-template-config.properties $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+
+    if [ "$?" != "0" ]; then
+      tput setab 1
+      tput setaf 7
+      echo "Error while preparing config"
+      tput op
+      support
+      exit 1
+    fi
+    chmod 777 $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+    
+    if [ "standalone" == "$MONITOR_TYPE" ]; then
+      sed -i '/SPM_MONITOR_IN_PROCESS=/c\'"SPM_MONITOR_IN_PROCESS=\"false\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+      sed -i '/THREAD_INSTRUMENTATION_ENABLED=/c\'"THREAD_INSTRUMENTATION_ENABLED=false"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+      # if jmx-params are present, do the replacement right now
+      if [ !  -z $SPM_MONITOR_JMX_PARAMS ]; then
+        sed -i '/SPM_MONITOR_JMX_PARAMS=\"\"/c\'"SPM_MONITOR_JMX_PARAMS=\"$SPM_MONITOR_JMX_PARAMS\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+      elif [ ! -z $JMX_HOST ] && [ ! -z $JMX_PORT ]; then
+        REPLACEMENT_JMX_LINE="SPM_MONITOR_JMX_PARAMS=\"-Dspm.remote.jmx.url=$JMX_HOST:$JMX_PORT\""
+        if [ ! -z $JMX_PASS_FILE ]; then
+          REPLACEMENT_JMX_LINE=${REPLACEMENT_JMX_LINE::-1}
+          REPLACEMENT_JMX_LINE="$REPLACEMENT_JMX_LINE -Dspm.remote.jmx.password.file=$JMX_PASS_FILE\""
+        elif [ ! -z $JMX_TRUSTSTORE ] && [ ! -z $JMX_TRUSTSTORE_PASS ]; then
+          REPLACEMENT_JMX_LINE=${REPLACEMENT_JMX_LINE::-1}
+          REPLACEMENT_JMX_LINE="$REPLACEMENT_JMX_LINE -Djavax.net.ssl.trustStore=$JMX_TRUSTSTORE -Djavax.net.ssl.trustStorePassword=$JMX_TRUSTSTORE_PASS -Dcom.sun.management.jmxremote.ssl.need.client.auth=true\""
+        fi
+        
+        # now replace
+        sed -i '/SPM_MONITOR_JMX_PARAMS=\"\"/c\'"$REPLACEMENT_JMX_LINE"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+      fi
+    else
+      sed -i '/SPM_MONITOR_IN_PROCESS=/c\'"SPM_MONITOR_IN_PROCESS=\"true\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+      sed -i '/THREAD_INSTRUMENTATION_ENABLED=/c\'"THREAD_INSTRUMENTATION_ENABLED=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+    fi
+        
+    for addProp in "${ADDITIONAL_PARAMS[@]}"; do
+      propName=$(echo $addProp | awk -F = '{ print $1 }')
+      
+      if [ "$propName" == "$addProp" ]; then
+        echo "Invalid property definition: $addProp"
+      else
+        grep -v "$propName=" $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties > $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties.tmp
+        mv $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties.tmp $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        chmod 777 $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        chown spmmon:spmmon $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        echo "" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        echo "$addProp" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+      fi
+    done
+    
+    # add collectors property as well
+    SPM_MONITOR_COLLECTORS="$APP_TYPE"
+    APP_TYPE_TAG="$APP_TYPE"
+    if [ "$APP_TYPE" == "solrcloud" ]; then
+      # solr and solrcloud have the same collector config dirs
+      SPM_MONITOR_COLLECTORS="solr"
+      APP_TYPE_TAG="solr"
+    elif [ "$APP_TYPE" == "es" ]; then
+      APP_TYPE_TAG="elasticsearch"
+    elif [ "$APP_TYPE" == "zk" ]; then
+      APP_TYPE_TAG="zookeeper"
+    fi
+    
+    case $APP_TYPE in
+      cassandra|hadoop|hbase|kafka|solr|solrcloud|spark|storm|tomcat|zk) 
+        SPM_MONITOR_COLLECTORS="$SPM_MONITOR_COLLECTORS,jvm"
+        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        ;;
+      es)
+        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        ;;
+      *)
+        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=false"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        ;;
+    esac
+
+    case $APP_TYPE in
+      storm|redis|haproxy)
+        echo "SPM_MONITOR_JAR=/opt/spm/spm-monitor/lib/spm-monitor-$APP_TYPE.jar" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+    esac
+    
+    echo -e "\nSPM_MONITOR_COLLECTORS=\"$SPM_MONITOR_COLLECTORS\"" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+
+    SPM_MONITOR_TAGS_REPLACEMENT="SPM_MONITOR_TAGS=\"appType:$APP_TYPE_TAG\""
+    sed -i '/SPM_MONITOR_TAGS=\"\"/c\'"$SPM_MONITOR_TAGS_REPLACEMENT"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+
+    # set JAVA_DEFAULTS
+    if [ "standalone" == "$MONITOR_TYPE" ]; then
+      case $APP_TYPE in
+        es|solr|solrcloud)
+          echo -e "\n# DO NOT EDIT THE FOLLOWING PROPERTY!" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+          echo -e "JAVA_DEFAULTS=\"-server -Xmx320m -Xms64m -Xss256k\"" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        ;;
+      esac
+    fi
+    
+    if [ "standalone" == "$MONITOR_TYPE" ]; then
+      service spm-monitor restart
+    fi
+    
+    # separately set env properties if they were sent as params
+    ENV_PARAMS=""
+    if [ ! -z $REGION_PARAM ]; then
+      ENV_PARAMS="$ENV_PARAMS --region $REGION_PARAM"
+    fi
+    if [ ! -z $SPM_TRACING_RECEIVER_URL_PARAM ]; then
+      ENV_PARAMS="$ENV_PARAMS --tracing-receiver $SPM_TRACING_RECEIVER_URL_PARAM"
+    fi
+    if [ ! -z $SPM_METRICS_RECEIVER_URL_PARAM ]; then
+      ENV_PARAMS="$ENV_PARAMS --metrics-receiver $SPM_METRICS_RECEIVER_URL_PARAM"
+    fi
+    if [ ! -z "$ENV_PARAMS" ]; then
+      bash ./setup-env $ENV_PARAMS
+    fi
+}
+
+echo "Setting up application monitor config..."
+setup_conf "$@"
+
+echo "Config setup ok" 
