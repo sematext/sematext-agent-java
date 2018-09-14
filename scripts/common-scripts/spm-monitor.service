@@ -1,0 +1,14 @@
+[Unit]
+Description=SPM Monitor
+After=local-fs.target network-online.target
+Requires=local-fs.target network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=-/bin/systemctl daemon-reload
+ExecStop=/bin/systemctl stop spm-monitor-starter
+ExecStart=/bin/systemctl start spm-monitor-starter
+
+[Install]
+WantedBy=multi-user.target
