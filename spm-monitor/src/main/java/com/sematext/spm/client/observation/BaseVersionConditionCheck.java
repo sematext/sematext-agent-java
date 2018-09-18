@@ -34,8 +34,8 @@ public abstract class BaseVersionConditionCheck extends BeanConditionCheck {
   private static final long VERSION_CACHE_INTERVAL = 1 * 60 * 1000;
 
   // caches of read versions where key is className
-  private static final Map<String, Long> LAST_VERSION_READ_TIMES = new UnifiedMap<String, Long>();
-  private static final Map<String, String> LAST_READ_VERSIONS = new UnifiedMap<String, String>();
+  protected static final Map<String, Long> LAST_VERSION_READ_TIMES = new UnifiedMap<String, Long>();
+  protected static final Map<String, String> LAST_READ_VERSIONS = new UnifiedMap<String, String>();
 
   @Override
   protected boolean clauseSatisfies(String readVersionNumber, String expectedValue) {
