@@ -120,22 +120,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk-ec2</artifactId>
-      <version>1.10.12</version>
-      <scope>${common.lib.scope}</scope>
-    </dependency>
-
-
-    <!--  spm-sender would need this one -->
-    <!-- dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.1.1</version>
-      <type>jar</type>
-    </dependency-->
-
-    <dependency>
       <groupId>org.eclipse.collections</groupId>
       <artifactId>eclipse-collections-api</artifactId>
       <version>7.0.0</version>
