@@ -1,4 +1,3 @@
-spm-client
 Copyright (c) 2018 Sematext Group, Inc. - All Rights Reserved
 
 Sematext licenses spm-client to you under the Apache License, Version
