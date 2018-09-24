@@ -54,7 +54,7 @@ cp $FPM_PATH/../common-scripts/move-spm-home-dir.sh $IMAGE_PATH/opt/spm/bin
 cp $FPM_PATH/../common-scripts/move-spm-home-dir-soft.sh $IMAGE_PATH/opt/spm/bin
 cp $FPM_PATH/../common-scripts/spm-remove-application.sh $IMAGE_PATH/opt/spm/bin
 cp $FPM_PATH/../conf/agent.properties $IMAGE_PATH/opt/spm/properties/agent.base.properties
-cp $FPM_PATH/../conf/tracing.properties $IMAGE_PATH/opt/spm/properties
+cp $FPM_PATH/../conf/tracing.properties $IMAGE_PATH/opt/spm/properties/tracing.base.properties
 cp $FPM_PATH/../conf/java.properties $IMAGE_PATH/opt/spm/properties
 cp $FPM_PATH/../conf/*-region.properties $IMAGE_PATH/opt/spm/properties
 cp $FPM_PATH/../common-scripts/run-jmxc.sh $IMAGE_PATH/opt/spm/bin
@@ -64,7 +64,7 @@ chmod +x $IMAGE_PATH/opt/spm/bin/*.sh
 chmod +x $IMAGE_PATH/opt/spm/bin/spm-diag
 chmod +x $IMAGE_PATH/opt/spm/bin/setup-spm
 chmod +x $IMAGE_PATH/opt/spm/bin/setup-env
-chmod -R 777 $IMAGE_PATH/opt/spm/spm-monitor/collectors/
+chmod -R a+rwX $IMAGE_PATH/opt/spm/spm-monitor/collectors/
 
 cp $FPM_PATH/../conf/monitor-template-config.properties $IMAGE_PATH/opt/spm/spm-monitor/templates/
 

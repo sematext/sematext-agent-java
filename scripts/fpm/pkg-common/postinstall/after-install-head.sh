@@ -28,6 +28,15 @@ else
 fi
 chmod 644 $SPM_HOME/properties/agent.properties
 
+if [ -e $SPM_HOME/properties/tracing.properties ]; then
+  echo "Keeping existing tracing.properties"
+  rm $SPM_HOME/properties/tracing.base.properties
+else
+  echo "Preparing new tracing.properties"
+  mv $SPM_HOME/properties/tracing.base.properties $SPM_HOME/properties/tracing.properties
+fi
+chmod 644 $SPM_HOME/properties/tracing.properties
+
 #Spm monitor
 chown -R spmmon $SPM_HOME/spm-monitor
 chmod 755 $SPM_HOME/spm-monitor/bin/spm-monitor-generator.py
