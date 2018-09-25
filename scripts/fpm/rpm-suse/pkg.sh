@@ -34,7 +34,7 @@ fpm -s dir \
   --template-value distr=suse \
   --template-value init=init \
   --config-files /opt/spm/properties/java.properties \
-  --config-files /opt/spm/properties/tracing.properties \
+  --config-files /opt/spm/spm-monitor/collectors \
   -d 'cron' \
   -d 'ntp' \
   -d 'python' \

@@ -34,7 +34,7 @@ fpm -s dir \
   --template-value distr=centos \
   --template-value init=systemd \
   --config-files /opt/spm/properties/java.properties \
-  --config-files /opt/spm/properties/tracing.properties \
+  --config-files /opt/spm/spm-monitor/collectors \
   -d 'cronie' \
   -d 'ntp' \
   -d 'python' \
