@@ -1,6 +1,5 @@
 sudo: required
 language: java
-jdk: openjdk6
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install ruby ruby-dev rubygems-integration build-essential
