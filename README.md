@@ -1,5 +1,7 @@
 # Sematext Java Agent
 
+[![Build Status](https://travis-ci.org/sematext/sematext-agent-java.svg?branch=master)](https://travis-ci.org/sematext/sematext-agent-java)
+
 TODO
 
 ## Built-in functions

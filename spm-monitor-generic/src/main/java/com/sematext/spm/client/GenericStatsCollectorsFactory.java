@@ -88,7 +88,7 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
                                                         MonitorConfig monitorConfig)
       throws StatsCollectorBadConfigurationException {
     try {
-      final String jvmName = monitorConfig.getJvmName2();
+      final String jvmName = monitorConfig.getJvmName();
       final String appToken = monitorConfig.getAppToken();
       final String subType = monitorConfig.getSubType();
 
