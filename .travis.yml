@@ -1,4 +1,5 @@
 sudo: required
+language: java
 jdk: openjdk6
 before_install:
   - sudo apt-get update -qq
@@ -8,4 +9,5 @@ before_install:
   - wget http://www.us.apache.org/dist/thrift/0.9.3/thrift-0.9.3.tar.gz
   - tar xfz thrift-0.9.3.tar.gz
   - cd thrift-0.9.3 && ./configure --enable-libs=no  && sudo make install
-script: ./build.sh
+script:
+  - cd $TRAVIS_BUILD_DIR && ./build.sh
