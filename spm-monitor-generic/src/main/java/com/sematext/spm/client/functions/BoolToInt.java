@@ -22,12 +22,16 @@ package com.sematext.spm.client.functions;
 
 import java.util.Map;
 
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.observation.CalculationFunction;
 
 /**
  * Converts bool value to 0 or 1
  */
 public class BoolToInt implements CalculationFunction {
+  private static final Log LOG = LogFactory.getLog(BoolToInt.class);
+  
   @Override public Object calculateAttribute(Map<String, Object> metrics, Object... params) {
     if (params != null && params.length == 1) {
       String metricName = params[0].toString();
@@ -38,14 +42,16 @@ public class BoolToInt implements CalculationFunction {
         } else if (metricValue instanceof String) {
           return Boolean.parseBoolean((String) metricValue) ? 1 : 0;
         } else {
-          throw new IllegalArgumentException(String.format("Value of unkwnown type: %s", metricValue));
+          LOG.warn(String.format("Value of unkwnown type: %s", metricValue));
         }
       } else {
-        throw new IllegalArgumentException(String.format("Cannot find %s in metrics", metricName));
+        LOG.warn(String.format("Cannot find %s in metrics", metricName));
       }
     } else {
       throw new IllegalArgumentException("Missing metric name and multiplication factor in params");
     }
+    
+    return null;
   }
 
   @Override public String calculateTag(Map<String, String> objectNameTags, Object... params) {

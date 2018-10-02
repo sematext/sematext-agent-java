@@ -22,6 +22,8 @@ package com.sematext.spm.client.functions;
 
 import java.util.Map;
 
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.observation.CalculationFunction;
 
 /**
@@ -36,6 +38,7 @@ import com.sematext.spm.client.observation.CalculationFunction;
  * Values can be literal like 55L or 55d or refer to other metrics like metric:name
  */
 public class IfThenElse implements CalculationFunction {
+  private static final Log LOG = LogFactory.getLog(IfThenElse.class);
   @Override public Object calculateAttribute(Map<String, Object> metrics, Object... params) {
     return calculateValue(metrics, params);
   }
@@ -48,7 +51,8 @@ public class IfThenElse implements CalculationFunction {
     if (metrics.get(metricName) != null) {
       return compareNumber(metrics, metricName, params);
     } else {
-      throw new IllegalArgumentException("Cannot find metric " + metricName);
+      LOG.warn("Cannot find metric " + metricName);
+      return null;
     }
   }
 
@@ -95,7 +99,8 @@ public class IfThenElse implements CalculationFunction {
       if (metrics.get(metricName) != null) {
         return metrics.get(metricName);
       } else {
-        throw new IllegalArgumentException("Cannot find metric " + metricName);
+        LOG.warn("Cannot find metric " + metricName);
+        return null;
       }
     } else {
       if (argValue.endsWith("l") ||

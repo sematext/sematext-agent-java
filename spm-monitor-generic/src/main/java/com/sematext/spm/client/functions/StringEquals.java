@@ -22,6 +22,8 @@ package com.sematext.spm.client.functions;
 
 import java.util.Map;
 
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.observation.CalculationFunction;
 
 /**
@@ -31,6 +33,8 @@ import com.sematext.spm.client.observation.CalculationFunction;
  * e.g. func:StringEquals(field,foo)
  */
 public class StringEquals implements CalculationFunction {
+  private static final Log LOG = LogFactory.getLog(StringEquals.class);
+  
   @Override public Object calculateAttribute(Map<String, Object> metrics, Object... params) {
     if (params != null && (params.length == 2 || params.length == 3) && params[0] != null && params[1] != null) {
       String metricName = params[0].toString();
@@ -46,11 +50,12 @@ public class StringEquals implements CalculationFunction {
           return metricValue.toString().equals(params[1].toString()) ? 1 : 0;
         }
       } else {
-        throw new IllegalArgumentException(String.format("Cannot find %s in metrics", metricName));
+        LOG.warn(String.format("Cannot find %s in metrics", metricName));
       }
     } else {
       throw new IllegalArgumentException("Missing metric name and value to compare in params");
     }
+    return null;
   }
 
   @Override public String calculateTag(Map<String, String> objectNameTags, Object... params) {
