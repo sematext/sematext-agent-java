@@ -42,7 +42,7 @@ public class BoolToInt implements CalculationFunction {
         } else if (metricValue instanceof String) {
           return Boolean.parseBoolean((String) metricValue) ? 1 : 0;
         } else {
-          LOG.warn(String.format("Value of unkwnown type: %s", metricValue));
+          LOG.warn(String.format("Value of unknown type: %s", metricValue));
         }
       } else {
         LOG.warn(String.format("Cannot find %s in metrics", metricName));

@@ -209,18 +209,14 @@ function setup_conf {
       # solr and solrcloud have the same collector config dirs
       SPM_MONITOR_COLLECTORS="solr"
       APP_TYPE_TAG="solr"
-    elif [ "$APP_TYPE" == "es" ]; then
-      APP_TYPE_TAG="elasticsearch"
-    elif [ "$APP_TYPE" == "zk" ]; then
-      APP_TYPE_TAG="zookeeper"
     fi
     
     case $APP_TYPE in
-      cassandra|hadoop|hbase|kafka|solr|solrcloud|spark|storm|tomcat|zk) 
+      cassandra|hadoop|hbase|kafka|solr|solrcloud|spark|storm|tomcat|zookeeper)
         SPM_MONITOR_COLLECTORS="$SPM_MONITOR_COLLECTORS,jvm"
         sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
         ;;
-      es)
+      elasticsearch)
         sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
         ;;
       *)

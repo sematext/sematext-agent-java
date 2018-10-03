@@ -21,6 +21,7 @@
 package com.sematext.spm.client.functions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -50,12 +51,12 @@ public class BoolToIntTest {
     ), "testField"));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testThrowException() {
+  @Test
+  public void testNull() {
     BoolToInt func = new BoolToInt();
 
-    func.calculateAttribute(ImmutableMap.of(
+    assertNull(func.calculateAttribute(ImmutableMap.of(
         "testField", (Object) Arrays.asList("123")
-    ), "testField");
+    ), "testField"));
   }
 }

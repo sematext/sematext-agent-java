@@ -51,7 +51,6 @@ rm /tmp/configs.tar
 cp $FPM_PATH/spm-client-diagnostics.sh $IMAGE_PATH/opt/spm/bin
 cp $FPM_PATH/spm-diag $IMAGE_PATH/opt/spm/bin
 cp $FPM_PATH/../common-scripts/env.sh $IMAGE_PATH/opt/spm/bin
-cp $FPM_PATH/../common-scripts/move-spm-home-dir.sh $IMAGE_PATH/opt/spm/bin
 cp $FPM_PATH/../common-scripts/move-spm-home-dir-soft.sh $IMAGE_PATH/opt/spm/bin
 cp $FPM_PATH/../common-scripts/spm-remove-application.sh $IMAGE_PATH/opt/spm/bin
 cp $FPM_PATH/../conf/agent.properties $IMAGE_PATH/opt/spm/properties/agent.base.properties
