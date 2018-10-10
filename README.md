@@ -15,7 +15,7 @@ Currently supported data sources are:
 Sematext App Agent uses Influx Line Protocol to ship the metrics. The metrics collected by the agent can be shipped to
 any Influx Line Protocol complaint endpoints like InfluxDB. You can also add support to other output formats like Elasticsearch, etc.
 
-The agent support number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
+The agent supports number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
 sending it to output. You can also plugin-in custom functions. 
 
 ## Getting Started
@@ -32,7 +32,22 @@ To build Sematext App Agent you need:
 After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions.
 
 ### Setup
-The packages built can be installed using OS specific package manager like dpkg, yum, etc. 
+The packages can be installed using OS specific package manager like dpkg, yum, etc. Once installed new App can be 
+setup by running `setup-spm` command. e.g. To setup monitoring for JVM application in standalone mode, add 
+`-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=3000 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false`
+command line arguments to the Java startup process. And you can setup new app by running following command:
+
+```bash
+sudo bash /opt/spm/bin/setup-spm  \
+    --app-token <app-token>   \
+    --app-type jvm  \
+    --agent-type standalone \
+    --jmx-params '-Dspm.remote.jmx.url=localhost:3000'
+``` 
+
+`<app-token>` - Sematext App Token. App Token is required if you are sending metrics to Sematext. For other Influx endpoints
+you can specify a dummy value like `xxxx-xxxx-xxxx-xxxxxx-xxx`. Make sure the token value is unique for each application 
+that needs to be monitored in a host. 
 
 Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to setup and 
 configure agent to ship metrics.
