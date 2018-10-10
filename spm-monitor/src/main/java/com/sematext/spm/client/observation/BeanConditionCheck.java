@@ -56,6 +56,7 @@ public abstract class BeanConditionCheck {
       LOG.error("For " + this.getClass() + " countNeededMatches (" + countNeededMatches
                     + ") is bigger than number of clauses (" +
                     requiredValues.size() + "): " + requiredValuesString);
+      return false;
     }
 
     String conditionValue = getConditionValue();

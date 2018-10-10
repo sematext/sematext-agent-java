@@ -22,6 +22,9 @@ package com.sematext.spm.client.functions;
 
 import java.util.Map;
 
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
+
 /**
  * Compare strings and returns string value if literal or metrics value data type
  * func:IfThenElseString(webapp_name,, /, tag:webapp_name,true)
@@ -31,6 +34,7 @@ import java.util.Map;
  * Values can be literal like `hello` or `a` or refer to other metrics like metric:name
  */
 public class IfThenElseString extends IfThenElse {
+  private static final Log LOG = LogFactory.getLog(IfThenElseString.class);
 
   @Override public Object calculateAttribute(Map<String, Object> metrics, Object... params) {
     return calculateValue(metrics, params);
@@ -62,7 +66,8 @@ public class IfThenElseString extends IfThenElse {
         return valueToReturnIfFalse;
       }
     } else {
-      throw new IllegalArgumentException("Cannot find metric " + metricName);
+      LOG.warn("Cannot find metric " + metricName);
+      return null;
     }
   }
 
@@ -72,7 +77,8 @@ public class IfThenElseString extends IfThenElse {
       if (metrics.get(metricName) != null) {
         return metrics.get(metricName);
       } else {
-        throw new IllegalArgumentException("Cannot find metric " + metricName);
+        LOG.warn("Cannot find metric " + metricName);
+        return null;
       }
     } else {
       return argValue;

@@ -49,13 +49,6 @@ public abstract class StatsCollector<T> {
 
         @Override
         public T apply(StatValues statValues) {
-          // do 0-stats row filtering here
-          // NOTE: meaningless for generic agent
-//          if (ignorableIfZeroRow() && statValues.isZeroRow()) {
-//            return null;
-//          } else if (ignorableIfNullRow() && statValues.isNullRow()) {
-//            return null;
-//          } else {
           if (statValues.isNullRow()) {
             return null;
           } else {
@@ -63,7 +56,6 @@ public abstract class StatsCollector<T> {
 
             return tmp;
           }
-//          }
         }
       });
 

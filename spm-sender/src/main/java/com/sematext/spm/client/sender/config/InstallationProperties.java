@@ -249,7 +249,7 @@ public final class InstallationProperties {
 
   public static InstallationProperties loadSpmSenderInstallationProperties(Configuration config) {
     final File dir = new File(config.getPropertiesDir());
-    final File spmProperties = new File(dir, "spm-sender.properties");
+    final File spmProperties = new File(dir, "agent.properties");
     final List<File> propertyFiles = Lists.newArrayList();
     final List<File> legacyPropertyFiles = Lists.newArrayList();
     final File[] files = dir.listFiles();
@@ -272,8 +272,10 @@ public final class InstallationProperties {
       propertyFiles.addAll(legacyPropertyFiles);
     }
     final Map<String, String> defaults = new UnifiedMap<String, String>();
-    defaults.put("spm_sender_receiver_url", config.getDefaultReceiverUrl());
-    defaults.put("spm_sender_receiver_metrics_path", config.getDefaultMetricsPath());
+    defaults.put("server_base_url", config.getDefaultReceiverUrl());
+    defaults.put("metrics_endpoint", config.getDefaultMetricsEndpoint());
+    defaults.put("tags_endpoint", config.getDefaultTagsEndpoint());
+    defaults.put("metainfo_endpoint", config.getDefaultMetainfoEndpoint());
 
     LOG.info("Using installation properties: " + propertyFiles + ".");
     return new InstallationProperties(new FileLoader(propertyFiles), defaults);

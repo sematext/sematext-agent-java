@@ -21,12 +21,16 @@ package com.sematext.spm.client.functions;
 
 import java.util.Map;
 
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.observation.CalculationFunction;
 
 /**
  * Returns time in ms passed since event was accured. So simple calculate now()-eventTime
  */
 public class TimeSince implements CalculationFunction {
+  private static final Log LOG = LogFactory.getLog(TimeSince.class);
+  
   @Override
   public Object calculateAttribute(Map<String, Object> metrics, Object... params) {
     if (params != null && params.length == 1) {
@@ -38,10 +42,12 @@ public class TimeSince implements CalculationFunction {
           //we don't want to see negative delay if there is clocks synchronization problem
           return timeSinceNow < 0 ? 0 : timeSinceNow;
         } else {
-          throw new IllegalArgumentException(String.format("Value of unsupported type: %s", metricValue));
+          LOG.warn(String.format("Value of unsupported type: %s", metricValue));
+          return null;
         }
       } else {
-        throw new IllegalArgumentException(String.format("Cannot find %s in metrics", metricName));
+        LOG.warn(String.format("Cannot find %s in metrics", metricName));
+        return null;
       }
     } else {
       throw new IllegalArgumentException("Missing metric name in params");

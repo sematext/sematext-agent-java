@@ -22,6 +22,8 @@ package com.sematext.spm.client.functions;
 
 import java.util.Map;
 
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.observation.CalculationFunction;
 
 /**
@@ -29,6 +31,8 @@ import com.sematext.spm.client.observation.CalculationFunction;
  * e.g. func:Multiply(cache.size.kb,1024)
  */
 public class DoubleMultiplyWithConstant implements CalculationFunction {
+  private static final Log LOG = LogFactory.getLog(DoubleMultiplyWithConstant.class);
+  
   @Override public Object calculateAttribute(Map<String, Object> metrics, Object... params) {
     if (params != null && params.length == 2) {
       String metricName = params[0].toString();
@@ -37,11 +41,12 @@ public class DoubleMultiplyWithConstant implements CalculationFunction {
       if (metricValue != null) {
         return ((Number) metricValue).doubleValue() * multiplicationFactor;
       } else {
-        throw new IllegalArgumentException("Cannot find " + metricName + " in metrics");
+        LOG.warn("Cannot find " + metricName + " in metrics");
       }
     } else {
       throw new IllegalArgumentException("Missing metric name and multiplication factor in params");
     }
+    return null;
   }
 
   @Override public String calculateTag(Map<String, String> objectNameTags, Object... params) {

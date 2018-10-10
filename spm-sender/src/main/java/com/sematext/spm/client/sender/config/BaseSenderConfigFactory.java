@@ -45,16 +45,18 @@ public abstract class BaseSenderConfigFactory implements SenderConfigFactory {
     final Map<String, String> properties = getProperties();
 
     final SenderConfig.Builder builder = new SenderConfig.Builder();
-    builder.setFlumeSubdir(getFlumeSubdir()).setSinkClass(properties.get("spm_sender_sink_class"))
-        .setContentType(getContentType()).
-        setReceiverUrl(properties.get("spm_sender_receiver_url"))
-        .setReceiverMetricsPath(properties.get("spm_sender_receiver_metrics_path")).
-        setProxyHost(properties.get("spm_sender_proxy_host"))
-        .setProxyPort(properties.get("spm_sender_proxy_port") != null &&
-                          !properties.get("spm_sender_proxy_port").trim().equals("") ?
-                          Integer.valueOf(properties.get("spm_sender_proxy_port").trim()) : null).
-        setProxyUser(properties.get("spm_sender_proxy_user_name"))
-        .setProxyPassword(properties.get("spm_sender_proxy_password"));
+    builder.setFlumeSubdir(getFlumeSubdir()).setSinkClass(properties.get("spm_sender_sink_class")).
+        setContentType(getContentType()).
+        setReceiverUrl(properties.get("server_base_url")).
+        setMetricsEndpoint(properties.get("metrics_endpoint")).
+        setTagsEndpoint(properties.get("tags_endpoint")).
+        setMetainfoEndpoint(properties.get("metainfo_endpoint")).
+        setProxyHost(properties.get("proxy_host")).
+        setProxyPort(properties.get("proxy_port") != null &&
+                          !properties.get("proxy_port").trim().equals("") ?
+                          Integer.valueOf(properties.get("proxy_port").trim()) : null).
+        setProxyUser(properties.get("proxy_user_name")).
+        setProxyPassword(properties.get("proxy_password"));
 
     postProcess(builder);
 

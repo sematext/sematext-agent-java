@@ -47,11 +47,37 @@ public class BaseVersionConditionCheckTest {
     // this one fails, but it is questionable how it should behave since 1.rc1 would be very atypical version number
     // Assert.assertEquals(false, check.clauseSatisfies("1.rc1", "1.11-*"));
   }
+  
+  @Test
+  public void testSatisfies() {
+    BaseVersionConditionCheckDummy check = new BaseVersionConditionCheckDummy(1, "7-7.3 || 7.4.1-*", "7.4.1");
+    Assert.assertEquals(true, check.satisfies());
+
+    check = new BaseVersionConditionCheckDummy(1, "7-7.3 || 7.4.1-*", "8.0");
+    Assert.assertEquals(true, check.satisfies());
+
+    // reset maps so test works properly
+    BaseVersionConditionCheck.LAST_READ_VERSIONS.clear();
+    BaseVersionConditionCheck.LAST_VERSION_READ_TIMES.clear();
+    check = new BaseVersionConditionCheckDummy(1, "7-7.3 || 7.4.1-*", "7.4");
+    Assert.assertEquals(false, check.satisfies());
+  }
 }
 
 class BaseVersionConditionCheckDummy extends BaseVersionConditionCheck {
+  public String value;
+  
+  public BaseVersionConditionCheckDummy() {
+  }
+  
+  public BaseVersionConditionCheckDummy(int countMatches, String requiredValues, String value) {
+    setCountNeededMatches(countMatches);
+    setRequiredValuesString(requiredValues);
+    this.value = value;
+  }
+  
   @Override
   protected String readVersion() {
-    return null;
+    return value;
   }
 }

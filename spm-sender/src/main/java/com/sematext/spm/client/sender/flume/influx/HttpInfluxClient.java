@@ -53,23 +53,23 @@ public class HttpInfluxClient extends InfluxClient {
 
   private HttpClient httpClient;
   private String fixedFullUrl;
-  private String hostname;
+  private String baseServerUrl;
   private RequestConfig requestConfig;
 
-  public HttpInfluxClient(String hostname, String contextRoot,
+  public HttpInfluxClient(String baseServerUrl, String urlPath,
                           Map<String, String> urlParams, ProxyContext proxyContext) {
     boolean useHttps = false;
 
-    if (!hostname.contains("http://") && !hostname.contains("https://")) {
-      hostname = "http://" + hostname;
+    if (!baseServerUrl.contains("http://") && !baseServerUrl.contains("https://")) {
+      baseServerUrl = "http://" + baseServerUrl;
     }
 
-    if (hostname.contains("https://")) {
+    if (baseServerUrl.contains("https://")) {
       useHttps = true;
 
       // when https is used without specifying port, we have to append port 443 manually (otherwise
       // "connection refused" errors can happen
-      String tmp = hostname.substring("https://".length());
+      String tmp = baseServerUrl.substring("https://".length());
 
       String host = null;
       String rest = null;
@@ -86,15 +86,15 @@ public class HttpInfluxClient extends InfluxClient {
         host = host + ":443";
       }
 
-      hostname = "https://" + host + rest;
+      baseServerUrl = "https://" + host + rest;
     }
 
-    this.hostname = hostname;
+    this.baseServerUrl = baseServerUrl;
 
     httpClient = createHttpClient(useHttps, proxyContext);
 
     this.urlParams = urlParams;
-    this.contextRoot = contextRoot;
+    this.urlPath = urlPath;
 
     initializeUrlVariables();
   }
@@ -208,12 +208,11 @@ public class HttpInfluxClient extends InfluxClient {
   @Override
   protected void initializeUrlVariables() {
     this.urlParamsString = createUrlParamsString();
-    this.fixedFullUrl = getBulkUrl(hostname);
+    this.fixedFullUrl = getBulkUrl(baseServerUrl, urlPath, urlParamsString);
   }
 
   private String createUrlParamsString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("?");
 
     for (String key : urlParams.keySet()) {
       if (InfluxClient.URL_PARAM_VERSION.equals(key) || InfluxClient.URL_PARAM_CONTENT_TYPE.equals(key) ||
@@ -228,8 +227,15 @@ public class HttpInfluxClient extends InfluxClient {
     return sb.toString();
   }
 
-  private String getBulkUrl(String host) {
-    return host + "/" + (contextRoot != null ? contextRoot : "") + urlParamsString;
+  public static String getBulkUrl(String baseServerUrl, String urlPath, String urlParamsString) {
+    String url = baseServerUrl + (baseServerUrl.endsWith("/") ? "" : (urlPath.equals("") ? "" : "/")) +
+        (urlPath != null ? (urlPath.startsWith("/") ? urlPath.substring(1) : urlPath) : "");
+    
+    url = url + (url.indexOf("?") == -1 ? "?" + urlParamsString : 
+      (url.indexOf("?") == url.length() - 1 ? urlParamsString :
+        (url.endsWith("&") || urlParamsString.startsWith("&") ? urlParamsString : "&" + urlParamsString)));
+   
+    return url;
   }
 
   @Override

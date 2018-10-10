@@ -20,30 +20,38 @@
 package com.sematext.spm.client.haproxy.factory;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
+
+import org.eclipse.collections.impl.list.mutable.FastList;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.sematext.spm.client.HeartbeatStatsCollector;
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.MonitorConfig;
 import com.sematext.spm.client.MonitorUtil;
+import com.sematext.spm.client.Serializer;
 import com.sematext.spm.client.StatsCollector;
+import com.sematext.spm.client.StatsCollectorBadConfigurationException;
 import com.sematext.spm.client.StatsCollectorsFactory;
 import com.sematext.spm.client.haproxy.collector.HAProxyStatsCollector;
 import com.sematext.spm.client.http.HttpDataSourceAuthentication;
 import com.sematext.spm.client.http.HttpDataSourceBasicAuthentication;
 import com.sematext.spm.client.http.ServerInfo;
+import com.sematext.spm.client.util.CollectionUtils.FunctionT;
 
-public class HAProxyStatsFactory extends StatsCollectorsFactory<StatsCollector<String>> {
+public class HAProxyStatsFactory extends StatsCollectorsFactory<StatsCollector<?>> {
+  private static final Log LOG = LogFactory.getLog(HAProxyStatsFactory.class);
 
-  private List<HAProxyStatsCollector> collectors;
+  private List<StatsCollector<?>> collectors;
 
   @Override
-  public Collection<? extends StatsCollector<String>> create(Properties monitorProperties,
-                                                             List<? extends StatsCollector<String>> currentCollectors,
-                                                             MonitorConfig monitorConfig) {
+  public Collection<? extends StatsCollector<?>> create(Properties monitorProperties,
+                                                             List<? extends StatsCollector<?>> currentCollectors,
+                                                             final MonitorConfig monitorConfig) {
     if (collectors == null) {
       String statsUrl = MonitorUtil.stripQuotes(monitorProperties
                                                     .getProperty("SPM_MONITOR_HAPROXY_STATS_URL", "http://localhost/haproxy_stats;csv")
@@ -60,10 +68,24 @@ public class HAProxyStatsFactory extends StatsCollectorsFactory<StatsCollector<S
 
       ServerInfo serverInfo = new ServerInfo(statsUrl, null, null, user, password);
 
-      collectors = Lists
-          .newArrayList(new HAProxyStatsCollector(serverInfo, statsUrl, auth, monitorConfig.getAppToken(), monitorConfig
-              .getJvmName(),
-                                                  monitorConfig.getSubType()));
+      collectors = new FastList<StatsCollector<?>>();
+      collectors.add(new HAProxyStatsCollector(serverInfo, statsUrl, auth, monitorConfig.getAppToken(), monitorConfig
+              .getJvmName(), monitorConfig.getSubType()));
+      
+      // as last collector add HeartbeatCollector
+      try {
+        updateCollector(currentCollectors, collectors, HeartbeatStatsCollector.class, monitorConfig.getJvmName(),
+            new FunctionT<String, HeartbeatStatsCollector, StatsCollectorBadConfigurationException>() {
+              @Override
+              public HeartbeatStatsCollector apply(String id) {
+                return new HeartbeatStatsCollector(
+                    Serializer.INFLUX, monitorConfig.getAppToken(), monitorConfig.getJvmName(), monitorConfig.getSubType());
+              }
+            });
+      } catch (StatsCollectorBadConfigurationException e) {
+        // just log
+        LOG.error("Couldn't add HeartbeatStatsCollector", e);
+      }      
     }
 
     return collectors;

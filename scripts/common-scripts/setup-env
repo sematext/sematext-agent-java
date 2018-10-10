@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+
+function support {
+    echo
+    echo "If you are having difficulties installing SPM, we want to help you!"
+    echo " * email spm-support@sematext.com"
+    echo " * ping @sematext on Twitter"
+    echo " * call +1 347 480 1610"
+    echo
+}
+
+function parse_param {
+  TMP_PARAM=$1
+  
+  if [[ "$TMP_PARAM" == --* ]]; then
+    CURRENT_PARAM_NAME=${TMP_PARAM:2}
+  else
+    CURRENT_PARAM_VALUE=$TMP_PARAM
+    
+    if [ -z $CURRENT_PARAM_NAME ]; then
+      echo "WARN: Found param value $CURRENT_PARAM_VALUE without preceding param name"
+    else
+      if [ "$CURRENT_PARAM_NAME" == "region" ]; then
+        REGION_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "tracing-receiver" ]; then
+        SPM_TRACING_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "metrics-receiver" ]; then
+        SPM_METRICS_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "proxy-host" ]; then
+        PROXY_HOST_PARAM_SET=true
+        PROXY_HOST_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "proxy-port" ]; then
+        PROXY_PORT_PARAM_SET=true
+        PROXY_PORT_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "proxy-user" ]; then
+        PROXY_USER_PARAM_SET=true
+        PROXY_USER_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "proxy-password" ]; then
+        PROXY_PASSWORD_PARAM_SET=true
+        PROXY_PASSWORD_PARAM=$CURRENT_PARAM_VALUE
+      else
+        ADDITIONAL_PARAMS[${#ADDITIONAL_PARAMS[@]}]="$CURRENT_PARAM_NAME=$CURRENT_PARAM_VALUE"
+      fi
+    
+      CURRENT_PARAM_NAME=""
+      CURRENT_PARAM_VALUE=""
+    fi
+  fi
+}
+
+function setup_env {
+    cd $( cd "$( dirname "$0" )" && pwd )
+    . env.sh
+
+    if [ -z "$SPM_HOME" ]
+    then
+      echo "Variable SPM_HOME not set, using default /opt/spm"
+      SPM_HOME="/opt/spm"
+    fi
+
+    while test ${#} -gt 0; do
+      parse_param "$1"
+      shift
+    done
+
+    if [ ! -z "$REGION_PARAM" ]; then
+      ADJUSTED_REGION=$(echo "$REGION_PARAM" | awk '{print tolower($0)}')
+      if [ "$ADJUSTED_REGION" == "us" ]; then
+        ADJUSTED_REGION="global"
+      fi
+      
+      PROPS_FILE=$SPM_HOME/properties/$ADJUSTED_REGION-region.properties
+      
+      if [ ! -f $PROPS_FILE ]; then
+        echo "Unknown region: $REGION_PARAM"
+        exit 1
+      fi
+      
+      . $PROPS_FILE
+      SED_SPM_METRICS_RECEIVER_URL=$(echo "$SPM_METRICS_RECEIVER_URL" | sed 's/\//\\\//g')
+      SED_SPM_TRACING_RECEIVER_URL=$(echo "$SPM_TRACING_RECEIVER_URL" | sed 's/\//\\\//g')
+
+      if `grep server_base_url $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SED_SPM_METRICS_RECEIVER_URL/" $SPM_HOME/properties/agent.properties
+      else
+        sudo echo "server_base_url=$SPM_METRICS_RECEIVER_URL" >> $SPM_HOME/properties/agent.properties
+      fi
+
+      if `grep server_base_url $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SED_SPM_TRACING_RECEIVER_URL/" $SPM_HOME/properties/tracing.properties
+      else
+        sudo echo "server_base_url=$SPM_TRACING_RECEIVER_URL" >> $SPM_HOME/properties/tracing.properties
+      fi
+    fi
+    
+    if [ ! -z "$SPM_TRACING_RECEIVER_URL_PARAM" ]; then
+      if `grep server_base_url $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
+        SPM_TRACING_RECEIVER_URL=$(echo "$SPM_TRACING_RECEIVER_URL_PARAM" | sed 's/\//\\\//g')
+        sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SPM_TRACING_RECEIVER_URL/" $SPM_HOME/properties/tracing.properties
+      else
+        sudo echo "server_base_url=$SPM_TRACING_RECEIVER_URL_PARAM" >> $SPM_HOME/properties/tracing.properties
+      fi
+    fi
+
+    if [ ! -z "$SPM_METRICS_RECEIVER_URL_PARAM" ]; then
+      if `grep server_base_url $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
+        SPM_METRICS_RECEIVER_URL=$(echo "$SPM_METRICS_RECEIVER_URL_PARAM" | sed 's/\//\\\//g')
+        sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SPM_METRICS_RECEIVER_URL/" $SPM_HOME/properties/agent.properties
+      else
+        sudo echo "server_base_url=$SPM_METRICS_RECEIVER_URL_PARAM" >> $SPM_HOME/properties/agent.properties
+      fi
+    fi
+    
+    if [ "true" == "$PROXY_HOST_PARAM_SET" ]; then
+      if `grep proxy_host $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*proxy_host.*/proxy_host=$PROXY_HOST_PARAM/" $SPM_HOME/properties/agent.properties
+      else
+        sudo echo "proxy_host=$PROXY_HOST_PARAM" >> $SPM_HOME/properties/agent.properties
+      fi
+      if `grep proxy_host $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*proxy_host.*/proxy_host=$PROXY_HOST_PARAM/" $SPM_HOME/properties/tracing.properties
+      else
+        sudo echo "proxy_host=$PROXY_HOST_PARAM" >> $SPM_HOME/properties/tracing.properties
+      fi
+    fi
+    if [ "true" == "$PROXY_PORT_PARAM_SET" ]; then
+      if `grep proxy_port $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*proxy_port.*/proxy_port=$PROXY_PORT_PARAM/" $SPM_HOME/properties/agent.properties
+      else
+        sudo echo "proxy_port=$PROXY_PORT_PARAM" >> $SPM_HOME/properties/agent.properties
+      fi
+      if `grep proxy_port $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*proxy_port.*/proxy_port=$PROXY_PORT_PARAM/" $SPM_HOME/properties/tracing.properties
+      else
+        sudo echo "proxy_port=$PROXY_PORT_PARAM" >> $SPM_HOME/properties/tracing.properties
+      fi
+    fi
+    if [ "true" == "$PROXY_USER_PARAM_SET" ]; then
+      if `grep proxy_user_name $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*proxy_user_name.*/proxy_user_name=$PROXY_USER_PARAM/" $SPM_HOME/properties/agent.properties
+      else
+        sudo echo "proxy_user_name=$PROXY_USER_PARAM" >> $SPM_HOME/properties/agent.properties
+      fi
+      if `grep proxy_user_name $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*proxy_user_name.*/proxy_user_name=$PROXY_USER_PARAM/" $SPM_HOME/properties/tracing.properties
+      else
+        sudo echo "proxy_user_name=$PROXY_USER_PARAM" >> $SPM_HOME/properties/tracing.properties
+      fi
+    fi
+    if [ "true" == "$PROXY_PASSWORD_PARAM_SET" ]; then
+      if `grep proxy_password $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*proxy_password.*/proxy_password=$PROXY_PASSWORD_PARAM/" $SPM_HOME/properties/agent.properties
+      else
+        sudo echo "proxy_password=$PROXY_PASSWORD_PARAM" >> $SPM_HOME/properties/agent.properties
+      fi
+      if `grep proxy_password $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
+        sudo sed -i -e "s/.*proxy_password.*/proxy_password=$PROXY_PASSWORD_PARAM/" $SPM_HOME/properties/tracing.properties
+      else
+        sudo echo "proxy_password=$PROXY_PASSWORD_PARAM" >> $SPM_HOME/properties/tracing.properties
+      fi
+    fi
+}
+
+echo "Setting up SPM client environment..."
+setup_env "$@"
+
+echo "Environment setup ok" 

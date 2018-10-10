@@ -24,6 +24,12 @@ import java.util.Map;
 import com.sematext.spm.client.observation.CalculationFunction;
 
 public class CalculateSolrFieldCacheTotalSize implements CalculationFunction {
+  private static long KB = 1024;
+  private static long MB = 1024 * KB;
+  private static long GB = 1024 * MB;
+  private static long TB = 1024 * GB;
+  private static long PB = 1024 * TB;
+  
   @Override
   public String calculateTag(Map<String, String> objectNameTags, Object... params) {
     throw new UnsupportedOperationException("Can't be used in tag context");
@@ -32,7 +38,25 @@ public class CalculateSolrFieldCacheTotalSize implements CalculationFunction {
   @Override
   public Number calculateAttribute(Map<String, Object> metrics, Object... params) {
     String size = (String) metrics.get("total_size");
-    //The value of field cache size will always be in bytes.
-    return Long.valueOf(size.split(" ")[0].trim());
+    
+    if (size == null) return null;
+    
+    String [] split = size.split(" "); 
+    double value = Double.valueOf(split[0].trim());
+    String unit = split[1].trim();
+    
+    if (unit.equalsIgnoreCase("kb")) {
+      return (long) (KB * value);
+    } else if (unit.equalsIgnoreCase("mb")) {
+      return (long) (MB * value);
+    } else if (unit.equalsIgnoreCase("gb")) {
+      return (long) (GB * value);
+    } else if (unit.equalsIgnoreCase("tb")) {
+      return (long) (TB * value);
+    } else if (unit.equalsIgnoreCase("pb")) {
+      return (long) (PB * value);
+    } else {
+      return value;
+    }
   }
 }

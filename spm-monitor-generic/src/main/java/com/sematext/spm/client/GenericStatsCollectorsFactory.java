@@ -25,7 +25,16 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -136,7 +145,9 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
       }
 
       // TODO externalize this a bit to live in separate handlers
-      if (types.contains("jvm")) {
+      // note: JvmNotifBasedGcStatsCollector depends on sun.management package which was moved to com.sun.management in
+      // Java 9 and also became internal API so --add-exports would also have to be used to make it available to agent
+      if (types.contains("jvm") && MonitorUtil.JAVA_MAJOR_VERSION < 9) {
         updateCollector(currentCollectors, collectors, JvmNotifBasedGcStatsCollector.class, jvmName,
                         new FunctionT<String, JvmNotifBasedGcStatsCollector, StatsCollectorBadConfigurationException>() {
                           @Override
@@ -148,7 +159,16 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
       }
 
       collectors = groupCollectorsByTags(collectors, monitorConfig);
-
+      
+      // as last collector add HeartbeatCollector
+      updateCollector(currentCollectors, collectors, HeartbeatStatsCollector.class, jvmName,
+          new FunctionT<String, HeartbeatStatsCollector, StatsCollectorBadConfigurationException>() {
+            @Override
+            public HeartbeatStatsCollector apply(String id) {
+              return new HeartbeatStatsCollector(Serializer.INFLUX, appToken, jvmName, subType);
+            }
+          });
+      
       int collectorsCount = StatsCollector.getCollectorsCount(collectors);
       if (collectorsCount < 50) {
         LOG.info("Created " + collectors.size() + " collectors : " + collectors);

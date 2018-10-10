@@ -58,7 +58,7 @@ public class StatsMetricsLogLineSender implements StatsLogLineBuilder<String, St
     return sortedHashMap;
   }
 
-  public static long COUNT = 0;
+  public static long TOTAL_COLLECTING_TIME = 0;
 
   @Override
   public String build(List<StatsCollector<String>> statsCollectors) {
@@ -80,61 +80,82 @@ public class StatsMetricsLogLineSender implements StatsLogLineBuilder<String, St
 
     Map<String, Long> collectingTimePerCollector = new HashMap<String, Long>();
 
-    COUNT = 0;
+    TOTAL_COLLECTING_TIME = 0;
+    
+    CollectionStats.CURRENT_RUN_GATHERED_LINES.set(0);
+    
     for (StatsCollector<String> collector : statsCollectors) {
       try {
-        long t1 = System.currentTimeMillis();
-        Iterator<String> data = collector.collect(null);
-        COUNT++;
-        long collectingTime = System.currentTimeMillis() - t1;
-
-        if (LOG.isDebugEnabled()) {
-          collectingTimePerCollector.put(collector.getId(), collectingTime);
-        }
-
-        totalCollectingTime += collectingTime;
-        t1 = System.currentTimeMillis();
-        while (data.hasNext()) {
-          // this handles stats logs
-          String statLine = data.next();
-          String spmLogLine = StatsLogLineFormat.buildSpmLogLineToSend(statLine, System.currentTimeMillis(),
-                                                                       collector.getSerializer()
-                                                                           .shouldGeneratePrefix());
-
-          // write to sender channel
-          Event newEvent = new SimpleEvent();
-          newEvent.setBody(spmLogLine.getBytes());
-          source.put(newEvent);
-
-          if (logLines) {
-            sb.append(spmLogLine).append(MonitorUtil.LINE_SEPARATOR);
-          }
-        }
+        int gatheredLines = processCollector(statsCollectors, source, logLines, sb,
+            collectingTimePerCollector, collector);
+        
+        CollectionStats.CURRENT_RUN_GATHERED_LINES.set(CollectionStats.CURRENT_RUN_GATHERED_LINES.get() + gatheredLines);
       } catch (ChannelException ce) {
         // handling channel errors, like channel-full
         // in this case we will stop further writing to the channel
         LOG.error("Failed to add stats line to flume channel, skipping writing of remaining lines", ce);
         break;
-      } catch (Throwable thr) {
-        // catching all exceptions here to prevent all stats gathering failure
-        if (statsCollectors != null && statsCollectors.size() < 50) {
-          LOG.error("Gathering stats failed, collector: " + collector + ", collectors: " + statsCollectors, thr);
-        } else {
-          LOG.error("Gathering stats failed, collector: " + collector, thr);
-        }
-        // DO NOTHING
       }
     }
 
     int totalCollectorsCount = StatsCollector.getCollectorsCount(statsCollectors);
     LOG.info(
-        "Collectors collecting time: " + totalCollectingTime + ", total time: " + (System.currentTimeMillis() - t0));
+        "Collectors collecting time: " + TOTAL_COLLECTING_TIME + ", total time: " + (System.currentTimeMillis() - t0));
     LOG.info("Collectors count: " + statsCollectors.size() + ", total collectors count: " + totalCollectorsCount);
     if (LOG.isDebugEnabled() && totalCollectorsCount < 500) {
       LOG.debug("Collecting time by collectors:\n" + sortByValues(collectingTimePerCollector));
     }
 
     return sb == null ? null : sb.toString();
+  }
+
+  public int processCollector(List<StatsCollector<String>> statsCollectors,
+      EmbeddedSource source, boolean logLines, StringBuilder sb, Map<String, Long> collectingTimePerCollector,
+      StatsCollector<String> collector) {
+    int countGatheredLines = 0;
+    
+    try {
+      long t1 = System.currentTimeMillis();
+      Iterator<String> data = collector.collect(null);
+      long collectingTime = System.currentTimeMillis() - t1;
+
+      if (LOG.isDebugEnabled()) {
+        collectingTimePerCollector.put(collector.getId(), collectingTime);
+      }
+
+      TOTAL_COLLECTING_TIME += collectingTime;
+      t1 = System.currentTimeMillis();
+      while (data.hasNext()) {
+        // this handles stats logs
+        String statLine = data.next();
+        String spmLogLine = StatsLogLineFormat.buildSpmLogLineToSend(statLine, System.currentTimeMillis(),
+                                                                     collector.getSerializer()
+                                                                         .shouldGeneratePrefix());
+        
+        countGatheredLines++;
+
+        // write to sender channel
+        Event newEvent = new SimpleEvent();
+        newEvent.setBody(spmLogLine.getBytes());
+        source.put(newEvent);
+
+        if (logLines) {
+          sb.append(spmLogLine).append(MonitorUtil.LINE_SEPARATOR);
+        }
+      }
+    } catch (ChannelException ce) {
+      throw ce;
+    } catch (Throwable thr) {
+      // catching all exceptions here to prevent all stats gathering failure
+      if (statsCollectors != null && statsCollectors.size() < 50) {
+        LOG.error("Gathering stats failed, collector: " + collector + ", collectors: " + statsCollectors, thr);
+      } else {
+        LOG.error("Gathering stats failed, collector: " + collector, thr);
+      }
+      // DO NOTHING
+    }
+
+    return countGatheredLines;
   }
 
   private EmbeddedSource getSource() {

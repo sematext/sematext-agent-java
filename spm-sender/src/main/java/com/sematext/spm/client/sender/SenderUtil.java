@@ -47,14 +47,16 @@ public final class SenderUtil {
   public static final String SPM_SETUP_PROPERTIES_DIR = createPathString(SPM_HOME, "properties");
 
   // TODO - read from some internal configuration; used only when for some reason app configs don't have this property
-  public static final String DEFAULT_SAAS_PROD_RECEIVER_URL = "http://spm-receiver.sematext.com/receiver/v1";
-  public static final String DEFAULT_SAAS_PROD_RECEIVER_METRICS_PATH = "";
+  public static final String DEFAULT_SAAS_PROD_RECEIVER_URL = "http://spm-receiver.sematext.com";
+  public static final String DEFAULT_SAAS_PROD_RECEIVER_METRICS_ENDPOINT = "/write?db=metrics";
+  public static final String DEFAULT_SAAS_PROD_RECEIVER_TAGS_ENDPOINT = "/write?db=tags";
+  public static final String DEFAULT_SAAS_PROD_RECEIVER_METAINFO_ENDPOINT = "/write?db=metainfo";
 
-  public static final File DATA_SENDER_PROPERTIES_FILE = new File(SPM_SETUP_PROPERTIES_DIR, "spm-sender.properties");
+  public static final File DATA_SENDER_PROPERTIES_FILE = new File(SPM_SETUP_PROPERTIES_DIR, "agent.properties");
 
   public static final AtomicLong INSTALLATION_PROPERTIES_FILE_LAST_MODIFIED_TIME = new AtomicLong(-1);
 
-  private static final String HOSTNAME_ALIAS_PROPERTY_NAME = "spm_sender_hostname_alias";
+  private static final String HOSTNAME_ALIAS_PROPERTY_NAME = "hostname_alias";
 
   public static final File DOCKER_SETUP_FILE = new File(SPM_HOME, ".docker");
 
@@ -65,7 +67,7 @@ public final class SenderUtil {
   }
 
   public static void loadInstallationProperties() {
-    // use spm-sender.properties as a source of proxy properties and receiver_url property
+    // use agent.properties as a source of proxy properties and receiver_url property
 
     File[] propsFiles = findSpmSetupPropertiesFiles();
 
@@ -73,7 +75,7 @@ public final class SenderUtil {
     File freshestAppPropsFile = null;
 
     for (File propsFile : propsFiles) {
-      if (propsFile.getName().equalsIgnoreCase("spm-sender.properties")) {
+      if (propsFile.getName().equalsIgnoreCase("agent.properties")) {
         proxyPropsFile = propsFile;
       }
       if (propsFile.getName().startsWith("spm-setup") && propsFile.getName().endsWith(".properties")) {
@@ -95,27 +97,34 @@ public final class SenderUtil {
         INSTALLATION_PROPERTIES_FILE_LAST_MODIFIED_TIME.set(freshestAppPropsFile.lastModified());
 
         // if no proxy props file, read proxy settings from the freshest spm-setup properties file
-        INSTALLATION_PROPERTIES.setProperty("spm_sender_receiver_url", tmpProps.getProperty("spm_sender_receiver_url"));
-        INSTALLATION_PROPERTIES
-            .setProperty("spm_sender_receiver_metrics_path", tmpProps.getProperty("spm_sender_receiver_metrics_path"));
+        INSTALLATION_PROPERTIES.setProperty("server_base_url", tmpProps.getProperty("server_base_url"));
+        INSTALLATION_PROPERTIES.setProperty("metrics_endpoint", tmpProps.getProperty("metrics_endpoint"));
+        INSTALLATION_PROPERTIES.setProperty("tags_endpoint", tmpProps.getProperty("tags_endpoint"));
+        INSTALLATION_PROPERTIES.setProperty("metainfo_endpoint", tmpProps.getProperty("metainfo_endpoint"));
 
-        INSTALLATION_PROPERTIES.setProperty("spm_sender_proxy_host", tmpProps.getProperty("spm_sender_proxy_host"));
-        INSTALLATION_PROPERTIES.setProperty("spm_sender_proxy_port", tmpProps.getProperty("spm_sender_proxy_port"));
+        INSTALLATION_PROPERTIES.setProperty("proxy_host", tmpProps.getProperty("proxy_host"));
+        INSTALLATION_PROPERTIES.setProperty("proxy_port", tmpProps.getProperty("proxy_port"));
         INSTALLATION_PROPERTIES
-            .setProperty("spm_sender_proxy_user_name", tmpProps.getProperty("spm_sender_proxy_user_name"));
+            .setProperty("proxy_user_name", tmpProps.getProperty("proxy_user_name"));
         INSTALLATION_PROPERTIES
-            .setProperty("spm_sender_proxy_password", tmpProps.getProperty("spm_sender_proxy_password"));
+            .setProperty("proxy_password", tmpProps.getProperty("proxy_password"));
       }
     } catch (Throwable thr) {
       LOG.error("Error while reading properties files!", thr);
       throw new IllegalStateException("Error while reading properties files!", thr);
     }
 
-    if (INSTALLATION_PROPERTIES.get("spm_sender_receiver_url") == null) {
-      INSTALLATION_PROPERTIES.setProperty("spm_sender_receiver_url", DEFAULT_SAAS_PROD_RECEIVER_URL);
+    if (INSTALLATION_PROPERTIES.get("server_base_url") == null) {
+      INSTALLATION_PROPERTIES.setProperty("server_base_url", DEFAULT_SAAS_PROD_RECEIVER_URL);
     }
-    if (INSTALLATION_PROPERTIES.get("spm_sender_receiver_metrics_path") == null) {
-      INSTALLATION_PROPERTIES.setProperty("spm_sender_receiver_metrics_path", DEFAULT_SAAS_PROD_RECEIVER_METRICS_PATH);
+    if (INSTALLATION_PROPERTIES.get("metrics_endpoint") == null) {
+      INSTALLATION_PROPERTIES.setProperty("metrics_endpoint", DEFAULT_SAAS_PROD_RECEIVER_METRICS_ENDPOINT);
+    }
+    if (INSTALLATION_PROPERTIES.get("tags_endpoint") == null) {
+      INSTALLATION_PROPERTIES.setProperty("tags_endpoint", DEFAULT_SAAS_PROD_RECEIVER_TAGS_ENDPOINT);
+    }
+    if (INSTALLATION_PROPERTIES.get("metainfo_endpoint") == null) {
+      INSTALLATION_PROPERTIES.setProperty("metainfo_endpoint", DEFAULT_SAAS_PROD_RECEIVER_METAINFO_ENDPOINT);
     }
   }
 
