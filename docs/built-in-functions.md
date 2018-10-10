@@ -1,4 +1,3 @@
-
 ## Built-in functions
 Sometimes it is not enough to just gather value of particular metric or tag. Instead, more complex calculation may be needed, based on input of 1 or N monitored attributes etc. Common case is transformation of attribute which is expressed in MB into its bytes equivalent or conversion of time attribute which is expressed in nanoseconds into ms value. For such cases Agent provides various built-in functions. They can be used out-of-the-box in yml configurations.
 Functions can be applied both on metrics and on tags using ```func:``` prefix followed by function name and params. Params are either names of other metrics (when used to calculate a metric) or names of path tags (when used to calculate a tag value) or values that will be used directly inside of the function (function specification explains the meaning of each param).

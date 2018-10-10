@@ -21,19 +21,17 @@ sending it to output. You can also plugin-in custom functions.
 ## Getting Started
 
 ### Build
-
 To build Sematext App Agent you need: 
 
 1) Linux based Operating System 
 2) Java 1.6+
 3) Maven 
-4) Thirft compiler v0.9.3
+4) Thrift compiler v0.9.3
 5) fpm package manager
 
 After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions.
 
-### Install
-
+### Setup
 The packages built can be installed using OS specific package manager like dpkg, yum, etc. 
 
 Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to setup and 
@@ -44,6 +42,11 @@ by changing the following properties in `/opt/spm/properties/agent.properties` f
 
 * `server_base_url` - Base URL of the destination server. e.g. `http://192.168.0.4:8086`
 * `metrics_endpoint` - Path to send the metrics. This will be appended with `server_base_url` to form the complete URL.
+    Default value is `/write?db=metrics`. You can update this property to send metrics to different endpoint 
+    or to specify username/password for InfluxDB. e.g. `/write?db=mydb&u=user&p=pass`
+    
+## Contributing
+We welcome bug fixes or feature enhancements to Sematext App Agent.
 
 
 
