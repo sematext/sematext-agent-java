@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/sematext/sematext-agent-java.svg?branch=master)](https://travis-ci.org/sematext/sematext-agent-java)
 
 This repository contains the source code for Sematext App Agent. Sematext App Agent can be used to collect application 
-metrics from multiple data sources. The data sources and the metrics to be collected can be defined in an YAML file.
+metrics from multiple data sources. The data sources and the metrics to be collected can be defined in YAML files.
 There are number of built-in integrations available for various applications in 
 [sematext-agent-integration](https://github.com/sematext/sematext-agent-integrations) repo.
 
@@ -13,7 +13,7 @@ Currently supported data sources are:
 * SQL
 
 Sematext App Agent uses Influx Line Protocol to ship the metrics. The metrics collected by the agent can be shipped to
-any Influx Line Protocol complaint endpoints like InfluxDB. You can also add support to other output formats like Elasticsearch, etc.
+any Influx Line Protocol complaint endpoints like InfluxDB. You can also add support to other output formats like HTTP, Graphite, etc.
 
 The agent supports number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
 sending it to output. You can also plugin-in custom functions. 
@@ -33,9 +33,12 @@ After cloning the repo, executing `build.sh` will build the packages for multipl
 
 ### Setup
 The packages can be installed using OS specific package manager like dpkg, yum, etc. Once installed new App can be 
-setup by running `setup-spm` command. e.g. To setup monitoring for JVM application in standalone mode, add 
-`-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=3000 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false`
-command line arguments to the Java startup process. And you can setup new app by running following command:
+setup by running `setup-spm` command. e.g. To setup monitoring for JVM application in standalone mode, add
+
+```bash
+-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=3000 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false
+```
+VM arguments to the Java startup process. And you can setup new app by running following command:
 
 ```bash
 sudo bash /opt/spm/bin/setup-spm  \
