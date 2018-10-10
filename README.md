@@ -12,13 +12,15 @@ Currently supported data sources are:
 * HTTP REST APIs
 * SQL
 
-Sematext App Agent uses Influx Line Protocol to ship the metrics. So the metrics collected by the agent can be shipped to
-any Influx Line Protocol complaint endpoints. You can also add support to other output formats like Elasticsearch, etc.
+Sematext App Agent uses Influx Line Protocol to ship the metrics. The metrics collected by the agent can be shipped to
+any Influx Line Protocol complaint endpoints like InfluxDB. You can also add support to other output formats like Elasticsearch, etc.
 
 The agent support number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
 sending it to output. You can also plugin-in custom functions. 
 
 ## Getting Started
+
+### Build
 
 To build Sematext App Agent you need: 
 
@@ -28,4 +30,20 @@ To build Sematext App Agent you need:
 4) Thirft compiler v0.9.3
 5) fpm package manager
 
-After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions. 
+After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions.
+
+### Install
+
+The packages built can be installed using OS specific package manager like dpkg, yum, etc. 
+
+Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to setup and 
+configure agent to ship metrics.
+
+By default the agent sends the collected metrics to Sematext. You can configure different Influx compatible destination
+by changing the following properties in `/opt/spm/properties/agent.properties` file:
+
+* `server_base_url` - Base URL of the destination server. e.g. `http://192.168.0.4:8086`
+* `metrics_endpoint` - Path to send the metrics. This will be appended with `server_base_url` to form the complete URL.
+
+
+
