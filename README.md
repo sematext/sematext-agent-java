@@ -57,8 +57,10 @@ sudo bash /opt/spm/bin/setup-spm  \
     --jmx-params '-Dspm.remote.jmx.url=localhost:3000'
 ```
 
-`<app-token>` - App Token should point to Sematext App Token if you are sending metrics to Sematext. For other Influx endpoints
-you can specify a hexa-decimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx`. e.g. `d0add28a-0a0f-46b2-9e1e-4928db5200e7`
+`<app-token>` - App Token should point to Sematext App Token if you are sending metrics to Sematext. App is an entity to 
+group similar/related metrics. e.g. All Elasticsearch metrics can be grouped under Elasticsearch App. Each App has a unique token.
+For other Influx endpoints you can specify a hexa-decimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx` 
+e.g. `d0add28a-0a0f-46b2-9e1e-4928db5200e7`.
 
 Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to setup and 
 configure agent to ship metrics.
