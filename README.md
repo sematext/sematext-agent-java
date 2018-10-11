@@ -63,7 +63,8 @@ by changing the following properties in `/opt/spm/properties/agent.properties` f
     or to specify username/password for InfluxDB. e.g. `/write?db=mydb&u=user&p=pass`
     
 ## Contributing
-We welcome bug fixes or feature enhancements to Sematext App Agent.
+We welcome bug fixes or feature enhancements to Sematext App Agent. When done working on and testing,
+just submit a pull request to have Sematext review and merge your changes.
 
 
 
