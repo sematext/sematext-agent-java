@@ -46,7 +46,7 @@ import com.sematext.spm.client.yaml.YamlConfigLoader;
  * markdown table for metric definitions in www.sematext.com/docs
  */
 public class GenerateMetricsDocs {
-  private static final String SEMATEXT_INTEGRATIONS_REPO_DIR = "/Users/siva/sematext/repos/sematext-agent-integrations";
+  private static final String SEMATEXT_INTEGRATIONS_REPO_DIR = "<sematext-agent-integrations repo dir>";
   private static final String OUT_DIR = "/tmp/md/";
 
   @Test
