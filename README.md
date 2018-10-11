@@ -13,7 +13,8 @@ Currently supported data sources are:
 * SQL
 
 Sematext App Agent uses Influx Line Protocol to ship the metrics. The metrics collected by the agent can be shipped to
-any Influx Line Protocol complaint endpoints like InfluxDB. You can also add support for other output formats like HTTP, Graphite, etc.
+any Influx Line Protocol complaint endpoints like InfluxDB. In future, you can also add support for other output formats
+like HTTP, Graphite, etc.
 
 The agent supports a number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
 sending it to output. You can also plugin-in custom functions. 
@@ -27,7 +28,15 @@ To build Sematext App Agent you need:
 2) Java 1.6+
 3) Maven 
 4) Thrift compiler v0.9.3
-5) fpm package manager
+    * Steps to install Thrift in Debian based systems
+        ```bash
+          sudo apt-get install automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
+          wget http://www.us.apache.org/dist/thrift/0.9.3/thrift-0.9.3.tar.gz
+          tar xfz thrift-0.9.3.tar.gz
+          cd thrift-0.9.3 && ./configure --enable-libs=no  && sudo make install
+        ```
+5) fpm package manager 
+    * For steps to install fpm refer [https://fpm.readthedocs.io/en/latest/installing.html](https://fpm.readthedocs.io/en/latest/installing.html)
 
 After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions.
 
@@ -38,7 +47,7 @@ setup by running `setup-spm` command. For example, to setup monitoring for a JVM
 ```bash
 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=3000 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false
 ```
-VM arguments to the Java startup process. Then you can setup new app by running the following command:
+to startup arguments of Java process you wish to monitor. Then you can setup new App by running the following command:
 
 ```bash
 sudo bash /opt/spm/bin/setup-spm  \
@@ -48,7 +57,7 @@ sudo bash /opt/spm/bin/setup-spm  \
     --jmx-params '-Dspm.remote.jmx.url=localhost:3000'
 ```
 
-`<app-token>` - App Token is should point to Sematext App Token if you are sending metrics to Sematext. For other Influx endpoints
+`<app-token>` - App Token should point to Sematext App Token if you are sending metrics to Sematext. For other Influx endpoints
 you can specify a hexa-decimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx`. e.g. `d0add28a-0a0f-46b2-9e1e-4928db5200e7`
 
 Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to setup and 
