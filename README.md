@@ -13,7 +13,7 @@ Currently supported data sources are:
 * SQL
 
 Sematext App Agent uses Influx Line Protocol to ship the metrics. The metrics collected by the agent can be shipped to
-any Influx Line Protocol complaint endpoints like InfluxDB. You can also add support to other output formats like HTTP, Graphite, etc.
+any Influx Line Protocol complaint endpoints like InfluxDB. You can also add support for other output formats like HTTP, Graphite, etc.
 
 The agent supports a number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
 sending it to output. You can also plugin-in custom functions. 
@@ -49,7 +49,7 @@ sudo bash /opt/spm/bin/setup-spm  \
 ```
 
 `<app-token>` - App Token is should point to Sematext App Token if you are sending metrics to Sematext. For other Influx endpoints
-you can specify a hexa-decimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx`. e.g. `d0add288-0a0f-46b2-9e1c-4928db5200e7`
+you can specify a hexa-decimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx`. e.g. `d0add28a-0a0f-46b2-9e1e-4928db5200e7`
 
 Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to setup and 
 configure agent to ship metrics.
