@@ -7,13 +7,13 @@ metrics from multiple data sources. The data sources and the metrics to be colle
 There are number of built-in integrations available for various applications in 
 [sematext-agent-integration](https://github.com/sematext/sematext-agent-integrations) repo.
 
-Currently supported data sources are:
+The supported data sources are:
 * JMX
 * HTTP REST APIs
 * SQL
 
 Sematext App Agent uses Influx Line Protocol to ship the metrics. The metrics collected by the agent can be shipped to
-any Influx Line Protocol complaint endpoints like InfluxDB. In future, you can also add support for other output formats
+any Influx Line Protocol compatible endpoints like InfluxDB. In the future, we will add support for other output formats
 like HTTP, Graphite, etc.
 
 The agent supports a number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
@@ -40,14 +40,14 @@ To build Sematext App Agent you need:
 
 After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions.
 
-### Setup
+### Set up
 The packages can be installed using OS specific package manager like dpkg, yum, etc. Once installed a new App can be 
-setup by running `setup-spm` command. For example, to setup monitoring for a JVM application in standalone mode, add
+set up by running `setup-spm` command. For example, to set up monitoring for a JVM application in standalone mode, add
 
 ```bash
 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=3000 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false
 ```
-to startup arguments of Java process you wish to monitor. Then you can setup new App by running the following command:
+to startup arguments of Java process you wish to monitor. Then you can set up new App by running the following command:
 
 ```bash
 sudo bash /opt/spm/bin/setup-spm  \
@@ -59,13 +59,13 @@ sudo bash /opt/spm/bin/setup-spm  \
 
 `<app-token>` - App Token should point to Sematext App Token if you are sending metrics to Sematext. App is an entity to 
 group similar/related metrics. e.g. All Elasticsearch metrics can be grouped under Elasticsearch App. Each App has a unique token.
-For other Influx endpoints you can specify a hexa-decimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx` 
+For other Influx endpoints you can specify a hexadecimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx` 
 e.g. `d0add28a-0a0f-46b2-9e1e-4928db5200e7`.
 
-Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to setup and 
-configure agent to ship metrics.
+Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to set up and 
+configure the agent to ship metrics.
 
-By default the agent sends the collected metrics to Sematext. You can configure different Influx compatible destination
+By default, the agent sends the collected metrics to Sematext. You can configure a different Influx compatible destination
 by changing the following properties in `/opt/spm/properties/agent.properties` file:
 
 * `server_base_url` - Base URL of the destination server. e.g. `http://192.168.0.4:8086`
