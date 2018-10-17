@@ -1,5 +1,6 @@
 ## Metrics Definition YAML format
-The metrics to be collected by Sematext App Agent are defined in YAML file. The metrics for an integration are grouped in separate YAML file based on the metric sources. 
+The metrics to be collected by Sematext App Agent are defined in YAML file. The metrics for an integration are grouped 
+in individual YAML files based on the metric sources. 
 
 Each YAML file consists of the following fields:
 
@@ -9,25 +10,26 @@ Each YAML file consists of the following fields:
     * DB data source
         * `query`: The SQL query be executed to collect metrics.
         * `dbUrl`: The DB Connection string. e.g. `jdbc:clickhouse://${SPM_MONITOR_CLICKHOUSE_DB_HOST_PORT}/system` where
-        `SPM_MONITOR_CLICKHOUSE_DB_HOST_PORT` is set up time variable passed from `setup-spm` script.  
-        * `dbDriverClass`: Fully qualified DB driver class name
+        `SPM_MONITOR_CLICKHOUSE_DB_HOST_PORT` is placeholder for variable passed from `setup-spm` script.  
+        * `dbDriverClass`: Fully qualified DB driver class name. Refer to 
+        [Adding custom classes to the agent](#adding-custom-classes-to-the-agent) for adding driver jar to agent.
         * `dbUser`: DB User name (typically passed from setup script)
         * `dbPassword`: DB Password (typically passed from setup script)
-        * `dbVerticalModel`: `true` if the each metric is present its own row. The default value is `false`, which means 
+        * `dbVerticalModel`: `true` if the each metric is present in its own row. The default value is `false`, which means 
         all metrics are present in single row, where each column represents a metric. For more info refer to 
         [DB Vertical Model](#db-vertical-model)
         * `dbAdditionalConnectionParams` - Any additional connection params to be passed to the DB connection.
     * JSON data source
-        * `server` - The protocol, hostname and port sections of the HTTP URL to query for metrics. Typically passed from setup script.
+        * `server` - The protocol, hostname and port sections of the HTTP URL to query for metrics  (typically passed from setup script)
         * `url`: The path to query metrics. For example, if the metrics are exposed via `http://localhost:9090/node/stats`
          then `server` should be `http://localhost:9090` and `url` should be `/node/stats`.
-        * `basicHttpAuthUsername`: Username for HTTP Basic authentication
-        * `basicHttpAuthPassword`: Password for HTTP Basic authentication
+        * `basicHttpAuthUsername`: Username for HTTP Basic authentication  (typically passed from setup script)
+        * `basicHttpAuthPassword`: Password for HTTP Basic authentication  (typically passed from setup script)
         * `smileFormat`: `true` if response is in [smile format](https://github.com/FasterXML/smile-format-specification).
          The default value is `false`.
         * `async`: Set to true to fetch metrics asynchronously. The default value is `false`.
         * `jsonHandlerClass`: Optional JSON handler class to parse the JSON output. The class should extend `CustomJsonHandler`. 
- * `require`: This section specify the condition that should be true to fetch the metrics defined in this YAML. 
+ * `require`: This section specifies the condition that should be true to fetch the metrics defined in this YAML. 
     You can specify multiple require sections to match multiple conditions. Only when all the conditions are matched the metrics will be collected. 
     Typically these are version checks or checks based on custom logic. You can specify the condition class and pass 
     values to the Condition class from YAML using
@@ -43,33 +45,34 @@ Each YAML file consists of the following fields:
     For each observation, we can specify the following parameters:
     * `name`: Name for identifying the observation. Recommended to be unique within an integration
     * `metricNamespace`: Namespace for all the metrics collected under this integration. This should be unique across all integrations.
-    For example, if you are collected Jetty metrics, then the namespace will be `jetty` for the Jetty related metrics.
-    * `objectName`: JMX ObjectName pattern. You can extract tags from the key properties of the object name. For more info,
-     refer to [Extracting tags from JMX ObjectName](#extracting-tags-from-jmx-objectname)
-    * `path`: JSON path to the objects the needs to be monitored in the response. You can extract tags from the path using placeholders.
-     For more info refer to [Extracting tags from JSON Path](#extracting-tags-from-json-path)
+    For example, if you are monitoring Jetty metrics, then the namespace will be `jetty` for the Jetty related metrics.
+    * `objectName`: JMX ObjectName pattern to query. You can extract tags from the key properties of the object name. For more info,
+     refer to [Extracting tags from JMX ObjectName](#extracting-tags-from-jmx-objectname). Applicable for JMX data source.
+    * `path`: JSON path to the objects the needs to be queried in the response. You can extract tags from the path using placeholders.
+     For more info refer to [Extracting tags from JSON Path](#extracting-tags-from-json-path). Applicable for JSON data source.
     
     Each observation has a list of metrics and tags under `metric` and `tag` sections.
     * Each `metric` can have following fields:
         * `name`: Name of the metric. Recommended to use dot separated hierarchical naming
-        * `source`: The attribute name to query in the metric source. The metric source can also be derived from other metrics.
-        Refer to [Derived Metrics](#derived-metrics) 
+        * `source`: The attribute name to query in the metric source. The metric source can also be a function. Refer to
+         [Derived Metrics](#derived-metrics) 
         * `label`: Short description of the metric
         * `type`: Metric data type. Refer to [Metric Data Types](#metric-data-types) for possible values
         * `description`: Long description of the metric
-        * `send`: `false` if this metric need to be sent to the receiver. THe default value is `true`. Will be false for metrics
+        * `send`: `false` if this metric need to be sent to the receiver. The default value is `true`. Will be false for metrics
          that are extracted as tags or used in the calculation of other metrics. 
         * `stateful`: `true` if . The default value is `false`
         * `pctls`: Comma separated percentile values to be calculated from this metric. e.g. `99,95,50`. For more info
         refer to [Percentiles](#percentiles)
-        * `agentAggregation`: Used to override the default aggregation function. When some of the tags are omitted in the definition, the agent aggregated the metric on the
-         omitted tag using the aggregation function based on `type`. Counters are aggregated by `SUM` and gauges by `AVG`.
+        * `agentAggregation`: Used to override the default aggregation function. When some of the extracted tags are 
+         omitted in the definition, the agent aggregates the metric on the omitted tag using the aggregation function 
+         based on `type`. Counters are aggregated by `SUM` and gauges by `AVG`. This could be overridden by using this field.
          Valid values are `SUM`, `AVG`, `MAX`, `MIN`, `DISCARD`.
-        * `unit`: Unit of measurement for this metric e.g `ms`, `bytes`, etc.
+        * `unit`: Unit of measurement for this metric e.g. `ms`, `bytes`, etc.
     * Each `tag` can have name and value fields:
-        * `name`: Name of the tag. Make sure the tag name is unique. recommended to prefix metric namespace to the tag name.  
-        * `value`: Reference to the variable from where this tag needs to be extracted. This could a metric name defined 
-        under the observation or the variable name in `path` or `objectName`. In case of metric, use `eval` function
+        * `name`: Name of the tag. Make sure the tag name is unique. Recommended to prefix metric namespace to the tag name.  
+        * `value`: Reference to the name from where this tag needs to be extracted. This could a metric name defined 
+        under the observation or the placeholder name in `path` or `objectName`. In case of metric, use `eval` function
         to refer to metric. You can also use [built-in functions](./built-in-functions.md) to modify the values before ]
         sending to output.
 
@@ -81,12 +84,13 @@ Sematext App Agent supports following metric data types:
 * `counter`, `long_counter`: Counter data type. Default aggregation is `SUM` 
 * `text`: Textual data type. Typically used for metrics that needs to extracted as tags
 
-The default collection interval for metrics is 10 seconds.
-
 ## Derived metrics
 
-Derived metrics are calculated by applying built-in or custom functions on other metrics. In such case the `source` field 
-of the metric need to be of format: `func:<function-name>(<params>)`. 
+Derived metrics are calculated by applying built-in or custom functions on other metrics. Derived metrics can be used to
+adjust the values of metrics before sending to receiver. Some of the user cases are to extract a number from the string 
+value or derive a metric as function of 2 attributes. 
+
+For derived metrics, the `source` field of the metric need to be of format: `func:<function-name>(<params>)`. 
 
 * `func`: Denotes that metric needs to be derived by applying the function specified.
 * `<function-name>`: Function to invoked. In case of [built-in functions](./built-in-functions.md), 
@@ -107,6 +111,8 @@ reference with `as_counter`. For example,
     description: lookups count
     stateful: true
 ```
+
+Some of the built-in functions can be applied to tags also. 
 
 ## Percentiles
 
@@ -162,9 +168,9 @@ sudo bash /opt/spm/bin/setup-spm  --app-token d0add288-0a0f-46bb-9e1a-4928db5200
 ```
 
 ## Extracting tags from JMX ObjectName
-JMX object name consists of two parts, the domain and the key properties. For e.g. In case of JVM memory pool, JMX
-object name, each pool has its own JMX object name instance, where the key `name` refers to pool name. We have instances
-like `java.lang:type=MemoryPool,name=Code Cache`, `java.lang:type=MemoryPool,name=Metaspace`, etc. The pool name can be
+JMX object name consists of two parts, the domain and the key properties. For e.g. In case of JVM memory pool, 
+each pool has its own JMX object name instance, where the key `name` refers to pool name. The instances are 
+`java.lang:type=MemoryPool,name=Code Cache`, `java.lang:type=MemoryPool,name=Metaspace`, etc. The pool name can be
 extracted as tag by specifying the `objectName` pattern as `java.lang:type=MemoryPool,name=${poolName}` and mapping `poolName`
 placeholder to tag in `tag` definition of observation as shown below.
 ```yaml
@@ -176,7 +182,7 @@ placeholder to tag in `tag` definition of observation as shown below.
       - name: jvm.memory.pool
         value: ${poolName}
 ```
-Typically the keys for a given ObjectName pattern is static. In case of dynamic keys added `*` at the end of pattern for match 
+Typically the keys for a given ObjectName pattern is static. In case of dynamic keys add `*` at the end of pattern for matching 
 all object names. For example, refer to [Tomcat Datasource YAML](https://github.com/sematext/sematext-agent-integrations/blob/master/tomcat/jmx-datasource.yml)
 
 ## Extracting tags from JSON Path
@@ -202,6 +208,6 @@ tag:
 
 ## Adding custom classes to the agent
 The App Agent allows loading custom classes (driver libraries or classes for custom functions/conditions). The jars can 
-be placed under `/opt/spm/spm-monitor/collectors/<integration>/lib` directory. jars placed in this location will be 
+be placed under `/opt/spm/spm-monitor/collectors/<integration>/lib` directory. Jars placed in this location will be 
 loaded during agent startup.
 
