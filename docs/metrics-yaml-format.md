@@ -22,7 +22,7 @@ Each YAML file consists of the following fields:
         * `dbVerticalModel`: `true` if the each metric is present its own row. Default value is `false`, which means 
         all metrics are present in single row, where each column represents a metric. For more info refer to 
         [DB Vertical Model](#db-vertical-model)
-        * `dbAdditionalConnectionParams` - Any additional connection params that need to passed to the DB connection.
+        * `dbAdditionalConnectionParams` - Any additional connection params to be passed to the DB connection.
     * JSON data source
         * `server` - The protocol, hostname and port sections of the HTTP URL to query for metrics. Typically passed from setup script.
         * `url`: The path to query metrics. For example, if the metrics are exposed via `http://localhost:9090/node/stats`
