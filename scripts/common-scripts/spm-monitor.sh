@@ -152,8 +152,6 @@ function sourceMonitorConfProperties() {
   unset SPM_MONITOR_TRACING_ENABLED
   unset THREAD_INSTRUMENTATION_ENABLED
   unset SPM_MONITOR_TAGS
-  unset SPM_SUPPRESS_TAGS
-  unset COLLECT_AWS_TAGS
   unset SPM_MONITOR_JMX_PARAMS
   unset spm_monitor_logging_level
   unset SPM_MONITOR_LOGGING_LEVEL

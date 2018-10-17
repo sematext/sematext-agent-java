@@ -64,12 +64,8 @@ public class MultipleTagsCollector extends MultipleStatsCollector<String> {
   }
 
   public void refreshTagsDefinitions(Properties monitorProperties) throws StatsCollectorBadConfigurationException {
-    Set<String> tags = TagsUtils
+    trackedTags = TagsUtils
         .parseTags(StringUtils.removeQuotes(monitorProperties.getProperty("SPM_MONITOR_TAGS", "").trim()));
-    Set<String> suppressTags = TagsUtils
-        .parseTags(StringUtils.removeQuotes(monitorProperties.getProperty("SPM_SUPPRESS_TAGS", "").trim()));
-    tags.removeAll(suppressTags);
-    trackedTags = tags;
   }
 
   @Override
