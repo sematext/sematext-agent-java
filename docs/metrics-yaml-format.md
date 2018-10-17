@@ -5,7 +5,7 @@ in individual YAML files based on the metric sources.
 Each YAML file consists of the following fields:
 
 * `type`: Data source type. Valid values are `jmx`, `db` and `json`
-* `data`: Contains additional parameters that need to be passed to the data source for metrics collection. `data` field
+* `data`: Contains additional parameters that have to be passed to the data source for metrics collection. `data` field
     is supported for `db` and `json` types.
     * DB data source
         * `query`: The SQL query be executed to collect metrics.
@@ -34,13 +34,15 @@ Each YAML file consists of the following fields:
     Typically these are version checks or checks based on custom logic. You can specify the condition class and pass 
     values to the Condition class from YAML using
     * `className` - Fully qualified condition class. This class should extend from 
-    `com.sematext.spm.client.observation.BeanConditionCheck`. In case of version check, the custom class needs to extend from
+    `com.sematext.spm.client.observation.BeanConditionCheck`. In case of version check, the custom class should extend from
     `BaseVersionConditionCheck`. For example, refer to [EsVersionCheck](../spm-monitor-generic/src/main/java/com/sematext/spm/client/es/EsVersionCheck.java)
     * `value` - Value to be passed to the condition class. In case of version check, you can specify individual version or ranges. Example values are `7`, `23.1.16`, `0.17-1.33.9` (match any version between specified range), 
     `*-1.0` (any version till 1.0), `1.0-*` (any version greater than 1.0)
-* `accept`:
-    * `name`:
-    * `value`:
+* `accept`: Specifies the condition based on tag value for the observation to be collected. For more info refer [here](#how-to-process/skip-metrics-from-select-metric-sources)
+    * `name`: Name of the tag whose value has to be compared.
+    * `value`: The value to compare. This could be a literal value, `func`, `json`, `jmx`, or variable placeholder (`${}`)
+* `ignore`: Specifies the condition based on tag value, which when true the observation be ignored. Opposite of `accept`.
+   Similar to `accept`, you can specify `name` and `value`.
 * `observation`: This section contains the list of metric sources and the metrics/tags to be collected from these sources. 
     For each observation, we can specify the following parameters:
     * `name`: Name for identifying the observation. Recommended to be unique within an integration
@@ -48,20 +50,21 @@ Each YAML file consists of the following fields:
     For example, if you are monitoring Jetty metrics, then the namespace will be `jetty` for the Jetty related metrics.
     * `objectName`: JMX ObjectName pattern to query. You can extract tags from the key properties of the object name. For more info,
      refer to [Extracting tags from JMX ObjectName](#extracting-tags-from-jmx-objectname). Applicable for JMX data source.
-    * `path`: JSON path to the objects the needs to be queried in the response. You can extract tags from the path using placeholders.
+    * `path`: JSONPath-like expression for the objects that should be queried in the response. You can extract tags from the path using placeholders.
      For more info refer to [Extracting tags from JSON Path](#extracting-tags-from-json-path). Applicable for JSON data source.
     
     Each observation has a list of metrics and tags under `metric` and `tag` sections.
     * Each `metric` can have following fields:
-        * `name`: Name of the metric. Recommended to use dot separated hierarchical naming
+        * `name`: Name of the metric. Recommended to use dot-separated hierarchical naming
         * `source`: The attribute name to query in the metric source. The metric source can also be a function. Refer to
          [Derived Metrics](#derived-metrics) 
         * `label`: Short description of the metric
         * `type`: Metric data type. Refer to [Metric Data Types](#metric-data-types) for possible values
         * `description`: Long description of the metric
-        * `send`: `false` if this metric need to be sent to the receiver. The default value is `true`. Will be false for metrics
+        * `send`: `false` if this metric has to be sent to the receiver. The default value is `true`. Will be false for metrics
          that are extracted as tags or used in the calculation of other metrics. 
-        * `stateful`: `true` if . The default value is `false`
+        * `stateful`: `true` if the collected metric values have to be preserved across collections. The default value is `false`.
+        For example, can be set to true in case of derived metrics where we need to compare with old values.
         * `pctls`: Comma separated percentile values to be calculated from this metric. e.g. `99,95,50`. For more info
         refer to [Percentiles](#percentiles)
         * `agentAggregation`: Used to override the default aggregation function. When some of the extracted tags are 
@@ -71,28 +74,28 @@ Each YAML file consists of the following fields:
         * `unit`: Unit of measurement for this metric e.g. `ms`, `bytes`, etc.
     * Each `tag` can have name and value fields:
         * `name`: Name of the tag. Make sure the tag name is unique. Recommended to prefix metric namespace to the tag name.  
-        * `value`: Reference to the name from where this tag needs to be extracted. This could a metric name defined 
+        * `value`: Reference to the name from where this tag has to be extracted. This could a metric name defined 
         under the observation or the placeholder name in `path` or `objectName`. In case of metric, use `eval` function
         to refer to metric. You can also use [built-in functions](./built-in-functions.md) to modify the values before ]
         sending to output.
 
 ## Metric Data Types
 
-Sematext App Agent supports following metric data types:
+Sematext App Agent supports the following metric data types:
 
 * `gauge`, `long_gauge`: Gauge data type. Default aggregation is `AVG`
 * `counter`, `long_counter`: Counter data type. Default aggregation is `SUM` 
-* `text`: Textual data type. Typically used for metrics that needs to extracted as tags
+* `text`: Textual data type. Typically used for metrics that have to be extracted as tags
 
 ## Derived metrics
 
 Derived metrics are calculated by applying built-in or custom functions on other metrics. Derived metrics can be used to
-adjust the values of metrics before sending to receiver. Some of the user cases are to extract a number from the string 
-value or derive a metric as function of 2 attributes. 
+adjust the values of metrics before sending to the receiver. Some of the use cases are to extract a number from a string 
+value or derive a metric as a function of 2 attributes. 
 
-For derived metrics, the `source` field of the metric need to be of format: `func:<function-name>(<params>)`. 
+For derived metrics, the `source` field of the metric has to be of the format: `func:<function-name>(<params>)`. 
 
-* `func`: Denotes that metric needs to be derived by applying the function specified.
+* `func`: Denotes that metric has to be derived by applying the function specified.
 * `<function-name>`: Function to invoked. In case of [built-in functions](./built-in-functions.md), 
 just function name is enough. For custom functions, specify the function name with fully qualified classname. e.g.
 `func:com.sematext.spm.client.solr.CalculateWarmupTime(warmupTime,searcherName)`. The function class should extend 
@@ -149,7 +152,7 @@ for the below table, `dbVerticalModel` will be set to true.
 The App Agent allows specifying set up time variables in YAML. The variable names can be referred in the values using 
 `${VARIABLE_NAME}` placeholders. The placeholders will be replaced by the agent with values from the setup script while parsing the YAML.
 It is recommended to use uppercase for the setup time placeholders. For example, in the below YAML, the variables will be 
-replaced accordingly when passed from `setup-spm` script. If the variable is not specified, it will be replaced by empty string.
+replaced accordingly when passed from `setup-spm` script. If the variable is not specified, it will be replaced by an empty string.
 
 ```yaml
 type: db
@@ -189,9 +192,9 @@ all object names. For example, refer to [Tomcat Datasource YAML](https://github.
 In case of JSON data source, `path` specifies set of objects which should be monitored. For each placeholder (defined
 with ${...}) any value will be accepted (while also storing the value of that placeholder). In the example below, if some setup has
 3 indices (say 'A', 'B' and 'C), each with 2 shards, meaning a total of 6 shards, there will be a total of 6
-matching objects found by this path expression (regardless off on which nodes which shards are, since total number of
+matching objects found by this path expression (regardless off on which nodes which shards are, since the total number of
 shards is 6 anyway). For each of those 6 objects, placeholder values will be available for use in tag definitions 
-(notice how value of "es.node.id" and "es.index" tags are specified - they will be resolved to exact values matching
+(notice how the value of "es.node.id" and "es.index" tags are specified - they will be resolved to exact values matching
 one of those 6 objects).
     
 ```yaml
@@ -211,3 +214,21 @@ The App Agent allows loading custom classes (driver libraries or classes for cus
 be placed under `/opt/spm/spm-monitor/collectors/<integration>/lib` directory. Jars placed in this location will be 
 loaded during agent startup.
 
+## How to process/skip metrics from selected metric sources
+For given metric source specified in an observation, you can skip or accept metric values from selected tag values. This 
+could be done by specifying the ignore/accept conditions. Each condition takes the tag name to compare and the value. The
+value can be a literal string, `jmx` (JMX attribute), `json` (JSONPath), or `${}` setup variable placeholder. For example,
+in case of JVM Memory Pool config, you can skip metrics from specific pool ( say `Metaspace`) using following YAML:
+
+```yaml
+- name: jvmMemoryPool
+    metricNamespace: jvm
+    objectName: java.lang:type=MemoryPool,name=${poolName}
+...
+    tag:
+      - name: jvm.memory.pool
+        value: ${poolName}
+    ignore:
+      name: jvm.memory.pool
+      value: Metaspace
+```
