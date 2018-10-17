@@ -110,12 +110,6 @@ public class MonitorConfigLoader {
             .add(new Property("SPM_MONITOR_TAGS", "", "add tags if you want to use them, example: SPM_MONITOR_TAGS=env:foo, role:bar"));
       }
 
-      String suppressTags = props.getProperty("SPM_SUPPRESS_TAGS");
-      if (suppressTags == null) {
-        missedProperties
-            .add(new Property("SPM_SUPPRESS_TAGS", "", "add tags which should be excluded, example: SPM_SUPPRESS_TAGS=project:baz, node:qux"));
-      }
-
       String javaDefaults = props.getProperty("JAVA_DEFAULTS");
       if (javaDefaults == null) {
         missedProperties.add(new Property("JAVA_DEFAULTS", JAVA_DEFAULTS_192M, null));
