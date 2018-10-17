@@ -58,7 +58,7 @@ observation:
     Example values are `7`, `23.1.16`, `0.17-1.33.9` (match any version between specified range), 
     `*-1.0` (any version till 1.0), `1.0-*` (any version greater than 1.0)
 * `accept`: Specifies the condition based on tag value for the observation to be collected. 
-    For more info refer [here](#how-to-process-or-skip-metrics-from-selected-metric-sources)
+    For more info refer [here](#process-or-skip-metrics-from-selected-sources)
     * `name`: Name of the tag whose value has to be compared.
     * `value`: The value to compare. This could be a literal value, `func`, `json`, `jmx`, or variable placeholder (`${}`)
 * `ignore`: Specifies the condition based on tag value, which when true the observation will be ignored. Opposite of `accept`.
