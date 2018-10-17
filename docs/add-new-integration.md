@@ -75,7 +75,7 @@ This depends on the data source type.
     e.g. d0add28a-0a0f-46b2-9e1e-4928db5200e7.
     
     You can also pass custom arguments from `setup-spm` command and use them in YAML definitions. For more info refer to
-    [How to pass custom arguments to my integration](faq.md)
+    [How to pass custom arguments to my integration](metrics-yaml-format.md#specifying-variables-in-yaml)
 7. By default, the agent sends the collected metrics to Sematext. You can configure a different Influx compatible destination
    by changing the following properties in `/opt/spm/properties/agent.properties` file:
    * `server_base_url` - Base URL of the destination server. e.g. `http://192.168.0.4:8086`

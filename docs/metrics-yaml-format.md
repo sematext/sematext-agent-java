@@ -1,3 +1,4 @@
+## Metrics Definition YAML format
 The metrics to be collected by Sematext App Agent are defined in YAML file. The metrics for an integration are grouped in separate YAML file based on the metric sources. 
 
 Each YAML file consists of the following fields:
@@ -75,11 +76,12 @@ Each YAML file consists of the following fields:
 ## Metric Data Types
 
 Sematext App Agent supports following metric data types:
-* `gauge`
-* `long_gauge`
-* `counter`
-* `double_counter`
-* `text` - Textual data type. Typically used for metrics that needs to extracted as tags.
+
+* `gauge`, `long_gauge`: Gauge data type. Default aggregation is `AVG`
+* `counter`, `long_counter`: Counter data type. Default aggregation is `SUM` 
+* `text`: Textual data type. Typically used for metrics that needs to extracted as tags
+
+The default collection interval for metrics is 10 seconds.
 
 ## Derived metrics
 
@@ -135,12 +137,6 @@ for the below table, `dbVerticalModel` will be set to true.
 │ ReadBufferFromFileDescriptorReadBytes   │         23956 │
 │ WriteBufferFromFileDescriptorWrite      │             1 │
 │ WriteBufferFromFileDescriptorWriteBytes │            59 │
-│ ReadCompressedBytes                     │         15002 │
-│ CompressedReadBufferBlocks              │            30 │
-│ CompressedReadBufferBytes               │         18875 │
-│ IOBufferAllocs                          │       1006636 │
-│ IOBufferAllocBytes                      │ 1055344600291 │
-│ ArenaAllocChunks                        │         55910 │
 ```
 
 ## Specifying variables in YAML
