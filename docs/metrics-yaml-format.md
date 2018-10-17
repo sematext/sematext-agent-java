@@ -1,8 +1,26 @@
-## Metrics Definition YAML format
+## Metrics Configuration YAML Format
 The metrics to be collected by Sematext App Agent are defined in YAML file. The metrics for an integration are grouped 
-in individual YAML files based on the metric sources. 
+in individual YAML files based on the metric sources. Each YAML file has the following sections:
 
-Each YAML file consists of the following fields:
+```yaml
+type: <Data source type>
+data: 
+    <Data source specific properties>
+require:
+    <List of require conditions like version checks>
+observation:
+    <List of Observations>
+    metric:
+      <List of metrics>
+    tag:
+      <List of tags>
+    accept:
+      <List of accept conditions>
+    ignore:
+      <List of ignore conditions>
+```
+
+## Configuration Fields
 
 * `type`: Data source type. Valid values are `jmx`, `db` and `json`
 * `data`: Contains additional parameters that have to be passed to the data source for metrics collection. `data` field
@@ -89,7 +107,7 @@ Sematext App Agent supports the following metric data types:
 * `counter`, `long_counter`: Counter data type. Default aggregation is `SUM` 
 * `text`: Textual data type. Typically used for metrics that have to be extracted as tags
 
-## Derived metrics
+## Derived Metrics
 
 Derived metrics are calculated by applying built-in or custom functions on other metrics. Derived metrics can be used to
 manipulate the values of metrics before sending to the receiver. Some of the use cases are to extract a number from a string 
@@ -150,7 +168,7 @@ for the table below, `dbVerticalModel` will be set to true.
 │ WriteBufferFromFileDescriptorWriteBytes │            59 │
 ```
 
-## Specifying variables in YAML
+## Specifying Variables in YAML
 The App Agent allows specifying set up time variables in YAML. The variable names can be referred in the values using 
 `${VARIABLE_NAME}` placeholders. The placeholders will be replaced by the agent with values from the setup script while parsing the YAML.
 It is recommended to use uppercase for the setup time placeholders. For example, in the below YAML, the variables will be 
@@ -172,7 +190,7 @@ sudo bash /opt/spm/bin/setup-spm  --app-token d0add288-0a0f-46bb-9e1a-4928db5200
     --SPM_MONITOR_CLICKHOUSE_DB_HOST_PORT 'localhost:8123'
 ```
 
-## Extracting tags from JMX ObjectName
+## Extracting Tags from JMX ObjectName
 JMX object name consists of two parts, the domain and the key properties. For e.g. In the case of JVM memory pool, 
 each pool has its own JMX object name instance, where the key `name` refers to pool name. The instances are 
 `java.lang:type=MemoryPool,name=Code Cache`, `java.lang:type=MemoryPool,name=Metaspace`, etc. The pool name can be
@@ -190,7 +208,7 @@ placeholder to tag in `tag` definition of observation as shown below.
 Typically the keys for a given ObjectName pattern is static. In the case of dynamic keys add `*` at the end of pattern for matching 
 all object names. For example, refer to [Tomcat Datasource YAML](https://github.com/sematext/sematext-agent-integrations/blob/master/tomcat/jmx-datasource.yml)
 
-## Extracting tags from JSON Path
+## Extracting Tags from JSON Path
 For JSON data source, `path` specifies set of objects which should be monitored. For each placeholder (defined
 with ${...}) any value will be accepted (while also storing the value of that placeholder). In the example below, if some setup has
 3 indices (say 'A', 'B' and 'C), each with 2 shards, meaning a total of 6 shards, there will be a total of 6
@@ -211,12 +229,12 @@ tag:
     value: ${indexName}
 ```
 
-## Adding custom classes to the agent
+## Adding Custom Classes to the Agent
 The App Agent allows loading custom classes (driver libraries or classes for custom functions/conditions). The jars can 
 be placed under `/opt/spm/spm-monitor/collectors/<integration>/lib` directory. Jars placed in this location will be 
 loaded during agent startup.
 
-## How to process or skip metrics from selected metric sources
+## Process or Skip Metrics from Selected Sources
 For a given metric source specified in an observation, you can skip or accept metric values from selected tag values. This 
 could be done by specifying the ignore/accept conditions. Each condition takes the tag name to compare and the value. The
 value can be a literal string, `jmx` (JMX attribute), `json` (JSONPath), or `${}` setup variable placeholder. For example,
