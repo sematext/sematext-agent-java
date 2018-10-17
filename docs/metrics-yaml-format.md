@@ -36,9 +36,11 @@ Each YAML file consists of the following fields:
     * `className` - Fully qualified condition class. This class should extend from 
     `com.sematext.spm.client.observation.BeanConditionCheck`. In case of version check, the custom class should extend from
     `BaseVersionConditionCheck`. For example, refer to [EsVersionCheck](../spm-monitor-generic/src/main/java/com/sematext/spm/client/es/EsVersionCheck.java)
-    * `value` - Value to be passed to the condition class. In case of version check, you can specify individual version or ranges. Example values are `7`, `23.1.16`, `0.17-1.33.9` (match any version between specified range), 
+    * `value` - Value to be passed to the condition class. In case of version check, you can specify individual version or ranges. 
+    Example values are `7`, `23.1.16`, `0.17-1.33.9` (match any version between specified range), 
     `*-1.0` (any version till 1.0), `1.0-*` (any version greater than 1.0)
-* `accept`: Specifies the condition based on tag value for the observation to be collected. For more info refer [here](#how-to-process/skip-metrics-from-select-metric-sources)
+* `accept`: Specifies the condition based on tag value for the observation to be collected. 
+    For more info refer [here](#how-to-process-or-skip-metrics-from-selected-metric-sources)
     * `name`: Name of the tag whose value has to be compared.
     * `value`: The value to compare. This could be a literal value, `func`, `json`, `jmx`, or variable placeholder (`${}`)
 * `ignore`: Specifies the condition based on tag value, which when true the observation be ignored. Opposite of `accept`.
@@ -214,11 +216,11 @@ The App Agent allows loading custom classes (driver libraries or classes for cus
 be placed under `/opt/spm/spm-monitor/collectors/<integration>/lib` directory. Jars placed in this location will be 
 loaded during agent startup.
 
-## How to process/skip metrics from selected metric sources
-For given metric source specified in an observation, you can skip or accept metric values from selected tag values. This 
+## How to process or skip metrics from selected metric sources
+For a given metric source specified in an observation, you can skip or accept metric values from selected tag values. This 
 could be done by specifying the ignore/accept conditions. Each condition takes the tag name to compare and the value. The
 value can be a literal string, `jmx` (JMX attribute), `json` (JSONPath), or `${}` setup variable placeholder. For example,
-in case of JVM Memory Pool config, you can skip metrics from specific pool ( say `Metaspace`) using following YAML:
+in the case of JVM Memory Pool config, you can skip metrics from a specific pool ( say `Metaspace`) using the following YAML:
 
 ```yaml
 - name: jvmMemoryPool
