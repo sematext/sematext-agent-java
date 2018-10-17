@@ -12,7 +12,7 @@ Each YAML file consists of the following fields:
         * `dbDriverClass`: Fully qualified DB driver class name
         * `dbUser`: DB User name (typically passed from setup script)
         * `dbPassword`: DB Password (typically passed from setup script)
-        * `dbVerticalModel`: `true` if the each metric is present its own row. Default value is `false`, which means 
+        * `dbVerticalModel`: `true` if the each metric is present its own row. The default value is `false`, which means 
         all metrics are present in single row, where each column represents a metric. For more info refer to 
         [DB Vertical Model](#db-vertical-model)
         * `dbAdditionalConnectionParams` - Any additional connection params to be passed to the DB connection.
@@ -22,7 +22,8 @@ Each YAML file consists of the following fields:
          then `server` should be `http://localhost:9090` and `url` should be `/node/stats`.
         * `basicHttpAuthUsername`: Username for HTTP Basic authentication
         * `basicHttpAuthPassword`: Password for HTTP Basic authentication
-        * `smileFormat`: `true` if response is in smile format. The default value is `false`.
+        * `smileFormat`: `true` if response is in [smile format](https://github.com/FasterXML/smile-format-specification).
+         The default value is `false`.
         * `async`: Set to true to fetch metrics asynchronously. The default value is `false`.
         * `jsonHandlerClass`: Optional JSON handler class to parse the JSON output. The class should extend `CustomJsonHandler`. 
  * `require`: This section specify the condition that should be true to fetch the metrics defined in this YAML. 
@@ -34,6 +35,9 @@ Each YAML file consists of the following fields:
     `BaseVersionConditionCheck`. For example, refer to [EsVersionCheck](../spm-monitor-generic/src/main/java/com/sematext/spm/client/es/EsVersionCheck.java)
     * `value` - Value to be passed to the condition class. In case of version check, you can specify individual version or ranges. Example values are `7`, `23.1.16`, `0.17-1.33.9` (match any version between specified range), 
     `*-1.0` (any version till 1.0), `1.0-*` (any version greater than 1.0)
+* `accept`:
+    * `name`:
+    * `value`:
 * `observation`: This section contains the list of metric sources and the metrics/tags to be collected from these sources. 
     For each observation, we can specify the following parameters:
     * `name`: Name for identifying the observation. Recommended to be unique within an integration
@@ -41,8 +45,8 @@ Each YAML file consists of the following fields:
     For example, if you are collected Jetty metrics, then the namespace will be `jetty` for the Jetty related metrics.
     * `objectName`: JMX ObjectName pattern. You can extract tags from the key properties of the object name. For more info,
      refer to [Extracting tags from JMX ObjectName](#extracting-tags-from-jmx-objectname)
-    * `path`: JSON path to read the metrics from the response. You can extract tags from the path. For more info refer to 
-    [Extracting tags from JSON Path](#extracting-tags-from-json-path)
+    * `path`: JSON path to the objects the needs to be monitored in the response. You can extract tags from the path using placeholders.
+     For more info refer to [Extracting tags from JSON Path](#extracting-tags-from-json-path)
     
     Each observation has a list of metrics and tags under `metric` and `tag` sections.
     * Each `metric` can have following fields:
@@ -104,6 +108,20 @@ reference with `as_counter`. For example,
 
 ## Percentiles
 
+Sematext App Agent, can automatically calculate percentiles for a metric and send to the receiver. The percentiles to be
+calculated can be specified using `pctls` field. Below example will calculate 99th, 95th and 50th percentile of metric 
+`requestCount` and send it in attributes `request.count.pctl.99`, `request.count.pctl.95` and `request.count.pctl.50` 
+respectively.
+
+```yaml
+  - name: request.count
+    source: requestCount
+    type: double_gauge
+    stateful: true
+    pctls: 99,95,50
+    label: request count
+```
+
 ## DB Vertical Model
 In the case of DB source, the metrics to be collected can present in a single row or in multiple rows, 
 with each row containing the metric name and value. In such cases, you can set `dbVerticalModel` to `true`. For example,
@@ -125,11 +143,11 @@ for the below table, `dbVerticalModel` will be set to true.
 │ ArenaAllocChunks                        │         55910 │
 ```
 
-##Specifying variables in YAML
+## Specifying variables in YAML
 The App Agent allows specifying set up time variables in YAML. The variable names can be referred in the values using 
-`${VARIABLE_NAME}`. The variables will be replaced by the agent with values from the setup script while parsing the YAML.
-It is recommended to use uppercase for the setup time variables. For example, in the below YAML, the variables will be 
-replaced accordingly when passed from `setup-spm` script. If the variable is not specifying it will be replaced by empty string.
+`${VARIABLE_NAME}` placeholders. The placeholders will be replaced by the agent with values from the setup script while parsing the YAML.
+It is recommended to use uppercase for the setup time placeholders. For example, in the below YAML, the variables will be 
+replaced accordingly when passed from `setup-spm` script. If the variable is not specified, it will be replaced by empty string.
 
 ```yaml
 type: db
@@ -147,12 +165,12 @@ sudo bash /opt/spm/bin/setup-spm  --app-token d0add288-0a0f-46bb-9e1a-4928db5200
     --SPM_MONITOR_CLICKHOUSE_DB_HOST_PORT 'localhost:8123'
 ```
 
-##Extracting tags from JMX ObjectName
+## Extracting tags from JMX ObjectName
 JMX object name consists of two parts, the domain and the key properties. For e.g. In case of JVM memory pool, JMX
 object name, each pool has its own JMX object name instance, where the key `name` refers to pool name. We have instances
 like `java.lang:type=MemoryPool,name=Code Cache`, `java.lang:type=MemoryPool,name=Metaspace`, etc. The pool name can be
 extracted as tag by specifying the `objectName` pattern as `java.lang:type=MemoryPool,name=${poolName}` and mapping `poolName`
-to tag in `tag` section of observation as shown below.
+placeholder to tag in `tag` definition of observation as shown below.
 ```yaml
 - name: jvmMemoryPool
     metricNamespace: jvm
@@ -165,9 +183,28 @@ to tag in `tag` section of observation as shown below.
 Typically the keys for a given ObjectName pattern is static. In case of dynamic keys added `*` at the end of pattern for match 
 all object names. For example, refer to [Tomcat Datasource YAML](https://github.com/sematext/sematext-agent-integrations/blob/master/tomcat/jmx-datasource.yml)
 
-##Extracting tags from JSON Path
+## Extracting tags from JSON Path
+In case of JSON data source, `path` specifies set of objects which should be monitored. For each placeholder (defined
+with ${...}) any value will be accepted (while also storing the value of that placeholder). In the example below, if some setup has
+3 indices (say 'A', 'B' and 'C), each with 2 shards, meaning a total of 6 shards, there will be a total of 6
+matching objects found by this path expression (regardless off on which nodes which shards are, since total number of
+shards is 6 anyway). For each of those 6 objects, placeholder values will be available for use in tag definitions 
+(notice how value of "es.node.id" and "es.index" tags are specified - they will be resolved to exact values matching
+one of those 6 objects).
+    
+```yaml
+path: $.indices.${indexName}.shards.${shard}[?(@.routing.node=${nodeId})].merges
+...
+tag:
+  
+  - name: es.node.id
+    value: ${nodeId}
 
-##Adding custom classes to the agent
+  - name: es.index
+    value: ${indexName}
+```
+
+## Adding custom classes to the agent
 The App Agent allows loading custom classes (driver libraries or classes for custom functions/conditions). The jars can 
 be placed under `/opt/spm/spm-monitor/collectors/<integration>/lib` directory. jars placed in this location will be 
 loaded during agent startup.
