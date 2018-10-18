@@ -4,7 +4,7 @@
 
 This repository contains the source code for Sematext App Agent. Sematext App Agent can be used to collect application 
 metrics from multiple data sources. The data sources and the metrics to be collected can be defined in 
-[metrics definition YAML](/docs/metrics-yaml-format.md) files.
+[Metrics Configuration YAML](/docs/metrics-yaml-format.md) files.
 There are number of built-in integrations available for various applications in 
 [sematext-agent-integration](https://github.com/sematext/sematext-agent-integrations) repo.
 
