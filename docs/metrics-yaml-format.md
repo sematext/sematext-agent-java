@@ -46,7 +46,7 @@ observation:
         * `smileFormat`: `true` if response is in [smile format](https://github.com/FasterXML/smile-format-specification).
          The default value is `false`.
         * `async`: Set to true to fetch metrics asynchronously. The default value is `false`. Should be set to true for sources
-        that can take long time to respond, so that it does not block collection from other sources.
+        that can take a long time to respond, so that it does not block collection from other sources.
         * `jsonHandlerClass`: Optional JSON handler class to parse the JSON output. The class should extend `CustomJsonHandler`. 
  * `require`: This section specifies the condition that should be true to fetch the metrics defined in this YAML. 
     You can specify multiple require sections. Only when all the conditions are true the metrics specified in this YAML
