@@ -11,8 +11,8 @@ Sematext App Agent
 for the new integration under `/opt/spm/spm-monitor/collectors`. For example, lets assume you need to add support for 
 monitoring Jetty Web server. Jetty metrics are exposed via JMX. Create a directory `jetty` under  `/opt/spm/spm-monitor/collectors`. All the YAML 
 files specifying the Jetty metric sources and definitions will go under `/opt/spm/spm-monitor/collectors/jetty`.
-3. Create YAML files under the respective integration directory. Although you can specify all metrics even in a single YAML, 
-we recommend you group metrics by source and create multiple YAML files, one for each source. For example, in the case of 
+3. Create YAML files under the respective integration directory. We recommend you to group metrics by source and 
+create multiple YAML files, one for each source group. For example, in the case of 
 Jetty all ThreadPool related metrics in Jetty can be grouped in single YAML file `jmx-thread-pool.yml`.
 The metric source could be a JMX ObjectName pattern or a database table or a REST URL. The recommended format to name the YAML files is
  `<data-source-type>-<metric-source-name>-<integration-version>.yaml`. `integration-version` is optional. The following are a few examples:

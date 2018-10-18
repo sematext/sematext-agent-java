@@ -168,10 +168,11 @@ for the table below, `dbVerticalModel` will be set to true.
 ```
 
 ## Specifying Variables in YAML
-The App Agent lets you to specify variables in YAML. The variable names can be referenced in the values using 
-`${VARIABLE_NAME}` notation. The placeholders will be replaced by the agent with values from the setup script while parsing the YAML.
-It is recommended to use uppercase for the setup time placeholders. For example, in the below YAML, the variables will be 
-replaced accordingly when passed from `setup-spm` script. If the variable is not specified, it will be replaced by an empty string.
+The App Agent lets you to specify variables in YAML. The variable names can be referenced using `${VARIABLE_NAME}` notation.
+The placeholders will be replaced by the agent with respective arguments passed from `setup-spm` script.
+It is recommended to use uppercase for the variable names. For example, in the below YAML, the variables will be 
+replaced accordingly when passed from `setup-spm` script. If the variable is not passed in `setup-spm` script, 
+it will be replaced by an empty string.
 
 ```yaml
 type: db
@@ -253,15 +254,15 @@ in the case of JVM Memory Pool config, you can skip metrics from a specific pool
 ```
 
 ## Process or Skip YAMLs based on Conditions
-There are use cases where you might need to skip fetching all metrics defined in a YAML based on some conditions like 
-application version, installation type, etc. This condition can be specified in `require` section. 
-You can specify the condition class and pass values to the condition class from YAML using `classname` and `value` fields. 
+There are use cases where you might need to skip fetching all metrics defined in a YAML file based on some conditions like 
+application version, installation type, etc. This condition can be specified in the `require` section. 
+You can specify the condition class and pass values to the condition class using `classname` and `value` fields. 
 The condition class should extend from `com.sematext.spm.client.observation.BeanConditionCheck`. The agent provides 
-a built-in `com.sematext.spm.client.observation.BaseVersionConditionCheck` class for version check based conditions. 
-You can extends this class you version check conditions. You need to write your implementation to return correct version
-by querying application. The `value` field for version checks can take specific version or ranges. 
+a built-in `com.sematext.spm.client.observation.BaseVersionConditionCheck` base class for version check based conditions. 
+You can extend from this class and write your implementation to return the actual version. 
+The `value` field for version checks can take a specific version or ranges. 
 Example values are `7`, `23.1.16`, `0.17-1.33.9` (match any version between specified range), 
-`*-1.0` (any version till 1.0), `1.0-*` (any version greater than 1.0). In the below example, we query the old searcher 
+`*-1.0` (any version till 1.0), `1.0-*` (any version greater than 1.0). In the below example, the agent fetches the old searcher 
 metrics only for Solr version 1 to 6. `com.sematext.spm.client.solr.SolrVersionCheck` is custom condition class that extends
 `com.sematext.spm.client.observation.BaseVersionConditionCheck` and reads the version by querying specific JMX attributes.
 
