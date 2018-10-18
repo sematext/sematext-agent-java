@@ -3,7 +3,8 @@
 [![Build Status](https://travis-ci.org/sematext/sematext-agent-java.svg?branch=master)](https://travis-ci.org/sematext/sematext-agent-java)
 
 This repository contains the source code for Sematext App Agent. Sematext App Agent can be used to collect application 
-metrics from multiple data sources. The data sources and the metrics to be collected can be defined in YAML files.
+metrics from multiple data sources. The data sources and the metrics to be collected can be defined in 
+[Metrics Configuration YAML](/docs/metrics-yaml-format.md) files.
 There are number of built-in integrations available for various applications in 
 [sematext-agent-integration](https://github.com/sematext/sematext-agent-integrations) repo.
 
@@ -75,7 +76,12 @@ by changing the following properties in `/opt/spm/properties/agent.properties` f
     
 ## Contributing
 We welcome bug fixes or feature enhancements to Sematext App Agent. When done working on and testing,
-just submit a pull request to have Sematext review and merge your changes.
+just submit a pull request to have Sematext review and merge your changes. 
+
+To add support to new integration refer to
+[Steps to add new integration in Sematext App Agent](/docs/add-new-integration.md)
+
+
 
 
 
