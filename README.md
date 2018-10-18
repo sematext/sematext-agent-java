@@ -79,7 +79,7 @@ We welcome bug fixes or feature enhancements to Sematext App Agent. When done wo
 just submit a pull request to have Sematext review and merge your changes. 
 
 To add support to new integration refer to
-[Steps to add new integration in Sematext App Agent](/docs/add-new-integration.md)
+[Adding a New Agent Integration](/docs/add-new-integration.md)
 
 
 
