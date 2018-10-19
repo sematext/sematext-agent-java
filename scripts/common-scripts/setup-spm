@@ -48,6 +48,8 @@ function parse_param {
         JMX_TRUSTSTORE=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "jmx-trust-store-pass" ]; then
         JMX_TRUSTSTORE_PASS=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "start-agent" ]; then
+        START_AGENT=$CURRENT_PARAM_VALUE
       else
         ADDITIONAL_PARAMS[${#ADDITIONAL_PARAMS[@]}]="$CURRENT_PARAM_NAME=$CURRENT_PARAM_VALUE"
       fi  
@@ -150,6 +152,10 @@ function setup_conf {
     if [ ! -z "$CONFIG_SUBTYPE" ]; then
       CONFIG_SUBTYPE="-$CONFIG_SUBTYPE"
     fi
+    
+    if [ -z "$START_AGENT" ]; then
+      START_AGENT="true"
+    fi
 
     cp -p $SPM_HOME/spm-monitor/templates/monitor-template-config.properties $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
 
@@ -244,7 +250,7 @@ function setup_conf {
       esac
     fi
     
-    if [ "standalone" == "$MONITOR_TYPE" ]; then
+    if [ "standalone" == "$MONITOR_TYPE" ] && [ "true" == "$START_AGENT" ]; then
       service spm-monitor restart
     fi
     
