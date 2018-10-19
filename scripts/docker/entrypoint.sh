@@ -32,16 +32,29 @@ if [ "$1" = 'spm-monitor' ]; then
   if [ -z "$JVM_NAME" ]; then
      JVM_NAME=default
   fi	  
+
   bash \
      $SPM_HOME/bin/setup-spm  \
+     --start-agent false \
      --app-token $APP_TOKEN   \
      --app-type $APP_TYPE  \
+     --app-subtype $APP_SUBTYPE \
      --agent-type $AGENT_TYPE \
-     --jvm-name $JVM_NAME
+     --jvm-name $JVM_NAME \
+     --jmx-params $JMX_PARAMS \
+     --metrics-receiver $METRICS_RECEIVER \
+     --tracing-receiver $TRACE_RECEIVER \
+     --region $REGION \
+     --jmx-host $JMX_HOST \
+     --jmx-port $JMX_PORT \
+     --jmx-pass-file $JMX_PASS_FILE \
+     --jmx-trust-store $JMX_TRUSTSTORE \
+     --jmx-trust-store-pass $JMX_TRUSTSTORE_PASS \
+     $EXTRA_PARAMS
   
   if [ $? -ne 0 ]; then
      exit 1
-  if
+  fi
 
   exec \
      $JAVA \
