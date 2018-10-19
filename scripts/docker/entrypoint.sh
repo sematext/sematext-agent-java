@@ -38,6 +38,11 @@ if [ "$1" = 'spm-monitor' ]; then
      --app-type $APP_TYPE  \
      --agent-type $AGENT_TYPE \
      --jvm-name $JVM_NAME
+  
+  if [ $? -ne 0 ]; then
+     exit 1
+  if
+
   exec \
      $JAVA \
      $SPM_MONITOR_JMX_PARAMS \
