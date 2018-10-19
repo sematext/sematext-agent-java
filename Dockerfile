@@ -41,9 +41,11 @@ COPY \
 
 RUN \
    mkdir -p "${BASE_DIR}/spm-monitor" && \
+   mkdir -p "${BASE_DIR}/spm-monitor/conf" && \
+   mkdir -p "${BASE_DIR}/spm-monitor/run" && \
    curl -L https://github.com/sematext/sematext-agent-integrations/tarball/master > /tmp/configs.tar && \
    tar -xvzf /tmp/configs.tar -C "${BASE_DIR}/spm-monitor/" && \
-   #mv "${BASE_DIR}/spm-monitor/sematext-sematext-agent-integrations-*" "${BASE_DIR}/spm-monitor/collectors" && \
+   mv "${BASE_DIR}"/spm-monitor/sematext-sematext-agent-integrations-* "${BASE_DIR}/spm-monitor/collectors" && \
    rm /tmp/configs.tar
 
 COPY \
@@ -54,6 +56,7 @@ COPY \
   "${BASE_DIR}/spm-monitor/lib/"
 
 COPY spm-client-common-libs/target/*-withdeps.jar "${BASE_DIR}/spm-monitor/lib/internal/common/"
+COPY "$FPM_PATH/../conf/monitor-template-config.properties" "${BASE_DIR}/spm-monitor/templates/"
 
 COPY \
     ./scripts/docker/entrypoint.sh \
