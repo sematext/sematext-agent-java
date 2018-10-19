@@ -65,5 +65,7 @@ COPY \
 
 RUN /unver.sh
 
+VOLUME "${BASE_DIR}"
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["spm-monitor"]
