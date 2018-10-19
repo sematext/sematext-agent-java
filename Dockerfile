@@ -11,6 +11,7 @@ RUN \
           unzip \
           bzip2 \
           curl \
+	  sudo \
 	  locales && \
   curl -skvLO \
        -H "Cookie: oraclelicense=accept-securebackup-cookie;" \
@@ -61,6 +62,7 @@ COPY "$FPM_PATH/../conf/monitor-template-config.properties" "${BASE_DIR}/spm-mon
 COPY \
     ./scripts/docker/entrypoint.sh \
     ./scripts/docker/unver.sh \
+    "${FPM_PATH}/../common-scripts/setup-env" \
     /
 
 RUN /unver.sh
