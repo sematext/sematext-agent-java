@@ -28,13 +28,22 @@ if [ -z "$SPM_MONITOR_JAR" ]; then
   SPM_MONITOR_JAR="$SPM_HOME/spm-monitor/lib/spm-monitor-generic.jar"
 fi
 
-if [ "$1" = 'spm-monitor' ]; then 
+if [ "$1" = 'spm-monitor' ]; then
+  if [ -z "$JVM_NAME" ]; then
+     JVM_NAME=default
+  fi	  
+  bash \
+     $SPM_HOME/bin/setup-spm  \
+     --app-token $APP_TOKEN   \
+     --app-type $APP_TYPE  \
+     --agent-type $AGENT_TYPE \
+     --jvm-name $JVM_NAME
   exec \
      $JAVA \
      $SPM_MONITOR_JMX_PARAMS \
      $JAVA_OPTIONS \
      -Dspm.home=$SPM_HOME \
      -cp $SPM_MONITOR_JAR $SPM_MONITOR_STANDALONE_CLASS \
-     $SPM_HOME/spm-monitor 
+     $SPM_HOME/spm-monitor/conf/spm-monitor-config-$APP_TOKEN-$JVM_NAME.properties 
 fi
 
