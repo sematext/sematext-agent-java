@@ -52,7 +52,7 @@ RUN \
 COPY \
   spm-monitor-generic/target/*-withdeps.jar \
   spm-monitor-storm/target/*-withdeps.jar \
-  spm-montor-proxy/target/*-withdeps.jar \
+  spm-monitor-redis/target/*-withdeps.jar \
   spm-monitor-haproxy/target/*-withdeps.jar \
   "${BASE_DIR}/spm-monitor/lib/"
 
@@ -70,4 +70,4 @@ RUN /unver.sh
 VOLUME "${BASE_DIR}"
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["spm-monitor"]
+CMD ["spm-monitor-generic"]
