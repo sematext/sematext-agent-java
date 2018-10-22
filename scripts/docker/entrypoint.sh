@@ -2,8 +2,7 @@
 
 SPM_MONITOR_STANDALONE_CLASS="com.sematext.spm.client.StandaloneMonitorAgent"
 
-if [ -z "$JAVA" ]
-then
+if [ -z "$JAVA" ]; then
   JAVA=$(command -v java)
 fi
 
@@ -11,8 +10,7 @@ if [ -z "$SPM_HOME" ]; then
   SPM_HOME=/opt/spm
 fi
 
-if [ -z "$JAVA_DEFAULTS" ]
-then
+if [ -z "$JAVA_DEFAULTS" ]; then
   JAVA_OPTIONS="$JAVA_OPTIONS -server "
   JAVA_OPTIONS="$JAVA_OPTIONS -Xmx320m -Xms64m -Xss256k"
 else
