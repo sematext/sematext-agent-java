@@ -55,7 +55,7 @@ the build with regular user:
 DOCKER_HOST=tcp://0.0.0.0:2375 mvn clean install dockerfile:build
 ```
 
-Once image is built, launching a new container with Sematext App Agent can be achieved with the following command:
+Once the image is built, launching a new container with Sematext App Agent can be achieved with the following command:
 
 ```bash
 sudo docker run -i -t --name solr-app-agent -e APP_TOKEN=<app-token> -e AGENT_TYPE=standalone -e APP_TYPE=solr -e JMX_PARAMS=-Dspm.remote.jmx.url=172.17.0.4:3000 spm-client:version
