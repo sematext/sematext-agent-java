@@ -7,7 +7,7 @@ ENV FPM_PATH scripts/fpm
 RUN \
   apt-get update && \
   apt-get -y install \
-       openjdk-11-jdk \
+       openjdk-11-jre-headless \
        software-properties-common \
        unzip \
        bzip2 \
