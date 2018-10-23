@@ -19,22 +19,20 @@
  */
 package com.sematext.spm.client.storm;
 
-import org.apache.thrift7.TException;
-import org.apache.thrift7.protocol.TBinaryProtocol;
-import org.apache.thrift7.transport.TFramedTransport;
-import org.apache.thrift7.transport.TSocket;
-import org.apache.thrift7.transport.TTransportException;
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
+import org.apache.storm.generated.*;
+import org.apache.storm.thrift.TException;
+import org.apache.storm.thrift.protocol.TBinaryProtocol;
+import org.apache.storm.thrift.transport.TFramedTransport;
+import org.apache.storm.thrift.transport.TSocket;
+import org.apache.storm.thrift.transport.TTransportException;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import com.sematext.spm.client.Log;
-import com.sematext.spm.client.LogFactory;
-
-import backtype.storm.generated.*;
 
 public final class StormInfoSource {
   private static final Log LOG = LogFactory.getLog(StormInfoSource.class);
@@ -212,8 +210,6 @@ public final class StormInfoSource {
       } catch (TTransportException e) {
         LOG.error("Can't get info from Nimbus", e);
       } catch (TException e) {
-        LOG.error("Can't get info from Nimbus", e);
-      } catch (NotAliveException e) {
         LOG.error("Can't get info from Nimbus", e);
       } finally {
         tTransport.close();
