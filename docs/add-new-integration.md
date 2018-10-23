@@ -12,10 +12,11 @@ for the new integration under `/opt/spm/spm-monitor/collectors`. For example, le
 monitoring Jetty Web server. Jetty metrics are exposed via JMX. Create a directory `jetty` under  `/opt/spm/spm-monitor/collectors`. All the YAML 
 files specifying the Jetty metric sources and definitions will go under `/opt/spm/spm-monitor/collectors/jetty`.
 3. Create YAML files under the respective integration directory. We recommend you to group metrics by source and 
-create multiple YAML files, one for each source group. For JSON & DB data source, each YAML can have single
-data source (URL or SQL query). For JMX data source, it is possible to have multiple object name patterns in single file. 
-For example, in the case of Jetty all ThreadPool related metrics in Jetty can be grouped in single YAML file `jmx-thread-pool.yml`.
-The metric source could be a JMX ObjectName pattern or a database table or a REST URL. The recommended format to name the YAML files is
+create multiple YAML files, one for each source group. The metric source could be a JMX ObjectName pattern or 
+a DB SQL query or a REST URL. For JSON & DB data source, each YAML can have a single
+data source (URL or SQL query). For JMX data source, it is possible to have multiple object name patterns in a single file. 
+For example, in the case of Jetty, all ThreadPool related metrics in Jetty can be grouped in single YAML file `jmx-thread-pool.yml`.
+The recommended format to name the YAML files is
  `<data-source-type>-<metric-source-name>-<integration-version>.yaml`. `integration-version` is optional. The following are a few examples:
     * `jmx-executor.yml` - Executor Service related metrics from JMX endpoint 
     * `db-system-events.yml` - All metrics from System Events table from DB endpoint
