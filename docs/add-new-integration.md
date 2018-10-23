@@ -1,6 +1,6 @@
 ## Adding a New Agent Integration
 Adding a new integration that collects data from one of the available sources is easy and involves no coding. 
-To add a new integration only a set of configuration (YML) files are needed. These config files specify the data source,
+To add a new integration only a set of configuration YAML files are needed. These config files specify the data source,
 as well as individual metrics to collect. The steps to add and verify a new Sematext App Agent integration are as follows:
 
 1. Make sure you have the latest version of Sematext App Agent installed in your system. There are two ways to install 
@@ -13,7 +13,7 @@ monitoring Jetty Web server. Jetty metrics are exposed via JMX. Create a directo
 files specifying the Jetty metric sources and definitions will go under `/opt/spm/spm-monitor/collectors/jetty`.
 3. Create YAML files under the respective integration directory. We recommend you to group metrics by source and 
 create multiple YAML files, one for each source group. The metric source could be a JMX ObjectName pattern or 
-a DB SQL query or a REST URL. For JSON & DB data source, each YAML can have a single
+a DB SQL query or a HTTP URL. For JSON & DB data source, each YAML can have a single
 data source (URL or SQL query). For JMX data source, it is possible to have multiple object name patterns in a single file. 
 For example, in the case of Jetty, all ThreadPool related metrics in Jetty can be grouped in single YAML file `jmx-thread-pool.yml`.
 The recommended format to name the YAML files is
