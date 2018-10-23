@@ -41,6 +41,28 @@ To build Sematext App Agent you need:
 
 After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions.
 
+### Docker
+
+Docker image building for Sematext App Agent is triggered by Maven target:
+
+```bash
+$ sudo mvn clean install dockerfile:build
+```
+
+If Docker daemon is listening on TCP socket, you can set `DOCKER_HOST` environment variable and start
+the build with regular user:
+
+```bash
+DOCKER_HOST=tcp://0.0.0.0:2375 mvn clean install dockerfile:build
+```
+
+Once the image is built, launching a new container with Sematext App Agent can be achieved with the following command:
+
+```bash
+sudo docker run -i -t --name solr-app-agent -e APP_TOKEN=<app-token> -e AGENT_TYPE=standalone -e APP_TYPE=solr -e JMX_PARAMS=-Dspm.remote.jmx.url=172.17.0.4:3000 spm-client:version
+```
+
+
 ### Set up
 The packages can be installed using OS specific package manager like dpkg, yum, etc. Once installed a new App can be 
 set up by running `setup-spm` command. For example, to set up monitoring for a JVM application in standalone mode, add
