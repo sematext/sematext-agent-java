@@ -13,7 +13,8 @@ RUN \
        bzip2 \
        curl \
        sudo \
-       locales
+       locales && \
+  rm -rf /var/lib/apt/lists/*
 
 COPY \
   "${FPM_PATH}/../common-scripts/setup-spm" \
