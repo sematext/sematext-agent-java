@@ -50,7 +50,11 @@ import com.sematext.spm.client.sender.flume.es.ProxyContext;
 
 public class HttpInfluxClient extends InfluxClient {
   private static final Log logger = LogFactory.getLog(HttpInfluxClient.class);
-
+  
+  private static final int CONNECTION_TIMEOUT_MS = 30000;
+  private static final int CONNECTION_REQUEST_TIMEOUT_MS = 30000;
+  private static final int SOCKET_TIMEOUT_MS = 30000;
+  
   private HttpClient httpClient;
   private String fixedFullUrl;
   private String baseServerUrl;
@@ -131,7 +135,7 @@ public class HttpInfluxClient extends InfluxClient {
             .build();
 
         HttpHost proxy = new HttpHost(proxyContext.getHost(), proxyContext.getPort(), useHttps ? "https" : "http");
-        requestConfig = RequestConfig.custom().setProxy(proxy).build();
+        requestConfig = getRequestConfig(proxy);
 
         return client;
       } else {
@@ -139,11 +143,26 @@ public class HttpInfluxClient extends InfluxClient {
             .setSslcontext(sslContext)
             .setSSLHostnameVerifier(new NoopHostnameVerifier())
             .build();
+        requestConfig = getRequestConfig(null);
         return client;
       }
     } catch (Throwable thr) {
       throw new RuntimeException("Can't create http client", thr);
     }
+  }
+  
+  private RequestConfig getRequestConfig(HttpHost proxyHost) {
+    RequestConfig.Builder requestConfig = RequestConfig.custom();
+    
+    requestConfig.setConnectTimeout(CONNECTION_TIMEOUT_MS);
+    requestConfig.setConnectionRequestTimeout(CONNECTION_REQUEST_TIMEOUT_MS);
+    requestConfig.setSocketTimeout(SOCKET_TIMEOUT_MS);
+    
+    if (proxyHost != null) {
+      requestConfig.setProxy(proxyHost);
+    }
+    
+    return requestConfig.build();    
   }
 
   @Override
