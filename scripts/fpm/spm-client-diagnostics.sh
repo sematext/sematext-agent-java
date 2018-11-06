@@ -253,6 +253,8 @@ ps -ef | egrep 'ntpd|chrony' &> $DIAG_DIR/ps-ntpd.txt
 
 top -c -b -d 3 -n 5 &> $DIAG_DIR/top.txt
 
+dmesg | tail -n 1000 &> $DIAG_DIR/dmesg.txt
+
 # rc.local
 if [ -f /etc/rc.local ]; then
   cp /etc/rc.local $DIAG_DIR/rc.local.txt
