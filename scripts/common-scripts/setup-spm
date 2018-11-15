@@ -250,10 +250,6 @@ function setup_conf {
       esac
     fi
     
-    if [ "standalone" == "$MONITOR_TYPE" ] && [ "true" == "$START_AGENT" ]; then
-      service spm-monitor restart
-    fi
-    
     # separately set env properties if they were sent as params
     ENV_PARAMS=""
     if [ ! -z $REGION_PARAM ]; then
@@ -268,6 +264,10 @@ function setup_conf {
     if [ ! -z "$ENV_PARAMS" ]; then
       bash ./setup-env $ENV_PARAMS
     fi
+
+    if [ "true" == "$START_AGENT" ]; then
+      service spm-monitor restart
+    fi    
 }
 
 echo "Setting up application monitor config..."
