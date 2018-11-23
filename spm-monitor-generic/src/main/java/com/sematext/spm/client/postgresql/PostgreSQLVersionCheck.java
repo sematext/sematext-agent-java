@@ -66,30 +66,7 @@ public class PostgreSQLVersionCheck extends BaseVersionConditionCheck {
             if (rs.next()) {
                 String version = rs.getString(1).trim();
 
-                int[] versions;
-                try {
-                    String[] versionParts = version.split(" ")[0].split(".");
-                    versions = new int[versionParts.length];
-                    for(int i = 0; i < versionParts.length; i++) {
-                        versions[i] = Integer.parseInt(versionParts[i]);
-                    }
-
-                    return version;
-                } catch (Exception e) {
-                    // Postgres might be in development, with format \d+[beta|rc]\d+
-                    Pattern pattern = Pattern.compile("(\\d+)([a-zA-Z]+)(\\d+)");
-                    Matcher m = pattern.matcher(version);
-                    if (m.matches() && m.groupCount() == 3) {
-                        versions = new int[3];
-                        versions[0] = Integer.parseInt(m.group(1));
-                        versions[1] = -1;
-                        versions[2] = Integer.parseInt(m.group(3));
-                    } else {
-                        return null;
-                    }
-
-                    return versions[0] + ".-1." + versions[2]; //TODO check if support 2.-1.3 version (which is < 2.0)
-                }
+                return getVersion(version);
             }
 
             return null;
@@ -97,6 +74,35 @@ public class PostgreSQLVersionCheck extends BaseVersionConditionCheck {
             LOG.error("Error while reading postgresql version", e);
 
             return null;
+        }
+    }
+
+    public String getVersion(String version) {
+        int[] versions;
+        try {
+            String versionPart = version.split(" ")[0];
+            String[] versionParts = versionPart.split("\\.");
+
+            versions = new int[versionParts.length];
+            for(int i = 0; i < versionParts.length; i++) {
+                versions[i] = Integer.parseInt(versionParts[i]);
+            }
+
+            return versionPart;
+        } catch (Exception e) {
+            // Postgres might be in development, with format \d+[beta|rc]\d+
+            Pattern pattern = Pattern.compile("(\\d+)([a-zA-Z]+)(\\d+)");
+            Matcher m = pattern.matcher(version);
+            if (m.matches() && m.groupCount() == 3) {
+                versions = new int[3];
+                versions[0] = Integer.parseInt(m.group(1));
+                versions[1] = -1;
+                versions[2] = Integer.parseInt(m.group(3));
+            } else {
+                return null;
+            }
+
+            return versions[0] + ".-1." + versions[2]; //TODO check if support 2.-1.3 version (which is < 2.0)
         }
     }
 }
