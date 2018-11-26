@@ -14,6 +14,6 @@ public class PosgreSQLVersionCheckTest {
         Assert.assertEquals("10.6", check.getVersion(rawVersion));
 
         rawVersion = "11beta3";
-        Assert.assertEquals("11.-1.3", check.getVersion(rawVersion));
+        Assert.assertEquals("11", check.getVersion(rawVersion));
     }
 }

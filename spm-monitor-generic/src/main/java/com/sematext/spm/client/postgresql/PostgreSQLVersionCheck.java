@@ -102,7 +102,7 @@ public class PostgreSQLVersionCheck extends BaseVersionConditionCheck {
                 return null;
             }
 
-            return versions[0] + ".-1." + versions[2]; //TODO check if support 2.-1.3 version (which is < 2.0)
+            return m.group(1); // for beta version 11beta3 return only 11
         }
     }
 }
