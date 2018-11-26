@@ -21,7 +21,9 @@ function parse_param {
       echo "WARN: Found param value $CURRENT_PARAM_VALUE without preceding param name"
     else
       if [ "$CURRENT_PARAM_NAME" == "app-token" ]; then
-        APP_TOKEN=$CURRENT_PARAM_VALUE
+        MONITORING_TOKEN=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "monitoring-token" ]; then
+        MONITORING_TOKEN=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "region" ]; then
         REGION_PARAM=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "tracing-receiver" ]; then
@@ -113,7 +115,7 @@ function setup_conf {
       fi
     fi
     
-    if [ -z "$APP_TOKEN" ]; then
+    if [ -z "$MONITORING_TOKEN" ]; then
       tput setab 1
       tput setaf 7
       echo "Parameter --app-token is missing"
@@ -157,7 +159,7 @@ function setup_conf {
       START_AGENT="true"
     fi
 
-    cp -p $SPM_HOME/spm-monitor/templates/monitor-template-config.properties $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+    cp -p $SPM_HOME/spm-monitor/templates/monitor-template-config.properties $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
 
     if [ "$?" != "0" ]; then
       tput setab 1
@@ -167,14 +169,14 @@ function setup_conf {
       support
       exit 1
     fi
-    chmod 777 $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+    chmod 777 $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
     
     if [ "standalone" == "$MONITOR_TYPE" ]; then
-      sed -i '/SPM_MONITOR_IN_PROCESS=/c\'"SPM_MONITOR_IN_PROCESS=\"false\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
-      sed -i '/THREAD_INSTRUMENTATION_ENABLED=/c\'"THREAD_INSTRUMENTATION_ENABLED=false"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+      sed -i '/SPM_MONITOR_IN_PROCESS=/c\'"SPM_MONITOR_IN_PROCESS=\"false\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
+      sed -i '/THREAD_INSTRUMENTATION_ENABLED=/c\'"THREAD_INSTRUMENTATION_ENABLED=false"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
       # if jmx-params are present, do the replacement right now
       if [ !  -z $SPM_MONITOR_JMX_PARAMS ]; then
-        sed -i '/SPM_MONITOR_JMX_PARAMS=\"\"/c\'"SPM_MONITOR_JMX_PARAMS=\"$SPM_MONITOR_JMX_PARAMS\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        sed -i '/SPM_MONITOR_JMX_PARAMS=\"\"/c\'"SPM_MONITOR_JMX_PARAMS=\"$SPM_MONITOR_JMX_PARAMS\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
       elif [ ! -z $JMX_HOST ] && [ ! -z $JMX_PORT ]; then
         REPLACEMENT_JMX_LINE="SPM_MONITOR_JMX_PARAMS=\"-Dspm.remote.jmx.url=$JMX_HOST:$JMX_PORT\""
         if [ ! -z $JMX_PASS_FILE ]; then
@@ -186,11 +188,11 @@ function setup_conf {
         fi
         
         # now replace
-        sed -i '/SPM_MONITOR_JMX_PARAMS=\"\"/c\'"$REPLACEMENT_JMX_LINE"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        sed -i '/SPM_MONITOR_JMX_PARAMS=\"\"/c\'"$REPLACEMENT_JMX_LINE"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
       fi
     else
-      sed -i '/SPM_MONITOR_IN_PROCESS=/c\'"SPM_MONITOR_IN_PROCESS=\"true\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
-      sed -i '/THREAD_INSTRUMENTATION_ENABLED=/c\'"THREAD_INSTRUMENTATION_ENABLED=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+      sed -i '/SPM_MONITOR_IN_PROCESS=/c\'"SPM_MONITOR_IN_PROCESS=\"true\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
+      sed -i '/THREAD_INSTRUMENTATION_ENABLED=/c\'"THREAD_INSTRUMENTATION_ENABLED=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
     fi
         
     for addProp in "${ADDITIONAL_PARAMS[@]}"; do
@@ -199,12 +201,12 @@ function setup_conf {
       if [ "$propName" == "$addProp" ]; then
         echo "Invalid property definition: $addProp"
       else
-        grep -v "$propName=" $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties > $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties.tmp
-        mv $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties.tmp $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
-        chmod 777 $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
-        chown spmmon:spmmon $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
-        echo "" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
-        echo "$addProp" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        grep -v "$propName=" $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties > $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties.tmp
+        mv $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties.tmp $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
+        chmod 777 $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
+        chown spmmon:spmmon $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
+        echo "" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
+        echo "$addProp" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
       fi
     done
     
@@ -220,32 +222,32 @@ function setup_conf {
     case $APP_TYPE in
       cassandra|hadoop|hbase|kafka|solr|solrcloud|spark|storm|tomcat|zookeeper)
         SPM_MONITOR_COLLECTORS="$SPM_MONITOR_COLLECTORS,jvm"
-        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
         ;;
       elasticsearch)
-        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
         ;;
       *)
-        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=false"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=false"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
         ;;
     esac
 
     case $APP_TYPE in
       storm|redis|haproxy)
-        echo "SPM_MONITOR_JAR=/opt/spm/spm-monitor/lib/spm-monitor-$APP_TYPE.jar" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+        echo "SPM_MONITOR_JAR=/opt/spm/spm-monitor/lib/spm-monitor-$APP_TYPE.jar" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
     esac
     
-    echo -e "\nSPM_MONITOR_COLLECTORS=\"$SPM_MONITOR_COLLECTORS\"" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+    echo -e "\nSPM_MONITOR_COLLECTORS=\"$SPM_MONITOR_COLLECTORS\"" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
 
     SPM_MONITOR_TAGS_REPLACEMENT="SPM_MONITOR_TAGS=\"appType:$APP_TYPE_TAG\""
-    sed -i '/SPM_MONITOR_TAGS=\"\"/c\'"$SPM_MONITOR_TAGS_REPLACEMENT"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+    sed -i '/SPM_MONITOR_TAGS=\"\"/c\'"$SPM_MONITOR_TAGS_REPLACEMENT"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
 
     # set JAVA_DEFAULTS
     if [ "standalone" == "$MONITOR_TYPE" ]; then
       case $APP_TYPE in
         es|solr|solrcloud)
-          echo -e "\n# DO NOT EDIT THE FOLLOWING PROPERTY!" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
-          echo -e "JAVA_DEFAULTS=\"-server -Xmx320m -Xms64m -Xss256k\"" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$APP_TOKEN-$JVM_NAME.properties
+          echo -e "\n# DO NOT EDIT THE FOLLOWING PROPERTY!" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
+          echo -e "JAVA_DEFAULTS=\"-server -Xmx320m -Xms64m -Xss256k\"" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
         ;;
       esac
     fi
