@@ -118,7 +118,7 @@ function setup_conf {
     if [ -z "$MONITORING_TOKEN" ]; then
       tput setab 1
       tput setaf 7
-      echo "Parameter --app-token is missing"
+      echo "Parameter --monitoring-token or --app-token is missing"
       tput op
       support
       exit 1

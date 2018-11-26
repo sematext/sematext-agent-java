@@ -31,7 +31,7 @@ case $1 in
          bash \
             $SPM_HOME/bin/setup-spm  \
             --start-agent false \
-            --app-token $APP_TOKEN   \
+            --monitoring-token $APP_TOKEN   \
             --app-type $APP_TYPE  \
             --app-subtype $APP_SUBTYPE \
             --agent-type $AGENT_TYPE \

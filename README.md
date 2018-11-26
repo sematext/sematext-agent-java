@@ -59,7 +59,7 @@ DOCKER_HOST=tcp://0.0.0.0:2375 mvn clean install dockerfile:build
 Once the image is built, launching a new container with Sematext App Agent can be achieved with the following command:
 
 ```bash
-sudo docker run -i -t --name solr-app-agent -e APP_TOKEN=<app-token> -e AGENT_TYPE=standalone -e APP_TYPE=solr -e JMX_PARAMS=-Dspm.remote.jmx.url=172.17.0.4:3000 spm-client:version
+sudo docker run -i -t --name solr-app-agent -e APP_TOKEN=<monitoring-token> -e AGENT_TYPE=standalone -e APP_TYPE=solr -e JMX_PARAMS=-Dspm.remote.jmx.url=172.17.0.4:3000 spm-client:version
 ```
 
 
@@ -74,13 +74,13 @@ to startup arguments of Java process you wish to monitor. Then you can set up ne
 
 ```bash
 sudo bash /opt/spm/bin/setup-spm  \
-    --app-token <app-token>   \
+    --monitoring-token <monitoring-token>   \
     --app-type jvm  \
     --agent-type standalone \
     --jmx-params '-Dspm.remote.jmx.url=localhost:3000'
 ```
 
-`<app-token>` - App Token should point to Sematext App Token if you are sending metrics to Sematext. App is an entity to 
+`<monitoring-token>` - Monitoring Token should point to Sematext App Token if you are sending metrics to Sematext. App is an entity to 
 group similar/related metrics. e.g. All Elasticsearch metrics can be grouped under Elasticsearch App. Each App has a unique token.
 For other Influx endpoints you can specify a hexadecimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx` 
 e.g. `d0add28a-0a0f-46b2-9e1e-4928db5200e7`.
