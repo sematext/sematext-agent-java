@@ -31,7 +31,7 @@ case $1 in
          bash \
             $SPM_HOME/bin/setup-spm  \
             --start-agent false \
-            --app-token $APP_TOKEN   \
+            --monitoring-token $MONITORING_TOKEN   \
             --app-type $APP_TYPE  \
             --app-subtype $APP_SUBTYPE \
             --agent-type $AGENT_TYPE \
@@ -57,7 +57,7 @@ case $1 in
             $JAVA_OPTIONS \
             -Dspm.home=$SPM_HOME \
             -cp "$SPM_HOME/spm-monitor/lib/$1.jar" $SPM_MONITOR_STANDALONE_CLASS \
-            $SPM_HOME/spm-monitor/conf/spm-monitor-config-$APP_TOKEN-$JVM_NAME.properties
+            $SPM_HOME/spm-monitor/conf/spm-monitor-config-$MONITORING_TOKEN-$JVM_NAME.properties
             ;;
      *)
          exec "$@"

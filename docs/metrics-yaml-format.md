@@ -186,7 +186,7 @@ data:
 ``` 
 
 ```bash
-sudo bash /opt/spm/bin/setup-spm  --app-token d0add288-0a0f-46bb-9e1a-4928db5200e7  --app-type clickhouse   \
+sudo bash /opt/spm/bin/setup-spm  --monitoring-token d0add288-0a0f-46bb-9e1a-4928db5200e7  --app-type clickhouse   \
     --agent-type standalone      --SPM_MONITOR_CLICKHOUSE_DB_USER ''      --SPM_MONITOR_CLICKHOUSE_DB_PASSWORD '' \
     --SPM_MONITOR_CLICKHOUSE_DB_HOST_PORT 'localhost:8123'
 ```
