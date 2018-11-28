@@ -25,7 +25,9 @@ function parse_param {
       elif [ "$CURRENT_PARAM_NAME" == "tracing-receiver" ]; then
         SPM_TRACING_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "metrics-receiver" ]; then
-        SPM_METRICS_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
+        SPM_MONITORING_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "monitoring-receiver" ]; then
+        SPM_MONITORING_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "proxy-host" ]; then
         PROXY_HOST_PARAM_SET=true
         PROXY_HOST_PARAM=$CURRENT_PARAM_VALUE
@@ -102,12 +104,12 @@ function setup_env {
       fi
     fi
 
-    if [ ! -z "$SPM_METRICS_RECEIVER_URL_PARAM" ]; then
+    if [ ! -z "$SPM_MONITORING_RECEIVER_URL_PARAM" ]; then
       if `grep server_base_url $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
-        SPM_METRICS_RECEIVER_URL=$(echo "$SPM_METRICS_RECEIVER_URL_PARAM" | sed 's/\//\\\//g')
+        SPM_METRICS_RECEIVER_URL=$(echo "$SPM_MONITORING_RECEIVER_URL_PARAM" | sed 's/\//\\\//g')
         sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SPM_METRICS_RECEIVER_URL/" $SPM_HOME/properties/agent.properties
       else
-        sudo echo "server_base_url=$SPM_METRICS_RECEIVER_URL_PARAM" >> $SPM_HOME/properties/agent.properties
+        sudo echo "server_base_url=$SPM_MONITORING_RECEIVER_URL_PARAM" >> $SPM_HOME/properties/agent.properties
       fi
     fi
     

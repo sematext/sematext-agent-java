@@ -29,7 +29,9 @@ function parse_param {
       elif [ "$CURRENT_PARAM_NAME" == "tracing-receiver" ]; then
         SPM_TRACING_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "metrics-receiver" ]; then
-        SPM_METRICS_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
+        SPM_MONITORING_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "monitoring-receiver" ]; then
+        SPM_MONITORING_RECEIVER_URL_PARAM=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "app-type" ]; then
         APP_TYPE=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "agent-type" ]; then
@@ -260,8 +262,8 @@ function setup_conf {
     if [ ! -z $SPM_TRACING_RECEIVER_URL_PARAM ]; then
       ENV_PARAMS="$ENV_PARAMS --tracing-receiver $SPM_TRACING_RECEIVER_URL_PARAM"
     fi
-    if [ ! -z $SPM_METRICS_RECEIVER_URL_PARAM ]; then
-      ENV_PARAMS="$ENV_PARAMS --metrics-receiver $SPM_METRICS_RECEIVER_URL_PARAM"
+    if [ ! -z $SPM_MONITORING_RECEIVER_URL_PARAM ]; then
+      ENV_PARAMS="$ENV_PARAMS --monitoring-receiver $SPM_MONITORING_RECEIVER_URL_PARAM"
     fi
     if [ ! -z "$ENV_PARAMS" ]; then
       bash ./setup-env $ENV_PARAMS
