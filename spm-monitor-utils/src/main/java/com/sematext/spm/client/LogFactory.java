@@ -25,9 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This is a wrapper for logging systems. There are known issues with using log4j & commons-logging when adding
@@ -152,11 +150,11 @@ public final class LogFactory {
       return enabled(LogLevel.WARN);
     }
 
-    private void write(String level, Object message) {
+    protected void write(String level, Object message) {
       current.write(LogUtils.format(dateFormat, level, name, message));
     }
 
-    private void write(String level, Object message, Throwable t) {
+    protected void write(String level, Object message, Throwable t) {
       current.write(LogUtils.format(dateFormat, level, name, message), t);
     }
 
@@ -255,7 +253,7 @@ public final class LogFactory {
     }
   }
 
-  protected static class ReducedSimpleLogImpl extends SimpleLogImpl {
+  protected static class ReducedSimpleLogImpl extends DeduplicatingErrorsLogImpl {
     protected ReducedSimpleLogImpl(String name) {
       super(name, LogLevel.ERROR);
     }
@@ -264,190 +262,24 @@ public final class LogFactory {
   /**
    * possible solution to reduce amount of error messages written to monitor logs; not used yet
    */
-  protected static class DeduplicatingErrorsLogImpl implements Log {
-    private String name;
-    private DateFormat dateFormat;
-    private Map<String, Long> loggedErrorMessageTimes = new ConcurrentHashMap<String, Long>();
-    private static Long MIN_TIME_BETWEEN_TWO_SAME_MESSAGES = 60 * 60 * 1000L;
-    private static Long MAX_NUM_OF_STORED_MSGS = 50L;
-    private final LogLevel level;
-
+  protected static class DeduplicatingErrorsLogImpl extends SimpleLogImpl {
     protected DeduplicatingErrorsLogImpl(String name, LogLevel logLevel) {
-      this.name = name;
-      dateFormat = new SimpleDateFormat(LogUtils.dataFormat);
-      dateFormat.setTimeZone(TimeZone.getDefault());
-      level = logLevel;
-    }
-
-    private boolean enabled(LogLevel target) {
-      return level.ordinal() >= target.ordinal();
+      super(name, logLevel);
     }
 
     @Override
-    public boolean isDebugEnabled() {
-      return enabled(LogLevel.DEBUG);
-    }
-
-    @Override
-    public boolean isErrorEnabled() {
-      return enabled(LogLevel.ERROR);
-    }
-
-    @Override
-    public boolean isFatalEnabled() {
-      return enabled(LogLevel.FATAL);
-    }
-
-    @Override
-    public boolean isInfoEnabled() {
-      return enabled(LogLevel.INFO);
-    }
-
-    @Override
-    public boolean isTraceEnabled() {
-      return enabled(LogLevel.TRACE);
-    }
-
-    @Override
-    public boolean isWarnEnabled() {
-      return enabled(LogLevel.WARN);
-    }
-
-    private void write(String level, Object message) {
-      current.write(LogUtils.format(dateFormat, level, name, message));
-    }
-
-    private void write(String level, Object message, Throwable t) {
-      current.write(LogUtils.format(dateFormat, level, name, message), t);
-    }
-
-    @Override
-    public void trace(Object message) {
-      if (isTraceEnabled()) {
-        write("TRACE", message);
+    protected void write(String level, Object message, Throwable t) {
+      if (ErrorTracker.INSTANCE.shouldPrintStacktrace(t)) {
+        super.write(level, message, t);
+        ErrorTracker.INSTANCE.rememberStacktracePrinted(t);
+      } else {
+        message = message + " : " + extractShortErrorMessage(t);
+        super.write(level, message);
       }
     }
-
-    @Override
-    public void trace(Object message, Throwable t) {
-      if (isTraceEnabled()) {
-        write("TRACE", message, t);
-      }
-    }
-
-    @Override
-    public void debug(Object message) {
-      if (isDebugEnabled()) {
-        write("DEBUG", message);
-      }
-    }
-
-    @Override
-    public void debug(Object message, Throwable t) {
-      if (isDebugEnabled()) {
-        write("DEBUG", message, t);
-      }
-    }
-
-    @Override
-    public void info(Object message) {
-      if (isInfoEnabled()) {
-        write("INFO", message);
-      }
-    }
-
-    @Override
-    public void info(Object message, Throwable t) {
-      if (isInfoEnabled()) {
-        write("INFO", message, t);
-      }
-    }
-
-    @Override
-    public void warn(Object message) {
-      if (isWarnEnabled()) {
-        write("WARN", message);
-      }
-    }
-
-    @Override
-    public void warn(Object message, Throwable t) {
-      if (isWarnEnabled()) {
-        write("WARN", message, t);
-      }
-    }
-
-    @Override
-    public void error(Object message) {
-      if (isErrorEnabled()) {
-        String errorMsg = message != null ? String.valueOf(message).trim() : null;
-        if (loggedErrorMessageTimes.containsKey(errorMsg)) {
-          long currentTime = System.currentTimeMillis();
-          if (currentTime - loggedErrorMessageTimes.get(errorMsg) < MIN_TIME_BETWEEN_TWO_SAME_MESSAGES) {
-            // just return
-          } else {
-            // set new time, allow log write
-            loggedErrorMessageTimes.put(errorMsg, currentTime);
-          }
-        } else {
-          if (loggedErrorMessageTimes.size() < MAX_NUM_OF_STORED_MSGS) {
-            // record message time, otherwise we reached the limit so ignore the check
-            loggedErrorMessageTimes.put(errorMsg, System.currentTimeMillis());
-          }
-        }
-
-        write("ERROR", message);
-      }
-    }
-
-    @Override
-    public void error(Object message, Throwable t) {
-      if (isErrorEnabled()) {
-        String errorMsg = t.getMessage() != null ? t.getMessage().trim() : null;
-        if (errorMsg != null && !errorMsg.equals("")) {
-          if (loggedErrorMessageTimes.containsKey(errorMsg)) {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - loggedErrorMessageTimes.get(errorMsg) < MIN_TIME_BETWEEN_TWO_SAME_MESSAGES) {
-              // just return
-              return;
-            } else {
-              // set new time, allow log write
-              loggedErrorMessageTimes.put(String.valueOf(errorMsg), currentTime);
-            }
-          } else {
-            if (loggedErrorMessageTimes.size() < MAX_NUM_OF_STORED_MSGS) {
-              // record message time, otherwise we reached the limit so ignore the check
-              loggedErrorMessageTimes.put(String.valueOf(errorMsg), System.currentTimeMillis());
-            }
-          }
-        }
-
-        write("ERROR", message, t);
-      }
-    }
-
-    @Override
-    public void fatal(Object message) {
-      if (isFatalEnabled()) {
-        write("FATAL", message);
-      }
-    }
-
-    @Override
-    public void fatal(Object message, Throwable t) {
-      if (isFatalEnabled()) {
-        write("FATAL", message, t);
-      }
-    }
-
-    @Override
-    public void printStackTrace(Exception e) {
-      if (isErrorEnabled() && e != null) {
-        StringWriter errors = new StringWriter();
-        e.printStackTrace(new PrintWriter(errors));
-
-        write("ERROR", errors.toString(), e);
-      }
+    
+    private String extractShortErrorMessage(Throwable thr) {
+      return thr != null ? thr.getClass().getName() + " - " + thr.getMessage() : null;
     }
   }
 
@@ -470,7 +302,7 @@ public final class LogFactory {
           level = LogLevel.INFO;
         }
       }
-      return new SimpleLogImpl(clazz.getName(), level);
+      return new DeduplicatingErrorsLogImpl(clazz.getName(), level);
     }
   }
 }
