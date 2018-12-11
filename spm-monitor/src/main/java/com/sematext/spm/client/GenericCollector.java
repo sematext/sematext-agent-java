@@ -25,6 +25,8 @@ import java.util.Properties;
 
 public abstract class GenericCollector<T extends GenericExtractor, S extends StatsExtractorConfig>
     extends SingleStatsCollector implements GenericCollectorInterface {
+  private static final Log LOG = LogFactory.getLog(GenericCollector.class);
+  
   private T genericExtractor;
   private String appToken;
   private String name;
@@ -56,6 +58,10 @@ public abstract class GenericCollector<T extends GenericExtractor, S extends Sta
   @Override
   protected void appendStats(StatValues statValues, Map<String, Object> outerMetrics)
       throws StatsCollectionFailedException {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Collecting metrics for " + this.toString() + " ...");
+    }
+    
     List<ExtractorResult> results = genericExtractor.getStats(outerMetrics);
 
     if (results.size() == 1) {
@@ -67,9 +73,17 @@ public abstract class GenericCollector<T extends GenericExtractor, S extends Sta
       statValues.setTimestamp(System.currentTimeMillis());
       statValues.setAppToken(appToken);
       statValues.setMetricNamespace(metricsNamespace);
+      
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Collecting metrics for " + this.toString() + " produced metrics: " + res.stats);
+      }
     } else {
       throw new StatsCollectionFailedException("For " + this + " extractor failed to produce exactly 1 stats result!");
     }
+    
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Collecting metrics for " + this.toString() + " DONE");
+    }    
   }
 
   @Override
