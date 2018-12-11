@@ -339,7 +339,7 @@ public class MonitorConfig extends InMemoryConfig {
     this.logBasedir = basedir == null || "".equals(basedir) ? "." : basedir;
     this.logMaxFileSize = MAX_LOG_FILE_SIZE_BYTES;
     this.logMaxBackups = DEFAULT_LOG_MAX_BACKUPS;
-    this.logLevel = StringUtils.removeQuotes(monitorProperties.getProperty("SPM_MONITOR_LOGGING_LEVEL", "standard"))
+    this.logLevel = StringUtils.removeQuotes(monitorProperties.getProperty("SPM_MONITOR_LOGGING_LEVEL", "INFO"))
         .trim();
     LogFactory.setLoggingLevel(logLevel);
   }

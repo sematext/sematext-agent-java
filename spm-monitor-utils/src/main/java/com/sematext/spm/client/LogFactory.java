@@ -36,7 +36,7 @@ import java.util.TimeZone;
 public final class LogFactory {
   private static List<BufferedLogEntry> bufferedLogEntries = new ArrayList<BufferedLogEntry>();
   private static LogWriter<String> current = new BufferingLogWriter(bufferedLogEntries);
-  private static String logLevel = "standard";
+  private static String logLevel = LogLevel.INFO.name();
 
   public static enum LogLevel {
     FATAL, ERROR, WARN, INFO, DEBUG, TRACE
@@ -71,7 +71,7 @@ public final class LogFactory {
     if ("reduced".equalsIgnoreCase(logLevelParam)) {
       logLevel = "ERROR";
     } else if (logLevelParam == null) {
-      logLevel = "standard";
+      logLevel = LogLevel.INFO.name();
     } else {
       logLevel = logLevelParam;
     }
@@ -295,7 +295,7 @@ public final class LogFactory {
         level = LogLevel.INFO;
       } else {
         try {
-          level = LogLevel.valueOf(logLevel);
+          level = LogLevel.valueOf(logLevel.toUpperCase());
         } catch (Throwable thr) {
           thr.printStackTrace();
           // fall-back to INFO level
