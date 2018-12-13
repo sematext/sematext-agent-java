@@ -43,14 +43,14 @@ public class DbStatsExtractor extends StatsExtractor<DbStatsExtractorConfig, DbO
     dataSource = DbDataSourceCachedFactory
         .getDataSource(config.getDbUrl(), config.getDataRequestQuery(), config.isDbVerticalDataModel());
     
-    allObservationCopies = new UnifiedMap<>(config.getObservations().size());
+    allObservationCopies = new UnifiedMap<DbObservation, Map<String, DbObservation>>(config.getObservations().size());
   }
   
   @Override
   protected Set<ObservationBeanDump> collectObservationStats(DbObservation observation) {
     Set<ObservationBeanDump> finalDump = null;
     Map<DbObservation, Map<String, DbObservation>> usedObservationCopies =
-        new UnifiedMap<>(allObservationCopies.size());
+        new UnifiedMap<DbObservation, Map<String, DbObservation>>(allObservationCopies.size());
     
     List<Map<String, Object>> data = dataSource.fetchData();
 
