@@ -71,15 +71,17 @@ public class DbStatsExtractorConfig extends StatsExtractorConfig<DbObservation> 
     }
 
     if (!dbVerticalDataModel) {
-      // when horizontal db model is used, allow only gauge and text attributes to be used
+      // when horizontal db model is used allow only gauge and text attribute unless rowIdolumns are defined
       for (DbObservation dbo : getObservations()) {
         for (DbAttributeObservation dba : dbo.getAttributeObservations()) {
           MetricType metricType = dba.getMetricType();
           if (metricType != MetricType.GAUGE && metricType != MetricType.TEXT) {
-            throw new ConfigurationFailedException("Found metric " + dba.getFinalName() + " of type " + metricType +
-                                                       " defined in combination with dbVerticalDataModel="
-                                                       + dbVerticalDataModel + ". Such combination is currently" +
-                                                       " not supported, only gauge and text types are allowed when dbVerticalDataModel=false");
+            if (dbo.getRowIdColumns() == null || dbo.getRowIdColumns().isEmpty()) {
+              throw new ConfigurationFailedException("Found metric " + dba.getFinalName() + " of type " + metricType +
+                  " defined in combination with dbVerticalDataModel=" + dbVerticalDataModel +
+                  ". Such combination is allowed only if rowIdColumns attribute is specified as well " +
+                  "(since agent has to be able to uniquely identify each result row)");              
+            }
           }
         }
       }

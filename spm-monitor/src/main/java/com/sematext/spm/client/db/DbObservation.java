@@ -19,8 +19,11 @@
  */
 package com.sematext.spm.client.db;
 
+import org.eclipse.collections.impl.list.mutable.FastList;
+
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,15 +40,19 @@ public class DbObservation extends ObservationBean<DbAttributeObservation, Map<S
 
   private String beanName;
 
+  private List<String> rowIdColumns;
+  
   // used when instantiating a "real" DbObservation object for some particular db bean (resulting object is not just a 
   // config holder anymore)
   public DbObservation(DbObservation orig, String beanName) {
     super(orig, Collections.EMPTY_MAP);
     this.beanName = beanName;
+    this.rowIdColumns = orig.getRowIdColumns();
   }
 
   public DbObservation(ObservationDefinitionConfig observationDefinition) throws ConfigurationFailedException {
     super(observationDefinition);
+    readRowIdColumns(observationDefinition);
   }
 
   public ObservationBean getCopy() throws ConfigurationFailedException {
@@ -91,6 +98,23 @@ public class DbObservation extends ObservationBean<DbAttributeObservation, Map<S
     // readAttributeNameMappings(observationDefinition);
     readIgnoreElements(observationDefinition);
     readAcceptElements(observationDefinition);
+    
+    readRowIdColumns(observationDefinition);
+  }
+
+  private void readRowIdColumns(ObservationDefinitionConfig observationDefinition) {
+    if (observationDefinition.getRowIdColumns() != null) {
+      rowIdColumns = new FastList<String>();
+      for (String id : observationDefinition.getRowIdColumns().split(",")) {
+        id = id.trim();
+        if (!id.equals("")) {
+          rowIdColumns.add(id);
+        }
+      }
+    }
+    if (rowIdColumns != null && rowIdColumns.isEmpty()) {
+      rowIdColumns = null;
+    }
   }
 
   @Override
@@ -114,5 +138,9 @@ public class DbObservation extends ObservationBean<DbAttributeObservation, Map<S
       LOG.error("Unknown attribute observation type: " + type);
       return null;
     }
+  }
+
+  public List<String> getRowIdColumns() {
+    return rowIdColumns;
   }
 }
