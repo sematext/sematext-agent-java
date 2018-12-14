@@ -27,6 +27,7 @@ public class ObservationDefinitionConfig {
   private String objectName;
   private String path;
   private String metricNamespace;
+  private String rowIdColumns;
 
   private List<MetricConfig> metric = Collections.EMPTY_LIST;
   private List<TagConfig> tag = Collections.EMPTY_LIST;
@@ -104,5 +105,13 @@ public class ObservationDefinitionConfig {
 
   public void setFunc(List<FunctionInvokerConfig> func) {
     this.func = func;
+  }
+
+  public String getRowIdColumns() {
+    return rowIdColumns;
+  }
+
+  public void setRowIdColumns(String rowIdColumns) {
+    this.rowIdColumns = rowIdColumns;
   }
 }
