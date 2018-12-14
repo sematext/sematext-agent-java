@@ -72,6 +72,11 @@ observation:
      refer to [Extracting tags from JMX ObjectName](#extracting-tags-from-jmx-objectname). Used only with JMX data source.
     * `path`: JSONPath-like expression for the objects that should be queried in the response. You can extract tags from the path using placeholders.
      For more info refer to [Extracting tags from JSON Path](#extracting-tags-from-json-path). Used only with JSON data source.
+    * `rowIdColumns`: used only with DB data source. When using horizontal model, each row will typically represent one entity. To collect
+     metrics of `counter` type, agent has to compare previous measurement with current one and it can do that only if it can uniquelly identify
+     each row. So this parameter should define comma-separated list of column names (as produced by SQL query) that should be used to
+     idenitify each row. If it is not defined properly it can lead to unexpected results as agent has to internally aggregate rows that
+     appear to be the same entity. If no `counter` metrics are used or if vertical model is used, it can be left empty. 
     
     Each observation has a list of metrics and tags under `metric` and `tag` sections.
     * Each `metric` can have following fields:
