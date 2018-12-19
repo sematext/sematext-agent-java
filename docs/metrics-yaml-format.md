@@ -107,10 +107,11 @@ observation:
 Sematext App Agent supports the following metric data types:
 
 * `gauge`, `long_gauge`:  Gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
-   Examples for gauge metric are current memory usage, current thread count, etc. Default aggregation is `AVG`
+   Agent reports gauge metrics as their current value. Examples for gauge metric are current memory usage, 
+   current thread count, etc. Default aggregation is `AVG`
 * `counter`, `long_counter`: Counter is a cumulative metric that represents a single monotonically increasing counter 
-   whose value can only increase or be reset to zero on restart. Examples for counter metric are number of requests served,
-   cache hits, etc. Default aggregation is `SUM` 
+   whose value can only increase or be reset to zero on restart. Agent reports counter metrics as delta between current and previous measurement.
+   Examples for counter metric are number of requests served, cache hits, etc. Default aggregation is `SUM` 
 * `text`: Textual data type. Examples are database name, webapp name, etc. Typically used for metrics that have to be extracted as tags
 
 ## Derived Metrics
@@ -287,15 +288,14 @@ observation:
 ```
 
 ## How to group metrics in YAML file
-Typically multiple metrics are grouped under single YAML file. 
+It is recommended to logically group multiple metrics under a single YAML file based on what kind of metrics are collected.
+For example, in Tomcat all Thread Pool related metrics are grouped under `jmx-thread-pool.yml` and in MySQL all binlog metrics
+are grouped under `db--binlog-stats-status.yml`.
 
-* DB data source - all metrics from single DB query can be grouped under one YAML file. For example, in Clickhouse 
-  integration all profile event metrics (can be fetched using single query) are grouped under 
-  [db-system-events.yml](https://github.com/sematext/sematext-agent-integrations/blob/master/clickhouse/db-system-events.yml).
-* JSON data source - all metrics from single URL can be grouped under one YAML file. For example, in Elasticsearch
-  integration all indexing related stats that can be fetched from single URL is grouped under 
-  [json-index-1plus.yml](https://github.com/sematext/sematext-agent-integrations/blob/master/elasticsearch/json-index-1plus.yml) 
-  There can be multiple observations for each json path.
-* JMX data source - all metrics from JMX object name pattern are grouped under one YAML file. For example, in Tomcat 
-  integration all ThreadPool related metrics which are exposed in single JMX object name pattern is grouped under
-  [jmx-thread-pool.yml](https://github.com/sematext/sematext-agent-integrations/blob/master/tomcat/jmx-thread-pool.yml)  
+If a single SQL query or URL returns multiple different groups of metrics, they can still be grouped under 
+different YAML files with same query or URL as source. 
+The agent caches the responses internally and does not issue multiple requests to fetch data from same query/URL when
+used across multiple YAML files (the agent ensures a single unique collection query is executed only once). For example,
+in case of MySQL, `SHOW /*!50002 GLOBAL */ STATUS` query is used in `db-handler-stats-status.yml`, `db-command-stats-status.yml`, 
+`db--binlog-stats-status.yml`, etc. The agent will execute `SHOW /*!50002 GLOBAL */ STATUS` query only once and uses the cached 
+result to extract the values for metrics specified in the above YAML files. 
