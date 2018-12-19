@@ -76,7 +76,7 @@ observation:
     Each observation has a list of metrics and tags under `metric` and `tag` sections.
     * Each `metric` can have following fields:
         * `name`: Name of the metric. Use dot-separated hierarchical naming. Metric names will be automatically prefixed with metric namespace.
-        For example, cache related metrics in Tomcat integration is named like `cache.lookups`, `cache.size`, `cache.size.max`, etc. 
+        For example, cache related metrics in Tomcat integration are named like `cache.lookups`, `cache.size`, `cache.size.max`, etc. 
         * `source`: The attribute name to query in the metric source. The metric source can also be a function. Refer to
          [Derived Metrics](#derived-metrics) 
         * `label`: Short description of the metric
