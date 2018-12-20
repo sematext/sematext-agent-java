@@ -91,5 +91,5 @@ This depends on the data source type.
     errors during monitoring like invalid YAML, exceptions during fetching of metrics, etc.
     * `spm-monitor-stats-*.log` - Contains the metrics data sent to the destination. By default 1 in every 10 requests sent will be logged here. 
     You can refer to this file to verify the list of metrics sent and their values.
-9. Before submitting a PR for new integration, follow the above steps to test the integration and 
+9. Before submitting a PR for a new integration, follow the above steps to test the integration and 
    make sure the metrics are collected without any errors.

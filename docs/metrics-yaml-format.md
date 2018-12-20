@@ -94,8 +94,8 @@ observation:
          Valid values are `SUM`, `AVG`, `MAX`, `MIN`, `DISCARD`.
         * `unit`: Unit of measurement for this metric e.g. `ms`, `bytes`, etc.
     * Each `tag` must have name and value fields:
-        * `name`: Name of the tag. Unlike metric names, tag names won't be prefixed with metric namespace. If a tag denotes same entity,
-        tag names can be reused across YAMLs file in a integration. For example, `tomcat.web.app` tag is reused across Tomcat 
+        * `name`: Name of the tag. Unlike metric names, tag names won't be prefixed with metric namespace. If a tag denotes the same entity,
+        tag names can be reused across YAML files in an integration. For example, `tomcat.web.app` tag is reused across Tomcat 
         integration which represents the web app name.
         * `value`: Reference to the name from where this tag has to be extracted. This could be a metric name defined 
         under the observation or the placeholder in `path` or `objectName`. For metric, use `eval` function
@@ -108,11 +108,11 @@ Sematext App Agent supports the following metric data types:
 
 * `gauge`, `long_gauge`:  Gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
    Agent reports gauge metrics as their current value. Examples for gauge metric are current memory usage, 
-   current thread count, etc. Default aggregation is `AVG`
+   current thread count, etc. Default aggregation is `AVG`.
 * `counter`, `long_counter`: Counter is a cumulative metric that represents a single monotonically increasing counter 
    whose value can only increase or be reset to zero on restart. Agent reports counter metrics as delta between current and previous measurement.
-   Examples for counter metric are number of requests served, cache hits, etc. Default aggregation is `SUM` 
-* `text`: Textual data type. Examples are database name, webapp name, etc. Typically used for metrics that have to be extracted as tags
+   Examples for counter metric are number of requests served, cache hits, etc. Default aggregation is `SUM`. 
+* `text`: Textual data type. Examples are database name, webapp name, etc. Typically used for metrics that have to be extracted as tags.
 
 ## Derived Metrics
 
