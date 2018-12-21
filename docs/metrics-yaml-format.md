@@ -80,7 +80,8 @@ observation:
     
     Each observation has a list of metrics and tags under `metric` and `tag` sections.
     * Each `metric` can have following fields:
-        * `name`: Name of the metric. Use dot-separated hierarchical naming. Metric names will be prefixed with metric namespace.
+        * `name`: Name of the metric. Use dot-separated hierarchical naming. Metric names will be automatically prefixed with metric namespace.
+        For example, cache related metrics in Tomcat integration are named like `cache.lookups`, `cache.size`, `cache.size.max`, etc. 
         * `source`: The attribute name to query in the metric source. The metric source can also be a function. Refer to
          [Derived Metrics](#derived-metrics) 
         * `label`: Short description of the metric
@@ -98,7 +99,9 @@ observation:
          Valid values are `SUM`, `AVG`, `MAX`, `MIN`, `DISCARD`.
         * `unit`: Unit of measurement for this metric e.g. `ms`, `bytes`, etc.
     * Each `tag` must have name and value fields:
-        * `name`: Name of the tag. Unlike metric names, tag names won't be prefixed with metric namespace.
+        * `name`: Name of the tag. Unlike metric names, tag names won't be prefixed with metric namespace. If a tag denotes the same entity,
+        tag names can be reused across YAML files in an integration. For example, `tomcat.web.app` tag is reused across Tomcat 
+        integration which represents the web app name.
         * `value`: Reference to the name from where this tag has to be extracted. This could be a metric name defined 
         under the observation or the placeholder in `path` or `objectName`. For metric, use `eval` function
         to refer to metric. You can also use [built-in functions](./built-in-functions.md) to modify the values before ]
@@ -108,9 +111,13 @@ observation:
 
 Sematext App Agent supports the following metric data types:
 
-* `gauge`, `long_gauge`: Gauge data type. Default aggregation is `AVG`
-* `counter`, `long_counter`: Counter data type. Default aggregation is `SUM` 
-* `text`: Textual data type. Typically used for metrics that have to be extracted as tags
+* `gauge`, `long_gauge`:  Gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
+   Agent reports gauge metrics as their current value. Examples for gauge metric are current memory usage, 
+   current thread count, etc. Default aggregation is `AVG`.
+* `counter`, `long_counter`: Counter is a cumulative metric that represents a single monotonically increasing counter 
+   whose value can only increase or be reset to zero on restart. Agent reports counter metrics as delta between current and previous measurement.
+   Examples for counter metric are number of requests served, cache hits, etc. Default aggregation is `SUM`. 
+* `text`: Textual data type. Examples are database name, webapp name, etc. Typically used for metrics that have to be extracted as tags.
 
 ## Derived Metrics
 
@@ -284,3 +291,16 @@ observation:
     objectName: solr/${core}:type=searcher,*
 
 ```
+
+## How to group metrics in YAML file
+It is recommended to logically group multiple metrics under a single YAML file based on what kind of metrics are collected.
+For example, in Tomcat all Thread Pool related metrics are grouped under `jmx-thread-pool.yml` and in MySQL all binlog metrics
+are grouped under `db--binlog-stats-status.yml`.
+
+If a single SQL query or URL returns multiple different groups of metrics, they can still be grouped under 
+different YAML files with same query or URL as source. 
+The agent caches the responses internally and does not issue multiple requests to fetch data from same query/URL when
+used across multiple YAML files (the agent ensures a single unique collection query is executed only once). For example,
+in case of MySQL, `SHOW /*!50002 GLOBAL */ STATUS` query is used in `db-handler-stats-status.yml`, `db-command-stats-status.yml`, 
+`db--binlog-stats-status.yml`, etc. The agent will execute `SHOW /*!50002 GLOBAL */ STATUS` query only once and uses the cached 
+result to extract the values for metrics specified in the above YAML files. 
