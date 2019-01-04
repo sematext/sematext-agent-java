@@ -18,7 +18,9 @@ any Influx Line Protocol compatible endpoints like InfluxDB. In the future, we w
 like HTTP, Graphite, etc.
 
 The agent supports a number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
-sending it to output. You can also plugin-in custom functions. 
+sending it to output. You can also plug-in custom functions.
+
+[How-to Guide](/docs/how-to.md) describes how to use Agent in some specific cases. 
 
 ## Getting Started
 
