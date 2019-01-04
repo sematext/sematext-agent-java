@@ -4,18 +4,16 @@ To add a new integration only a set of configuration YAML files are needed. Thes
 as well as individual metrics to collect. The steps to add and verify a new Sematext App Agent integration are as follows:
 
 1. Make sure you have the latest version of Sematext App Agent installed in your system. There are two ways to install 
-Sematext App Agent
+Sematext App Agent:
     * Build and install the agent from [source code](../README.md#build)
     * Install the agent directly from [Sematext public repo](https://sematext.com/docs/monitoring/spm-client/#installation)
-2. The YAML files for the integrations are present in `/opt/spm/spm-monitor/collectors` directory. Create a directory 
-for the new integration under `/opt/spm/spm-monitor/collectors`. For example, lets assume you need to add support for 
-monitoring Jetty Web server. Jetty metrics are exposed via JMX. Create a directory `jetty` under  `/opt/spm/spm-monitor/collectors`. All the YAML 
-files specifying the Jetty metric sources and definitions will go under `/opt/spm/spm-monitor/collectors/jetty`.
-3. Create YAML files under the respective integration directory. We recommend you to group metrics by source and 
+2. The YAML files for the integrations are in `/opt/spm/spm-monitor/collectors` directory. Create a directory 
+for the new integration under `/opt/spm/spm-monitor/collectors`. For example, if you were adding an integration for monitoring Jetty Web Server you would create a directory `jetty` under  `/opt/spm/spm-monitor/collectors`. All the YAML 
+files specifying Jetty metric sources and definitions would go under `/opt/spm/spm-monitor/collectors/jetty`.
+3. Create YAML files under the respective integration directory. We recommend you group metrics by source and 
 create multiple YAML files, one for each source group. The metric source could be a JMX ObjectName pattern or 
-a DB SQL query or a HTTP URL. For JSON & DB data source, each YAML can have a single
-data source (URL or SQL query). For JMX data source, it is possible to have multiple object name patterns in a single file. 
-For example, in the case of Jetty, all ThreadPool related metrics in Jetty can be grouped in single YAML file `jmx-thread-pool.yml`.
+a DB SQL query or a HTTP URL. For JSON & DB data source, each YAML can have a single data source (URL or SQL query). For JMX data source, it is possible to have multiple object name patterns in a single file. 
+For example, in case of Jetty, all ThreadPool related metrics in Jetty can be grouped in a single YAML file `jmx-thread-pool.yml`.
 The recommended format to name the YAML files is
  `<data-source-type>-<metric-source-name>-<integration-version>.yaml`. `integration-version` is optional. The following are a few examples:
     * `jmx-executor.yml` - Executor Service related metrics from JMX endpoint 
@@ -56,7 +54,7 @@ The recommended format to name the YAML files is
             value: ${id}
     ```
 6. Once you have all YAML files ready you need to enable monitoring in the application to be monitored.
-This depends on the data source type.
+How that is done depends on the data source type.
     * For JMX, in case of [standalone agent](https://sematext.com/docs/monitoring/spm-monitor-standalone/), 
       make sure the appropriate [JMX startup arguments](https://sematext.com/docs/monitoring/spm-monitor-standalone/#jmx-setups-ie-how-to-configure-the-monitored-appserver)
       are passed to the Java process to be monitored.
@@ -79,8 +77,7 @@ This depends on the data source type.
     
     You can also pass custom arguments from `setup-spm` command and use them in YAML configuration. For more info refer to
     [How to pass custom arguments to my integration](metrics-yaml-format.md#specifying-variables-in-yaml)
-7. By default, the agent sends the collected metrics to Sematext. You can configure a different Influx compatible destination
-   by changing the following properties in `/opt/spm/properties/agent.properties` file:
+7. By default, the agent sends the collected metrics to Sematext. You can configure a different Influx compatible destination by changing the following properties in `/opt/spm/properties/agent.properties` file:
    * `server_base_url` - Base URL of the destination. e.g. `http://192.168.0.4:8086`
    * `metrics_endpoint` - Path to send the metrics. This will be appended to `server_base_url` to form the complete URL.
        Default value is `/write?db=metrics`. You can update this property to send metrics to a different endpoint 
