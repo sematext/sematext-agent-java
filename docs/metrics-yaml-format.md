@@ -1,6 +1,5 @@
 ## Metrics Configuration YAML Format
-The metrics to be collected by Sematext App Agent are defined in YAML file. The metrics for an integration are grouped 
-in individual YAML files based on the metric sources. Each YAML file has the following sections:
+The metrics to be collected by Sematext App Agent are defined in one or more YAML files. Metrics for an integration are grouped in individual YAML files based on metric sources. Each YAML file has the following sections:
 
 ```yaml
 type: <data source type>
@@ -104,7 +103,7 @@ observation:
         integration which represents the web app name.
         * `value`: Reference to the name from where this tag has to be extracted. This could be a metric name defined 
         under the observation or the placeholder in `path` or `objectName`. For metric, use `eval` function
-        to refer to metric. You can also use [built-in functions](./built-in-functions.md) to modify the values before ]
+        to refer to metric. You can also use [built-in functions](./built-in-functions.md) to modify the values before
         sending to output.
 
 ## Metric Data Types
@@ -151,10 +150,7 @@ Some of the built-in functions can be applied to tags also.
 
 ## Percentiles
 
-Sematext App Agent can automatically calculate percentiles for a metric and send it. The percentiles to be
-calculated can be specified using `pctls` field. Below example will calculate 99th, 95th and 50th percentile of metric 
-`requestCount` and send it in attributes `request.count.pctl.99`, `request.count.pctl.95` and `request.count.pctl.50` 
-respectively.
+Sematext App Agent can automatically calculate percentiles for a metric and send it. The percentiles to be calculated can be specified using `pctls` field. Below example will calculate 99th, 95th and 50th percentile of metric  `requestCount` and send it in attributes `request.count.pctl.99`, `request.count.pctl.95` and `request.count.pctl.50` respectively.
 
 ```yaml
   - name: request.count
@@ -166,9 +162,8 @@ respectively.
 ```
 
 ## DB Vertical Model
-In the case of DB source, the metrics to be collected can be present in a single row or in multiple rows, 
-with each row containing the metric name and value. In such cases, you can set `dbVerticalModel` to `true`. For example,
-for the table below, `dbVerticalModel` will be set to true.
+In case of DB source, the metrics to be collected can be present in a single row or in multiple rows, with each row containing the metric name and value. In such cases, you can set `dbVerticalModel` to `true`. For example, for the table below, `dbVerticalModel` will be set to true.
+
 ```
 ┌─event───────────────────────────────────┬─────────value─┐
 │ Query                                   │        335485 │
@@ -207,8 +202,8 @@ sudo bash /opt/spm/bin/setup-spm  --monitoring-token d0add288-0a0f-46bb-9e1a-492
 JMX object name consists of two parts, the domain and the key properties. For example, in the case of JVM memory pool, 
 each pool has its own JMX object name instance, where the key `name` refers to pool name. The instances are 
 `java.lang:type=MemoryPool,name=Code Cache`, `java.lang:type=MemoryPool,name=Metaspace`, etc. The pool name can be
-extracted as tag by specifying the `objectName` pattern as `java.lang:type=MemoryPool,name=${poolName}` and mapping `poolName`
-placeholder to the tag in `tag` definition of observation as shown below.
+extracted as tag by specifying the `objectName` pattern as `java.lang:type=MemoryPool,name=${poolName}` and mapping `poolName` placeholder to the tag in `tag` definition of observation as shown below.
+
 ```yaml
 - name: jvmMemoryPool
     metricNamespace: jvm
@@ -218,13 +213,11 @@ placeholder to the tag in `tag` definition of observation as shown below.
       - name: jvm.memory.pool
         value: ${poolName}
 ```
-Typically the keys for a given ObjectName pattern are static. In the case of dynamic keys add `*` at the end of pattern for matching 
-all object names. For example, refer to [Tomcat Datasource YAML](https://github.com/sematext/sematext-agent-integrations/blob/master/tomcat/jmx-datasource.yml)
+Typically the keys for a given ObjectName pattern are static. In the case of dynamic keys add `*` at the end of pattern for matching all object names. For example, refer to [Tomcat Datasource YAML](https://github.com/sematext/sematext-agent-integrations/blob/master/tomcat/jmx-datasource.yml)
 
 ## Extracting Tags from JSON Path
-For JSON data source, `path` specifies set of objects which should be monitored. For each placeholder (defined
-with ${...}) any value will be accepted (while also storing the value of that placeholder). In the example below, if some setup has
-3 indices (say 'A', 'B' and 'C'), each with 2 shards, meaning a total of 6 shards, there will be a total of 6
+For JSON data source, `path` specifies the set of objects which should be monitored. For each placeholder (defined
+with ${...}) any value will be accepted (while also storing the value of that placeholder). In the example below, if some setup has 3 indices (say 'A', 'B' and 'C'), each with 2 shards, meaning a total of 6 shards, there will be a total of 6
 matching objects found by this path expression (regardless of which nodes which shards are on, since the total number of
 shards is 6 anyway). For each of those 6 objects, placeholder values will be available for use in tag definitions 
 (notice how the value of "es.node.id" and "es.index" tags are specified - they will be resolved to exact values matching
@@ -275,9 +268,7 @@ a built-in `com.sematext.spm.client.observation.BaseVersionConditionCheck` base 
 You can extend from this class and write your implementation to return the actual version. 
 The `value` field for version checks can take a specific version or ranges. 
 Example values are `7`, `23.1.16`, `0.17-1.33.9` (match any version between specified range), 
-`*-1.0` (any version till 1.0), `1.0-*` (any version greater than 1.0). In the below example, the agent fetches the old searcher 
-metrics only for Solr version 1 to 6. `com.sematext.spm.client.solr.SolrVersionCheck` is custom condition class that extends
-`com.sematext.spm.client.observation.BaseVersionConditionCheck` and reads the version by querying specific JMX attributes.
+`*-1.0` (any version till 1.0), `1.0-*` (any version greater than 1.0). In the below example, the agent fetches the old searcher metrics only for Solr version 1 to 6. `com.sematext.spm.client.solr.SolrVersionCheck` is custom condition class that extends `com.sematext.spm.client.observation.BaseVersionConditionCheck` and reads the version by querying specific JMX attributes.
 
 ```yaml
 type: jmx
@@ -294,13 +285,10 @@ observation:
 
 ## How to group metrics in YAML file
 It is recommended to logically group multiple metrics under a single YAML file based on what kind of metrics are collected.
-For example, in Tomcat all Thread Pool related metrics are grouped under `jmx-thread-pool.yml` and in MySQL all binlog metrics
-are grouped under `db--binlog-stats-status.yml`.
+For example, in Tomcat all Thread Pool related metrics are grouped under `jmx-thread-pool.yml` and in MySQL all binlog metrics are grouped under `db--binlog-stats-status.yml`.
 
 If a single SQL query or URL returns multiple different groups of metrics, they can still be grouped under 
 different YAML files with same query or URL as source. 
 The agent caches the responses internally and does not issue multiple requests to fetch data from same query/URL when
 used across multiple YAML files (the agent ensures a single unique collection query is executed only once). For example,
-in case of MySQL, `SHOW /*!50002 GLOBAL */ STATUS` query is used in `db-handler-stats-status.yml`, `db-command-stats-status.yml`, 
-`db--binlog-stats-status.yml`, etc. The agent will execute `SHOW /*!50002 GLOBAL */ STATUS` query only once and uses the cached 
-result to extract the values for metrics specified in the above YAML files. 
+in case of MySQL, `SHOW /*!50002 GLOBAL */ STATUS` query is used in `db-handler-stats-status.yml`, `db-command-stats-status.yml`,  `db--binlog-stats-status.yml`, etc. The agent will execute `SHOW /*!50002 GLOBAL */ STATUS` query only once and uses the cached result to extract the values for metrics specified in the above YAML files. 
