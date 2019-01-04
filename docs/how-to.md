@@ -1,8 +1,7 @@
 # How-to Guide
 
-## How to monitor metrics on JSON URLs which are not known in advance but are instead defined by runtime data?
-In some cases metrics will be exposed on URLs you can't know in advance. E.g., some runtime attribute like `jobId` or
-`workerName` or `bucket` can be part of URL. Agent can monitor such URLs by using derived metric.
+## How to monitor metrics for things defined in JSON responses and not known in advance?
+In some cases metrics will be exposed via URLs that are not static and need to be dynamically built. For example, a runtime attribute like `jobId` or `workerName` or `bucket` may need to be specified in a URL in order to fetch metrics for a given job, worker, or bucket. The agent can build such URLs by using the derived metric functionality.
 
 Consider the following example:
 
@@ -31,16 +30,13 @@ observation:
         value: ${appId}
 ```
 
-In this case there is a known stats URL `/api/v1/applications` which provides general info about applications. For each
-distinct entry found by `path` expression, separate (per-app) observation will be created internally by the agent.
-However, details of each application are on separate URLs `/api/v1/applications/appId` which can't be known in advance
-(and even if they are known, it wouldn't make sense to create configuration for each app). However, we can define
-derived metric with definition:
+In this case there is a known, static stats URL `/api/v1/applications`. The response for this URL provides general info about (Spark) applications. For each distinct entry found by the `path` expression provided here a separate (per-application) observation will be created internally by the agent.
+
+However, to get the info for each application the agent has to call `/api/v1/applications/${appId}` for each "appId", which cannot be known in advance.  Even if they were known ahead of time, it would not make sense to create a configuration for each application. To handle this we can define a derived metric with the following definition:
 
 `source: json:/api/v1/applications/${appId} $.?(@.id=appId).attempts.[:1].completed`
 
-Each app observation will monitor one metric (`applications.uncompleted`) which will be monitored by querying URL
-`/api/v1/applications/${appId}` and running the expression `$.?(@.id=appId).attempts.[:1].completed` on it to provide metric value.
+Each application observation will monitor one metric (`applications.uncompleted`) by calling the
+`/api/v1/applications/${appId}` URL and applying the `$.?(@.id=appId).attempts.[:1].completed` expression on it to extract the metric value.
 
-Note that in cases when there are 100s or 1000s of applications, config like this would cause a big number of additional
-requests sent to monitored service so one has to be careful when using it.
+Note that when the number of dynamic elements (such as applications in this example) is high, a config like this would cause a high number of additional requests to be sent to the monitored service so one has to be careful when using it.
