@@ -70,7 +70,7 @@ How that is done depends on the data source type.
     ```bash
     sudo bash /opt/spm/bin/setup-spm  --monitoring-token <monitoring-token>  --app-type jetty  --agent-type standalone
     ```
-    The above command will start a standalone monitor and will will fetch metrics from JMX exposed by Jetty server running on localhost in port 3000.
+    The above command will start a standalone monitor and will fetch metrics from JMX exposed by Jetty server running on localhost on port 3000.
     <monitoring-token> - Monitoring Token should point to Sematext App Token if you are sending metrics to Sematext. 
     For other Influx endpoints you can specify a hexadecimal value with format xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx 
     e.g. d0add28a-0a0f-46b2-9e1e-4928db5200e7.
