@@ -6,8 +6,9 @@ This repository contains the source code for Sematext App Agent. Sematext App Ag
 metrics from multiple data sources. The data sources and the metrics to be collected can be defined in 
 [Metrics Configuration YAML](/docs/metrics-yaml-format.md) files.
 There are number of built-in integrations available for various applications in 
-[sematext-agent-integration](https://github.com/sematext/sematext-agent-integrations) repo.
+[sematext-agent-integrations](https://github.com/sematext/sematext-agent-integrations) repo.
 
+## Data Sources
 The supported data sources are:
 * JMX
 * HTTP REST APIs
@@ -17,10 +18,11 @@ Sematext App Agent uses Influx Line Protocol to ship the metrics. The metrics co
 any Influx Line Protocol compatible endpoints like InfluxDB. In the future, we will add support for other output formats
 like HTTP, Graphite, etc.
 
-The agent supports a number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
-sending it to output. You can also plug-in custom functions.
+## Configuration
+The Agent supports a number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
+sending them to output. You can also plug-in custom functions.
 
-[How-to Guide](/docs/how-to.md) describes how to use Agent in some specific cases. 
+The [How-to Guide](/docs/how-to.md) describes how to configure the App Agent in some specific cases. 
 
 ## Getting Started
 
