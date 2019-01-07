@@ -90,3 +90,4 @@ How that is done depends on the data source type.
     You can refer to this file to verify the list of metrics sent and their values.
 9. Before submitting a PR for a new integration, follow the above steps to test the integration and 
    make sure the metrics are collected without any errors.
+10. Once you are happy with your new integration please send the PR to have your integration included in the next agent release.  To start using your new integration without waiting for the next agent release simply rebuild the agent (by running `build.sh` or `sudo mvn clean install dockerfile:build`) on the machine where you've added new integration YAMLs.  This will include your new integration YAMLs in the new agent build which you can then install on the rest of your infrastructure.
