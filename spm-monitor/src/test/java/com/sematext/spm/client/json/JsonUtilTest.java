@@ -587,4 +587,25 @@ public class JsonUtilTest {
     Assert.assertEquals(1, clauses.length);
     Assert.assertEquals("abc", clauses[0]);
   }
+
+  @Test
+  public void testFindOnArrayPosition() throws IOException {
+    InputStream response = getClass().getResourceAsStream("nginx-plus.json");
+    TypeReference<UnifiedMap<String, Object>> typeRef = new TypeReference<UnifiedMap<String, Object>>() {
+    };
+    Map<String, Object> jsonData = new ObjectMapper(new JsonFactory()).readValue(response, typeRef);
+
+    List<JsonMatchingPath> paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[0]");
+    Assert.assertEquals(361675, ((Map) paths.get(0).getMatchedObject()).get("requests"));
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[0].requests");
+    Assert.assertEquals(361675, paths.get(0).getMatchedObject());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[1].state");
+    Assert.assertEquals("unhealthy", paths.get(0).getMatchedObject());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[9999].requests");
+    Assert.assertEquals(0, paths.size());
+
+  }
 }

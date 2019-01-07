@@ -208,7 +208,9 @@ public final class JsonUtil {
           arrayMatchAll = true;
           arrayExpression = arrayDef.substring("?(".length(), arrayDef.lastIndexOf(")"));
         } else {
-          throw new IllegalArgumentException("Unsupported array expression encountered: " + arrayDef);
+          // no sub-expression, just specific element position
+          arrayMatchAll = false;
+          arrayExpression = arrayDef;
         }
 
         node = node.substring(0, indexOfArrayDefOpen).trim();
@@ -302,9 +304,9 @@ public final class JsonUtil {
                                    String arrayExpression, Object element) {
     // TODO one day add support for array within array within array...
     if (array) {
-      // TODO add support for other array expressions, for example matching by position in an array
-      if (arrayMatchAll) {
-        if (element instanceof List) {
+      if (element instanceof List) {
+        // TODO add support for other array expressions
+        if (arrayMatchAll) {
           List<String> nodePaths;
           List<String> nodePathValueNames;
           List<Boolean> nodePathValueNameIsAttribute;
@@ -327,7 +329,7 @@ public final class JsonUtil {
               String path = expression.substring(0, expression.indexOf("=")).trim();
               String value = expression.substring(expression.indexOf("=") + 1).trim();
               nodePaths.add(path);
-
+  
               if (value.startsWith("${") && value.endsWith("}")) {
                 String attribName = value.substring(2, value.length() - 1).trim();
                 nodePathValueNames.add(attribName);
@@ -344,20 +346,20 @@ public final class JsonUtil {
             nodePathValueNameIsAttribute = Collections.EMPTY_LIST;
             nodePathAttributeNames = Collections.EMPTY_LIST;
           }
-
+  
           // jump into every element, but before that check if all expression paths match condition and collect any path attribs
           for (Object listElement : ((List) element)) {
             // NOTE: for now we are assuming all clauses act as &&
-
+  
             String tmpPathSoFar = pathSoFar;
-
+  
             // first check all clauses match...
             boolean allClausesMatch = true;
             for (int j = 0; j < nodePaths.size(); j++) {
               String path = nodePaths.get(j);
               String value = nodePathValueNames.get(j);
               Boolean valueIsAttribute = nodePathValueNameIsAttribute.get(j);
-
+  
               if (!valueIsAttribute) {
                 Object expressionValue = findValueIn(path, listElement);
                 // check if matches; if yes, continue, otherwise fail
@@ -386,7 +388,7 @@ public final class JsonUtil {
                 }
               }
             }
-
+  
             if (allClausesMatch) {
               tmpPathSoFar = tmpPathSoFar + "[";
               String resolvedExpression = "?(";
@@ -395,11 +397,11 @@ public final class JsonUtil {
                 String path = nodePaths.get(j);
                 String value = nodePathValueNames.get(j);
                 Boolean valueIsAttribute = nodePathValueNameIsAttribute.get(j);
-
+  
                 if (j > 0) {
                   resolvedExpression = resolvedExpression + " && ";
                 }
-
+  
                 if (valueIsAttribute) {
                   Object expressionValue = findValueIn(path, listElement);
                   resolvedExpression = resolvedExpression + "@." + path + "=" + expressionValue;
@@ -410,18 +412,41 @@ public final class JsonUtil {
               }
               resolvedExpression = resolvedExpression + ")";
               tmpPathSoFar = tmpPathSoFar + resolvedExpression + "]";
-
+  
               traverse(tmpPathSoFar, listElement, nodes, i + 1, allMatchingPaths, pathAttributes);
-
+  
               for (String attribName : nodePathAttributeNames) {
                 // when done with "current" list element, clear pathAttributes added by it
                 pathAttributes.remove(attribName);
               }
             }
           }
+        } else {
+          // match just specific element
+          arrayExpression = arrayExpression.trim();
+          int index;
+          try {
+            index = Integer.parseInt(arrayExpression);
+          } catch (Throwable thr) {
+            throw new IllegalArgumentException("Expected position in array as integer, instead found " +
+                arrayExpression, thr);
+          }
+          if (element instanceof List) {
+            List elementList = ((List) element);
+            if (elementList.size() <= index) {
+              LOG.warn("Tried to extract element at position " + index + " while there are only " +
+                  elementList.size() + " elements in array. Path so far was: " + pathSoFar);
+            } else {
+              // allMatchingPaths.add(new JsonMatchingPath(pathSoFar, Collections.EMPTY_MAP, elementList.get(index)));
+              traverse(pathSoFar + "[" + arrayExpression + "]", elementList.get(index), nodes, i + 1, allMatchingPaths,
+                  pathAttributes);
+            }
+          } else {
+            LOG.warn("Expected to find a list at " + pathSoFar + ", instead found " + element);
+          }
         }
-        // otherwise just ignore it, it doesn't match since it is not an array
       }
+      // otherwise just ignore it, it doesn't match since it is not an array
     } else {
       // jump into each of them
       traverse(pathSoFar, element, nodes, i + 1, allMatchingPaths, pathAttributes);
