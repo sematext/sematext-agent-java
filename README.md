@@ -104,8 +104,9 @@ by changing the following properties in `/opt/spm/properties/agent.properties` f
 We welcome bug fixes or feature enhancements to Sematext App Agent. When done working on and testing,
 just submit a pull request to have Sematext review and merge your changes. 
 
-To add support to new integration refer to
-[Adding a New Agent Integration](/docs/add-new-integration.md)
+To add support to new integration refer to [Adding a New Agent Integration](/docs/add-new-integration.md).
+
+To modify built-in integrations refer to [Modifying built-in integrations](/docs/modify-integration.md) 
 
 
 
