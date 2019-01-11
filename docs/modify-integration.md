@@ -1,4 +1,4 @@
-## Modifying built-in integrations
+## Modifying Built-in Integrations
 Sematext App Agent has built-in support for various application [integrations](https://github.com/sematext/sematext-agent-integrations). 
 You can modify the built-in integration YAMLs to suit your needs or fix any issues present in these YAMLs.
 These changes can be done by modifying existing YAML files (for example, adding new metric or modifying the description of existing metric) 
