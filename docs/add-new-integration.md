@@ -91,6 +91,6 @@ How that is done depends on the data source type.
 9. Before submitting a PR for a new integration, follow the above steps to test the integration and 
    make sure the metrics are collected without any errors.
 10. Once you are happy with your new integration please send the PR to have your integration included in the next agent release.
-11. If you have the agent running in multiple machines and your changes are private or you need them before next release of the agent, 
+11. If you have the agent running on multiple machines and your changes are private or you need them before next release of the agent, 
     you need to manually copy the changes (contents of `/opt/spm/spm-monitor/collectors/<integration>`) to these machines and set up the agent
     for the new integration.
