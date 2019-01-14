@@ -2,8 +2,9 @@
 Sematext App Agent has built-in support for various application [integrations](https://github.com/sematext/sematext-agent-integrations). 
 You can modify the built-in integration YAMLs to suit your needs or fix any issues present in these YAMLs.
 These changes can be done by modifying existing YAML files (for example, adding new metric or modifying the description of existing metric) 
-or adding a new YAML file. Assuming you have installed Sematext App Agent (open source or enterprise version) and
-set up the agent to monitor your application, following are the steps to modify metrics for a built-in integration:
+or adding a new YAML file. Assuming you have installed Sematext App Agent (by building it yourself or by installing the 
+`spm-client` package from Sematext Cloud) and set up the agent to monitor your application, following are the steps to 
+modify metrics for a built-in integration:
 
 1. The YAML files for the integrations are present in `/opt/spm/spm-monitor/collectors/<integration>` directory.
    To modify existing YAML, edit and save the respective YAML file. To add a new YAML file, create the file under the 
