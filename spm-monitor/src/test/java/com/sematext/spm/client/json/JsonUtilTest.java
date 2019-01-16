@@ -619,7 +619,20 @@ public class JsonUtilTest {
     List<JsonMatchingPath> paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers.length()");
     Assert.assertEquals(2, paths.get(0).getMatchedObject());
 
-    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers.length ( )");
-    Assert.assertEquals(2, paths.get(0).getMatchedObject());
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.stream.upstreams.unused_tcp_backends.peers.length ( )");
+    Assert.assertEquals(4, paths.get(0).getMatchedObject());
+
+    response.close();
+
+    response = getClass().getResourceAsStream("json-response.json");
+     typeRef = new TypeReference<UnifiedMap<String, Object>>() {
+    };
+    jsonData = new ObjectMapper(new JsonFactory()).readValue(response, typeRef);
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book.ratings.max()");
+    Assert.assertEquals(5.0, paths.get(0).getMatchedObject());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book.ratings.min()");
+    Assert.assertEquals(2.5, paths.get(0).getMatchedObject());
   }
 }
