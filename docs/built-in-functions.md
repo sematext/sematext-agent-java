@@ -181,6 +181,16 @@ There are two groups of built-in functions:
         unit: ms
 ```
 
+- ArrayLength - Returns length of the array.
+
+```
+      - name: parition.size
+        source: func:ArrayLength(partition)
+        type: gauge
+        label: partition size
+        description: size of the partition
+``` 
+
 ### Service type specific built-in functions:
 - com.sematext.spm.client.hadoop.CalculateNumNodes - hadoop specific. The only param is metric name mapped to hadoop jmx attribute LiveNodes.
 
