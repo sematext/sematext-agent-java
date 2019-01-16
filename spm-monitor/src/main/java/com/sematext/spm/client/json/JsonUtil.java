@@ -19,18 +19,11 @@
  */
 package com.sematext.spm.client.json;
 
-import org.eclipse.collections.impl.map.mutable.UnifiedMap;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+
+import java.util.*;
 
 public final class JsonUtil {
   private static final Log LOG = LogFactory.getLog(JsonUtil.class);
@@ -189,6 +182,14 @@ public final class JsonUtil {
       int indexOfArrayDefOpen = node.indexOf("[");
       int lastIndexOfArrayDefClose = node.lastIndexOf("]");
 
+      boolean function = node.replaceAll(" ","").endsWith("()");
+      if (function) {
+        // function should be the last node in the expression.
+        if (i != nodes.length - 1) {
+          throw new IllegalArgumentException("function should be the last node in the expression.");
+        }
+      }
+
       boolean array = false;
       boolean arrayMatchAll = false;
       String arrayPartOfPath = "";
@@ -245,7 +246,11 @@ public final class JsonUtil {
       } else if (jsonNodeData instanceof List) {
         if (node.trim().equals("")) {
           traverseNode(pathSoFar + "." + node + arrayPartOfPath, nodes, i, allMatchingPaths, pathAttributes, array,
-                       arrayMatchAll, arrayExpression, jsonNodeData);
+                  arrayMatchAll, arrayExpression, jsonNodeData);
+        } else if (function) {
+          Object result = evaluateFunction(node, jsonNodeData);
+          allMatchingPaths.add(new JsonMatchingPath(pathSoFar, Collections.EMPTY_MAP, result));
+          return;
         } else {
           throw new UnsupportedOperationException("Lists were supposed to be handled differently");
         }
@@ -255,6 +260,22 @@ public final class JsonUtil {
       }
     }
   }
+
+  private static Object evaluateFunction(String node, Object element) {
+    String function = node.substring(0, node.indexOf("(")).trim();
+    Object result;
+    if ("length".equals(function)) {
+      if (element instanceof List) {
+        result = ((List) element).size();
+      } else {
+        throw new UnsupportedOperationException("length() function can be applied only on array");
+      }
+    } else {
+      throw new UnsupportedOperationException(String.format("Unknown function %s", node));
+    }
+    return result;
+  }
+
 
   private static String escapeSpecialChars(String nodeValue) {
     return nodeValue.replace(".", "\\.").replace("[", "\\[").replace("]", "\\]");

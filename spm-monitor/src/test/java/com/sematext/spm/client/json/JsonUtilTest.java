@@ -608,4 +608,18 @@ public class JsonUtilTest {
     Assert.assertEquals(0, paths.size());
 
   }
+
+  @Test
+  public void testArrayFunctions() throws IOException {
+    InputStream response = getClass().getResourceAsStream("nginx-plus.json");
+    TypeReference<UnifiedMap<String, Object>> typeRef = new TypeReference<UnifiedMap<String, Object>>() {
+    };
+    Map<String, Object> jsonData = new ObjectMapper(new JsonFactory()).readValue(response, typeRef);
+
+    List<JsonMatchingPath> paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers.length()");
+    Assert.assertEquals(2, paths.get(0).getMatchedObject());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers.length ( )");
+    Assert.assertEquals(2, paths.get(0).getMatchedObject());
+  }
 }
