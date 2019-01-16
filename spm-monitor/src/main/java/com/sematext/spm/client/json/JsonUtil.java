@@ -263,16 +263,17 @@ public final class JsonUtil {
 
   private static Object evaluateFunction(String node, Object element) {
     if (!(element instanceof List)) {
-      throw new UnsupportedOperationException(String.format("Cannot evaluate function %s. Functions are allowed only on arrays.", node));
+      throw new UnsupportedOperationException(String.format("Cannot evaluate function %s. Functions are allowed only on lists.", node));
     }
+    List elementList = (List)element;
     String function = node.substring(0, node.indexOf("(")).trim();
     Object result;
     if ("length".equals(function)) {
-      result = ((List) element).size();
+      result = elementList.size();
     } else if ("max".equals(function)) {
-      result = Collections.max((List) element);
+      result = Collections.max(elementList);
     } else if ("min".equals(function)) {
-      result = Collections.min((List) element);
+      result = Collections.min(elementList);
     } else {
       throw new UnsupportedOperationException(String.format("Unknown function %s", node));
     }
