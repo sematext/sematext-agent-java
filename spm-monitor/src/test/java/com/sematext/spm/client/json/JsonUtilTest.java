@@ -24,20 +24,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JsonUtilTest {
   @Test
@@ -616,12 +609,11 @@ public class JsonUtilTest {
     };
     Map<String, Object> jsonData = new ObjectMapper(new JsonFactory()).readValue(response, typeRef);
 
-    List<JsonMatchingPath> paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers.length()");
-    Assert.assertEquals(2, paths.get(0).getMatchedObject());
+    List<JsonMatchingPath> paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend");
+    Assert.assertEquals(2, JsonUtil.findValueIn("peers.length()", paths.get(0).getMatchedObject()));
 
-    paths = JsonUtil.findMatchingPaths(jsonData, "$.stream.upstreams.unused_tcp_backends.peers.length ( )");
-    Assert.assertEquals(4, paths.get(0).getMatchedObject());
-
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.stream.upstreams.unused_tcp_backends");
+    Assert.assertEquals(4, JsonUtil.findValueIn("peers.length()", paths.get(0).getMatchedObject()));
     response.close();
 
     response = getClass().getResourceAsStream("json-response.json");
@@ -629,10 +621,10 @@ public class JsonUtilTest {
     };
     jsonData = new ObjectMapper(new JsonFactory()).readValue(response, typeRef);
 
-    paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book.ratings.max()");
-    Assert.assertEquals(5.0, paths.get(0).getMatchedObject());
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book");
+    Assert.assertEquals(5.0, JsonUtil.findValueIn("ratings.max()", paths.get(0).getMatchedObject()));
 
-    paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book.ratings.min()");
-    Assert.assertEquals(2.5, paths.get(0).getMatchedObject());
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book");
+    Assert.assertEquals(2.5, JsonUtil.findValueIn("ratings.min()", paths.get(0).getMatchedObject()));
   }
 }
