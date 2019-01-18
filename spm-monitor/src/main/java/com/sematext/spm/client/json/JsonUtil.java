@@ -182,13 +182,7 @@ public final class JsonUtil {
       int indexOfArrayDefOpen = node.indexOf("[");
       int lastIndexOfArrayDefClose = node.lastIndexOf("]");
 
-      boolean function = node.replaceAll(" ","").endsWith("()");
-      if (function) {
-        // function should be the last node in the expression.
-        if (i != nodes.length - 1) {
-          throw new IllegalArgumentException("function should be the last node in the expression.");
-        }
-      }
+
 
       boolean array = false;
       boolean arrayMatchAll = false;
@@ -247,10 +241,6 @@ public final class JsonUtil {
         if (node.trim().equals("")) {
           traverseNode(pathSoFar + "." + node + arrayPartOfPath, nodes, i, allMatchingPaths, pathAttributes, array,
                   arrayMatchAll, arrayExpression, jsonNodeData);
-        } else if (function) {
-          Object result = evaluateFunction(node, jsonNodeData);
-          allMatchingPaths.add(new JsonMatchingPath(pathSoFar, Collections.EMPTY_MAP, result));
-          return;
         } else {
           throw new UnsupportedOperationException("Lists were supposed to be handled differently");
         }
@@ -293,9 +283,21 @@ public final class JsonUtil {
 //      EXPRESSION_NODES.put(expression, expressionNodes);
 //    }
 
+    int i = 0;
     for (String exNode : expressionNodes) {
+      i++;
       if (jsonNodeData == null) {
         return null;
+      }
+      if (exNode.contains("(")) {
+        boolean function = exNode.replaceAll(" ", "").endsWith("()");
+        if (function) {
+          // function should be the last node in the expression.
+          if (i != expressionNodes.length) {
+            throw new IllegalArgumentException("function should be the last node in the expression.");
+          }
+          jsonNodeData = evaluateFunction(exNode, jsonNodeData);
+        }
       } else {
         jsonNodeData = ((Map<String, Object>) jsonNodeData).get(exNode);
       }
