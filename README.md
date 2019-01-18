@@ -89,7 +89,7 @@ group similar/related metrics. e.g. All Elasticsearch metrics can be grouped und
 For other Influx endpoints you can specify a hexadecimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx` 
 e.g. `d0add28a-0a0f-46b2-9e1e-4928db5200e7`.
 
-Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client/) for more info on how to set up and 
+Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client) for more info on how to set up and 
 configure the agent to ship metrics.
 
 By default, the agent sends the collected metrics to Sematext. You can configure a different Influx compatible destination
@@ -104,10 +104,6 @@ by changing the following properties in `/opt/spm/properties/agent.properties` f
 We welcome bug fixes or feature enhancements to Sematext App Agent. When done working on and testing,
 just submit a pull request to have Sematext review and merge your changes. 
 
-To add support to new integration refer to
-[Adding a New Agent Integration](/docs/add-new-integration.md)
+To add support for a new integration refer to [Adding a New Agent Integration](/docs/add-new-integration.md).
 
-
-
-
-
+To modify built-in integrations refer to [Modifying Built-in Integrations](/docs/modify-integration.md).
