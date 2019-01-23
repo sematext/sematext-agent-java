@@ -20,21 +20,21 @@
 
 package com.sematext.spm.client.functions;
 
-import java.util.Map;
-
 import com.sematext.spm.client.observation.CalculationFunction;
+
+import java.util.Map;
 
 /**
  * Trims the specified unit string from the end of value of the metricName and returns Long.
- * e.g.TrimUnit(Value,ms) - trims `ms` from  the end of value of metric name `Value`
+ * e.g.LongTrimUnit(Value,ms) - trims `ms` from  the end of value of metric name `Value`
  */
-public class TrimUnit implements CalculationFunction {
+public class LongTrimUnit implements CalculationFunction {
   @Override public Object calculateAttribute(Map<String, Object> metrics, Object... params) {
     if (params != null && params.length == 2) {
       String metricName = params[0].toString();
       String unit = params[1].toString();
-      String autocommitMaxTimeStr = (String) metrics.get(metricName);
-      return Long.parseLong(autocommitMaxTimeStr.substring(0, autocommitMaxTimeStr.indexOf(unit)).trim());
+      String value = (String) metrics.get(metricName);
+      return Long.parseLong(value.substring(0, value.indexOf(unit)).trim());
     } else {
       throw new IllegalArgumentException("Missing metric name and unit in params");
     }

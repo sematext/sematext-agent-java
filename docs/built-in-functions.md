@@ -170,11 +170,11 @@ There are two groups of built-in functions:
         unit: ms
 ```
 
-- TrimUnit - Trims the specified unit string from the end of value of the metricName and returns Long. E.g. TrimUnit(Value,ms) - trims `ms` from  the end of value of metric name `Value`
+- LongTrimUnit/DoubleTrimUnit - Trims the specified unit string from the end of value of the metricName and returns Long/Double respectively. E.g. LongTrimUnit(Value,ms) - trims `ms` from  the end of value of metric name `Value`
 
 ```
       - name: indexing.commits.auto.time.max
-        source: func:TrimUnit(autocommit maxTime,ms)
+        source: func:LongTrimUnit(autocommit maxTime,ms)
         type: gauge
         label: autocommit max time
         description: autocommit max time
