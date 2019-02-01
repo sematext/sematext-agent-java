@@ -16,7 +16,7 @@ def label = "worker-${UUID.randomUUID().toString()}"
 podTemplate(label: label, serviceAccount: 'jenkins', containers: [
   containerTemplate(name: 'jnlp', image: 'sematext/jnlp-slave-git-lfs:alpine', args: '${computer.jnlpmac} ${computer.name}'),
   containerTemplate(name: 'docker', image: 'sematext/docker:latest', command: 'cat', ttyEnabled: true, alwaysPullImage: true),
-  containerTemplate(name: 'maven', image: 'maven:3.6.0-jdk-8', resourceRequestCpu: '2', command: 'cat', ttyEnabled: true, alwaysPullImage: true),
+  containerTemplate(name: 'maven', image: 'maven:3.5.3-jdk-8', resourceRequestCpu: '2', command: 'cat', ttyEnabled: true, alwaysPullImage: true),
 ],
 volumes: [
   hostPathVolume(mountPath: '/tmp/cache', hostPath: '/tmp/jenkins/cache'),
