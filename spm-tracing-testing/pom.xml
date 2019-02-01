@@ -69,6 +69,7 @@
         <version>2.18.1</version>
         <configuration>
           <reuseForks>false</reuseForks>
+          <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
         </configuration>
       </plugin>
     </plugins>
@@ -94,6 +95,7 @@
               <excludes>
                 <exclude>%regex[.*IntegrationTest.*]</exclude>
               </excludes>
+              <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
             </configuration>
           </plugin>
         </plugins>
