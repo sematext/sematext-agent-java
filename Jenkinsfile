@@ -25,7 +25,7 @@ volumes: [
 podRetention: never()) {
   node(label) {
     // Checkout repo in $WORKSPACE/sematext-agent-java directory
-    def sematextCloud = checkout ([
+    def sematextAgentJava = checkout ([
         $class: 'GitSCM',
         branches: scm.branches,
         userRemoteConfigs: scm.userRemoteConfigs,
@@ -35,6 +35,7 @@ podRetention: never()) {
           [$class: 'RelativeTargetDirectory', relativeTargetDir: 'sematext-agent-java'],
         ]
       ])
+    def gitBranch = sematextAgentJava.GIT_LOCAL_BRANCH
 
     stage('Build') {
       try {
@@ -51,18 +52,24 @@ podRetention: never()) {
     }
 
     stage('Store') {
-      try {
-        container('maven') {
-          sh """
-            cd sematext-agent-java
-            mkdir -p /tmp/cache/java-agent
-            cp spm-monitor-*/target/*-withdeps.jar /tmp/cache/java-agent/
-            ls -l /tmp/cache/java-agent/
-            """
+      if (gitBranch == 'master') {
+        try {
+          container('maven') {
+            sh """
+              cd sematext-agent-java
+              mkdir -p /tmp/cache/java-agent
+              rm -f /tmp/cache/java-agent/*
+              cp spm-monitor-*/target/*-withdeps.jar /tmp/cache/java-agent/
+              ls -l /tmp/cache/java-agent/
+              """
+          }
+        }
+        catch (exc) {
+          throw(exc)
         }
       }
-      catch (exc) {
-        throw(exc)
+      else {
+        println 'Skip'
       }
     }
   }
