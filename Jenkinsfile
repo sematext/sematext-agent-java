@@ -16,7 +16,7 @@ def label = "worker-${UUID.randomUUID().toString()}"
 podTemplate(label: label, serviceAccount: 'jenkins', containers: [
   containerTemplate(name: 'jnlp', image: 'sematext/jnlp-slave-git-lfs:alpine', args: '${computer.jnlpmac} ${computer.name}'),
   containerTemplate(name: 'docker', image: 'sematext/docker:latest', command: 'cat', ttyEnabled: true, alwaysPullImage: true),
-  containerTemplate(name: 'maven', image: 'maven:3.5.3-jdk-8', resourceRequestCpu: '2', command: 'cat', ttyEnabled: true, alwaysPullImage: true),
+  containerTemplate(name: 'maven', image: 'sematext/maven:latest', command: 'cat', ttyEnabled: true, alwaysPullImage: true),
 ],
 volumes: [
   hostPathVolume(mountPath: '/tmp/cache', hostPath: '/tmp/jenkins/cache'),
@@ -36,25 +36,12 @@ podRetention: never()) {
         ]
       ])
 
-    def gitCommit = sematextCloud.GIT_COMMIT
-    def gitBranch = sematextCloud.GIT_LOCAL_BRANCH
-    def shortGitCommit = "dev-${gitCommit[0..10]}"
-    def gitCommitPrevious = sematextCloud.GIT_PREVIOUS_SUCCESSFUL_COMMIT
-
-    stage('Prepare go deps') {
+    stage('Build') {
       try {
         container('maven') {
           sh """
             cd sematext-agent-java
-            apt-get update
-            apt-get -y --no-install-recommends install automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
-            wget http://www.us.apache.org/dist/thrift/0.9.3/thrift-0.9.3.tar.gz
-            tar xfz thrift-0.9.3.tar.gz
-            cd thrift-0.9.3
-            ./configure --enable-libs=no
-            make install
-            cd ..
-            mvn clean install
+            mvn --batch-mode clean install
             """
         }
       }
@@ -63,5 +50,20 @@ podRetention: never()) {
       }
     }
 
+    stage('Store') {
+      try {
+        container('maven') {
+          sh """
+            cd sematext-agent-java
+            mkdir -p /tmp/cache/java-agent
+            cp spm-monitor-*/target/*-withdeps.jar /tmp/cache/java-agent/
+            ls -l /tmp/cache/java-agent/
+            """
+        }
+      }
+      catch (exc) {
+        throw(exc)
+      }
+    }
   }
 }
