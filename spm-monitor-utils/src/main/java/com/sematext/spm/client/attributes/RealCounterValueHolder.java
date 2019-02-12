@@ -36,7 +36,10 @@ public class RealCounterValueHolder extends MetricValueHolder<Long> {
     //reset performed
     if (getPreviousValue() > currentValue) {
       setPreviousValue(currentValue);
-      return currentValue;
+      // we can't know why the reset happened (could be a restart, but also could be some issue with delayed
+      // stats reporting by the service we monitor, so value we get here could be huge cumulative). The safest approach
+      // is to just report as 0
+      return 0l;
     }
 
     long delta = currentValue - getPreviousValue();
