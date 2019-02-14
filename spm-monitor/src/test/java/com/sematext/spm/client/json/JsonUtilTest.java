@@ -600,6 +600,25 @@ public class JsonUtilTest {
     paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[9999].requests");
     Assert.assertEquals(0, paths.size());
 
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[1:2]");
+    Assert.assertEquals(1, paths.size());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[0:2]");
+    Assert.assertEquals(2, paths.size());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[:1]");
+    Assert.assertEquals(1, paths.size());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[:2]");
+    Assert.assertEquals(2, paths.size());
+    
+    Assert.assertEquals(361675, JsonUtil.findValueIn("requests", paths.get(0).getMatchedObject()));
+    Assert.assertEquals(361675,
+        ((Map) (JsonUtil.findMatchingPaths(jsonData, paths.get(0).getFullObjectPath()).get(0)).getMatchedObject()).
+          get("requests"));
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[:10]");
+    Assert.assertEquals(2, paths.size()); // there are just two elements
   }
 
   @Test

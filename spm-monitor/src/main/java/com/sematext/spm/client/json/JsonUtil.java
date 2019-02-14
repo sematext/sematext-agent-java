@@ -190,8 +190,6 @@ public final class JsonUtil {
       int indexOfArrayDefOpen = node.indexOf("[");
       int lastIndexOfArrayDefClose = node.lastIndexOf("]");
 
-
-
       boolean array = false;
       boolean arrayMatchAll = false;
       String arrayPartOfPath = "";
@@ -281,7 +279,6 @@ public final class JsonUtil {
     }
     return result;
   }
-
 
   private static String escapeSpecialChars(String nodeValue) {
     return nodeValue.replace(".", "\\.").replace("[", "\\[").replace("]", "\\]");
@@ -461,27 +458,14 @@ public final class JsonUtil {
             }
           }
         } else {
-          // match just specific element
           arrayExpression = arrayExpression.trim();
-          int index;
-          try {
-            index = Integer.parseInt(arrayExpression);
-          } catch (Throwable thr) {
-            throw new IllegalArgumentException("Expected position in array as integer, instead found " +
-                arrayExpression, thr);
-          }
-          if (element instanceof List) {
-            List elementList = ((List) element);
-            if (elementList.size() <= index) {
-              LOG.warn("Tried to extract element at position " + index + " while there are only " +
-                  elementList.size() + " elements in array. Path so far was: " + pathSoFar);
-            } else {
-              // allMatchingPaths.add(new JsonMatchingPath(pathSoFar, Collections.EMPTY_MAP, elementList.get(index)));
-              traverse(pathSoFar + "[" + arrayExpression + "]", elementList.get(index), nodes, i + 1, allMatchingPaths,
-                  pathAttributes);
-            }
+          int indexOfColon = arrayExpression.indexOf(":");
+          
+          if (indexOfColon != -1) {
+            processArrayRange(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, arrayExpression, element,
+                indexOfColon);
           } else {
-            LOG.warn("Expected to find a list at " + pathSoFar + ", instead found " + element);
+            processSingleArrayElement(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, arrayExpression, element);            
           }
         }
       }
@@ -489,6 +473,61 @@ public final class JsonUtil {
     } else {
       // jump into each of them
       traverse(pathSoFar, element, nodes, i + 1, allMatchingPaths, pathAttributes);
+    }
+  }
+
+  private static void processArrayRange(String pathSoFar, String[] nodes, int i,
+      List<JsonMatchingPath> allMatchingPaths, Map<String, String> pathAttributes, String arrayExpression,
+      Object element, int indexOfColon) {
+    if (indexOfColon == arrayExpression.length() - 1) {
+      throw new UnsupportedOperationException("Array expression 'from tail' not supported yet: " +
+          arrayExpression);
+    }
+    
+    int arrayFirstElementIndex;
+    int arrayAfterLastElementIndex;
+    try {
+      arrayFirstElementIndex = indexOfColon == 0 ?
+          0 : Integer.parseInt(arrayExpression.substring(0, indexOfColon).trim());
+      arrayAfterLastElementIndex = Integer.parseInt(arrayExpression.substring(indexOfColon + 1).trim());
+    } catch (Throwable thr) {
+      throw new IllegalArgumentException("Incorrect array expression : " + arrayExpression, thr);              
+    }
+
+    if (element instanceof List) {
+      List elementList = ((List) element);
+      
+      for (int k = arrayFirstElementIndex; k < Math.min(arrayAfterLastElementIndex, elementList.size()); k++) {                
+        traverse(pathSoFar + "[" + k + "]", elementList.get(k), nodes, i + 1, allMatchingPaths,
+            pathAttributes);
+      }
+    } else {
+      LOG.warn("Expected to find a list at " + pathSoFar + ", instead found " + element);
+    }
+  }
+
+  private static void processSingleArrayElement(String pathSoFar, String[] nodes, int i,
+      List<JsonMatchingPath> allMatchingPaths, Map<String, String> pathAttributes, String arrayExpression,
+      Object element) {
+    int index;
+    try {
+      index = Integer.parseInt(arrayExpression);
+    } catch (Throwable thr) {
+      throw new IllegalArgumentException("Expected position in array as integer, instead found " +
+          arrayExpression, thr);
+    }
+    if (element instanceof List) {
+      List elementList = ((List) element);
+      if (elementList.size() <= index) {
+        LOG.warn("Tried to extract element at position " + index + " while there are only " +
+            elementList.size() + " elements in array. Path so far was: " + pathSoFar);
+      } else {
+        // allMatchingPaths.add(new JsonMatchingPath(pathSoFar, Collections.EMPTY_MAP, elementList.get(index)));
+        traverse(pathSoFar + "[" + arrayExpression + "]", elementList.get(index), nodes, i + 1, allMatchingPaths,
+            pathAttributes);
+      }
+    } else {
+      LOG.warn("Expected to find a list at " + pathSoFar + ", instead found " + element);
     }
   }
 
