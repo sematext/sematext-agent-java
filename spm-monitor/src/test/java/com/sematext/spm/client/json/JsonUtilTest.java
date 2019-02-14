@@ -626,5 +626,11 @@ public class JsonUtilTest {
 
     paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book");
     Assert.assertEquals(2.5, JsonUtil.findValueIn("ratings.min()", paths.get(0).getMatchedObject()));
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book");
+    Assert.assertEquals(16.1, JsonUtil.findValueIn("ratings.sum()", paths.get(0).getMatchedObject()));
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book");
+    Assert.assertEquals(4.025, JsonUtil.findValueIn("ratings.avg()", paths.get(0).getMatchedObject()));
   }
 }

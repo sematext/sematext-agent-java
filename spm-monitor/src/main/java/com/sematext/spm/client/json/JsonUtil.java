@@ -19,11 +19,19 @@
  */
 package com.sematext.spm.client.json;
 
-import com.sematext.spm.client.Log;
-import com.sematext.spm.client.LogFactory;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
 
 public final class JsonUtil {
   private static final Log LOG = LogFactory.getLog(JsonUtil.class);
@@ -264,6 +272,10 @@ public final class JsonUtil {
       result = Collections.max(elementList);
     } else if ("min".equals(function)) {
       result = Collections.min(elementList);
+    } else if ("sum".equals(function)) {
+      result = elementList.stream().collect(Collectors.summingDouble(e -> ((Number) e).doubleValue()));
+    } else if ("avg".equals(function)) {
+      result = elementList.stream().collect(Collectors.averagingDouble(e -> ((Number) e).doubleValue()));
     } else {
       throw new UnsupportedOperationException(String.format("Unknown function %s", node));
     }
