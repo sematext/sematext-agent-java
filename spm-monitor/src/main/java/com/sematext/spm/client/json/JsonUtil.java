@@ -259,9 +259,14 @@ public final class JsonUtil {
 
   private static Object evaluateFunction(String node, Object element) {
     if (!(element instanceof List)) {
-      throw new UnsupportedOperationException(String.format("Cannot evaluate function %s. Functions are allowed only on lists.", node));
+      throw new UnsupportedOperationException(
+          String.format("Cannot evaluate function %s. Functions are allowed only on lists.", node));
     }
     List elementList = (List)element;
+    if (elementList.isEmpty()) {
+      return null;
+    }
+    
     String function = node.substring(0, node.indexOf("(")).trim();
     Object result;
     if ("length".equals(function)) {
@@ -271,13 +276,26 @@ public final class JsonUtil {
     } else if ("min".equals(function)) {
       result = Collections.min(elementList);
     } else if ("sum".equals(function)) {
-      result = elementList.stream().collect(Collectors.summingDouble(e -> ((Number) e).doubleValue()));
+      result = summarizeElements(node, elementList);
     } else if ("avg".equals(function)) {
-      result = elementList.stream().collect(Collectors.averagingDouble(e -> ((Number) e).doubleValue()));
+      result = summarizeElements(node, elementList) / elementList.size();
     } else {
       throw new UnsupportedOperationException(String.format("Unknown function %s", node));
     }
     return result;
+  }
+
+  private static double summarizeElements(String node, List elementList) {
+    double tmpSum = 0d;
+    for (Object e : elementList) {
+      if (e instanceof Number) {
+        tmpSum += ((Number) e).doubleValue();
+      } else {
+        throw new IllegalArgumentException("For node " + node + " found element which is not a Number : " + e +
+            ", class: " + e.getClass());
+      }
+    }
+    return tmpSum;
   }
 
   private static String escapeSpecialChars(String nodeValue) {
