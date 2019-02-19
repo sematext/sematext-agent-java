@@ -175,14 +175,7 @@ public final class JsonUtil {
     }
 
     if (i == nodes.length) {
-      // we reached the leaf we were looking for
-      Map<String, String> currentNodePathAttributes;
-      if (pathAttributes != null && pathAttributes.size() > 0) {
-        currentNodePathAttributes = new HashMap<String, String>(pathAttributes);
-      } else {
-        currentNodePathAttributes = Collections.EMPTY_MAP;
-      }
-      allMatchingPaths.add(new JsonMatchingPath(pathSoFar, currentNodePathAttributes, jsonNodeData));
+      addMatchingNode(pathSoFar, jsonNodeData, allMatchingPaths, pathAttributes);
     } else {
       // need to dig further
       String node = nodes[i].trim();
@@ -217,6 +210,11 @@ public final class JsonUtil {
         node = node.substring(0, indexOfArrayDefOpen).trim();
       }
 
+      if (isFunction(node)) {
+        traverseNode(pathSoFar + "." + node + arrayPartOfPath, nodes, i, allMatchingPaths, pathAttributes, array,
+          arrayMatchAll, arrayExpression, evaluateFunction(node, jsonNodeData));            
+      }
+
       if (jsonNodeData instanceof Map) {
         Map<String, Object> jsonNodeDataMap = (Map<String, Object>) jsonNodeData;
 
@@ -241,7 +239,7 @@ public final class JsonUtil {
           }
         } else {
           traverseNode(pathSoFar + "." + node + arrayPartOfPath, nodes, i, allMatchingPaths, pathAttributes, array,
-                       arrayMatchAll, arrayExpression, jsonNodeDataMap.get(node));
+              arrayMatchAll, arrayExpression, jsonNodeDataMap.get(node));            
         }
       } else if (jsonNodeData instanceof List) {
         if (node.trim().equals("")) {
@@ -257,35 +255,53 @@ public final class JsonUtil {
     }
   }
 
-  private static Object evaluateFunction(String node, Object element) {
-    if (!(element instanceof List)) {
-      throw new UnsupportedOperationException(
-          String.format("Cannot evaluate function %s. Functions are allowed only on lists.", node));
+  private static void addMatchingNode(String pathSoFar, Object jsonNodeData, List<JsonMatchingPath> allMatchingPaths,
+      Map<String, String> pathAttributes) {
+    Map<String, String> currentNodePathAttributes;
+    if (pathAttributes != null && pathAttributes.size() > 0) {
+      currentNodePathAttributes = new HashMap<String, String>(pathAttributes);
+    } else {
+      currentNodePathAttributes = Collections.EMPTY_MAP;
     }
-    List elementList = (List)element;
-    if (elementList.isEmpty()) {
+    allMatchingPaths.add(new JsonMatchingPath(pathSoFar, currentNodePathAttributes, jsonNodeData));
+  }
+
+  public static Object evaluateFunction(String node, Object element) {
+    Collection elementCollection;
+    if (element instanceof Collection) {
+      elementCollection = (Collection) element;
+    } else if (element instanceof Map) {
+      elementCollection = ((Map) element).values();
+    } else {
+      throw new UnsupportedOperationException(
+          String.format(
+              "Cannot evaluate function %s. Functions are allowed only on collections and maps, %s is not allowed",
+              node, element.getClass()));
+    }
+
+    if (elementCollection.isEmpty()) {
       return null;
     }
     
     String function = node.substring(0, node.indexOf("(")).trim();
     Object result;
     if ("length".equals(function)) {
-      result = elementList.size();
+      result = elementCollection.size();
     } else if ("max".equals(function)) {
-      result = Collections.max(elementList);
+      result = Collections.max(elementCollection);
     } else if ("min".equals(function)) {
-      result = Collections.min(elementList);
+      result = Collections.min(elementCollection);
     } else if ("sum".equals(function)) {
-      result = summarizeElements(node, elementList);
+      result = summarizeElements(node, elementCollection);
     } else if ("avg".equals(function)) {
-      result = summarizeElements(node, elementList) / elementList.size();
+      result = summarizeElements(node, elementCollection) / elementCollection.size();
     } else {
       throw new UnsupportedOperationException(String.format("Unknown function %s", node));
     }
     return result;
   }
 
-  private static double summarizeElements(String node, List elementList) {
+  private static double summarizeElements(String node, Collection elementList) {
     double tmpSum = 0d;
     for (Object e : elementList) {
       if (e instanceof Number) {
@@ -316,21 +332,23 @@ public final class JsonUtil {
       if (jsonNodeData == null) {
         return null;
       }
-      if (exNode.contains("(")) {
-        boolean function = exNode.replaceAll(" ", "").endsWith("()");
-        if (function) {
-          // function should be the last node in the expression.
-          if (i != expressionNodes.length) {
-            throw new IllegalArgumentException("function should be the last node in the expression.");
-          }
-          jsonNodeData = evaluateFunction(exNode, jsonNodeData);
+      if (isFunction(exNode)) {
+        // function should be the last node in the expression.
+        if (i != expressionNodes.length) {
+          throw new IllegalArgumentException("function should be the last node in the expression.");
         }
+        jsonNodeData = evaluateFunction(exNode, jsonNodeData);
       } else {
         jsonNodeData = ((Map<String, Object>) jsonNodeData).get(exNode);
       }
     }
 
     return jsonNodeData;
+  }
+  
+  public static boolean isFunction(String node) {
+    // no support for functions with args for now
+    return node.replaceAll(" ", "").endsWith("()");
   }
 
   public static String[] extractNodes(String value, String separator) {

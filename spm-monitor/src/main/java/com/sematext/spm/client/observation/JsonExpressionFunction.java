@@ -38,14 +38,11 @@ public class JsonExpressionFunction implements CalculationFunction {
   private String fullyResolvedUrl;
   private boolean smile;
   private String jsonDataNodePath;
-  private String returnExpression;
-  private String returnBeanPathAttribName;
-  private String returnValueOfKey;
-  private String returnValueFunction;
-  private boolean returnCountMatches;
   private JsonObservation parentObservation;
   private CachableReliableDataSourceBase<Object, JsonDataProvider> dataSource;
   private String fullPlaceholderResolvedExpression;
+  
+  private ReturnValue returnValue; 
 
   public static JsonExpressionFunction getFunction(String fullPlaceholderResolvedExpression,
                                                    JsonObservation parentObservation) {
@@ -99,21 +96,9 @@ public class JsonExpressionFunction implements CalculationFunction {
     this.url = url;
     this.smile = smile;
     this.jsonDataNodePath = jsonDataNodePath;
-    this.returnExpression = returnExpression == null ? null : returnExpression.trim();
+    
+    returnValue = JsonExpressionReturnValue.getReturnValue(returnExpression);
 
-    if (this.returnExpression != null && this.returnExpression.startsWith("substring_")) {
-      returnValueFunction = this.returnExpression.substring(0, this.returnExpression.indexOf("(")).trim();
-      this.returnExpression = this.returnExpression.substring(this.returnExpression.indexOf("(") + 1);
-      if (this.returnExpression.endsWith(")")) {
-        this.returnExpression = this.returnExpression.substring(0, this.returnExpression.length() - 1).trim();
-      }
-    }
-
-    this.returnBeanPathAttribName = this.returnExpression != null && this.returnExpression.startsWith("pathTags:") ?
-        this.returnExpression.substring("pathTags:".length()).trim() : null;
-    this.returnValueOfKey = this.returnExpression != null && this.returnExpression.startsWith("valueOfKey:") ?
-        this.returnExpression.substring("valueOfKey:".length()).trim() : null;
-    this.returnCountMatches = "countMatches".equalsIgnoreCase(this.returnExpression);
     this.parentObservation = parentObservation;
 
   }
@@ -134,67 +119,17 @@ public class JsonExpressionFunction implements CalculationFunction {
     Object jsonData = getData();
     List<JsonMatchingPath> paths = JsonUtil.findMatchingPaths(jsonData, jsonDataNodePath);
 
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("For JSON expression url=" + fullyResolvedUrl + ", nodePath=" + jsonDataNodePath + ", returnExpression="
-                    + returnExpression +
-                    ", found data=" + jsonData + " with " + paths.size() + " matching paths");
-    }
+//    if (LOG.isDebugEnabled()) {
+//      LOG.debug("For JSON expression url=" + fullyResolvedUrl + ", nodePath=" + jsonDataNodePath + ", returnExpression="
+//                    + returnExpression +
+//                    ", found data=" + jsonData + " with " + paths.size() + " matching paths");
+//    }
 
-    if (returnCountMatches) {
-      return paths.size();
-    }
-
-    if (paths.size() == 0) {
-      return null;
-    } else if (paths.size() == 1) {
-      if (returnExpression != null) {
-        Object extractedValue = null;
-
-        if (returnBeanPathAttribName != null) {
-          extractedValue = paths.get(0).getPathAttributes().get(returnBeanPathAttribName);
-        } else if (returnValueOfKey != null) {
-          Object match = paths.get(0).getMatchedObject();
-          if (match != null && match instanceof Map) {
-            extractedValue = ((Map<String, Object>) match).get(returnValueOfKey);
-          } else {
-            throw new IllegalArgumentException("Can't return valueOfKey for object " + match);
-          }
-        } else {
-          throw new IllegalArgumentException("Unsupported return expression: " + returnExpression);
-        }
-
-        if (extractedValue != null && returnValueFunction != null) {
-          try {
-            if (returnValueFunction.startsWith("substring_")) {
-              String tmp1 = returnValueFunction.substring(returnValueFunction.indexOf("_") + 1);
-              int startIndex;
-              int endIndex;
-              int indexOfEndIndex = tmp1.indexOf("_");
-              if (indexOfEndIndex != -1) {
-                startIndex = Integer.parseInt(tmp1.substring(0, indexOfEndIndex));
-                endIndex = Integer.parseInt(tmp1.substring(indexOfEndIndex + 1).trim());
-              } else {
-                startIndex = Integer.parseInt(tmp1);
-                endIndex = -1;
-              }
-              return endIndex != -1 ? extractedValue.toString().substring(startIndex, endIndex) :
-                  extractedValue.toString().substring(startIndex);
-            }
-          } catch (Throwable thr) {
-            throw new IllegalArgumentException("Can't apply returnValueFunction: " + returnValueFunction +
-                                                   " on value: " + extractedValue + ", error was: " + thr.getClass()
-                .getName() + ":" + thr.getMessage());
-          }
-        }
-
-        return extractedValue;
-      } else {
-        return paths.get(0).getMatchedObject();
-      }
-    } else {
-      throw new IllegalStateException(
-          "Found multiple (only 1 should match) matching paths for url:" + fullyResolvedUrl + ", nodePath:"
-              + jsonDataNodePath);
+    try {
+      return returnValue.getResult(paths);
+    } catch (Throwable thr) {
+      throw new RuntimeException("Error for url:" + fullyResolvedUrl + ", nodePath:"
+              + jsonDataNodePath, thr);
     }
   }
 
