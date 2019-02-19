@@ -36,25 +36,25 @@ import com.sematext.spm.client.json.JsonDataProvider;
 public class JsonExpressionFunctionTest {
   @Test
   public void test_calculate() {
-    JsonExpressionFunctionForTesting func = new JsonExpressionFunctionForTesting("dummy1", "http://localhost/_cluster/health?format=smile", false,
-                                                                                 "$.", "valueOfKey:cluster_name");
-
+    JsonExpressionFunctionForTesting func = new JsonExpressionFunctionForTesting(
+        "dummy1", "http://localhost/_cluster/health?format=smile", false, "$.", "valueOfKey:cluster_name");
     Assert.assertEquals("elasticsearch", func.calculate());
 
     // this should produce the same
     func = new JsonExpressionFunctionForTesting("dummy2", "http://localhost/_cluster/health?format=smile", false,
                                                 "$.cluster_name", null);
-
     Assert.assertEquals("elasticsearch", func.calculate());
 
     func = new JsonExpressionFunctionForTesting("dummy3", "http://localhost/_cluster/health?format=smile", false,
                                                 "$.", "substring_0_4(valueOfKey:cluster_name)");
-
     Assert.assertEquals("elas", func.calculate());
 
     func = new JsonExpressionFunctionForTesting("dummy4", "http://localhost/_cluster/health?format=smile", false,
                                                 "$.", "substring_3(valueOfKey:cluster_name)");
+    Assert.assertEquals("sticsearch", func.calculate());
 
+    func = new JsonExpressionFunctionForTesting("dummy4", "http://localhost/_cluster/health?format=smile", false,
+        "$.", "substring_3(valueOfKey:cluster_name)");
     Assert.assertEquals("sticsearch", func.calculate());
   }
 }

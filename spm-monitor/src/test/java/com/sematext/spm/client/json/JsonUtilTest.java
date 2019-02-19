@@ -619,6 +619,10 @@ public class JsonUtilTest {
 
     paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[:10]");
     Assert.assertEquals(2, paths.size()); // there are just two elements
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.upstreams.hg-backend.peers[:2].length()");
+    // count of object's attributes, not length of selected [:2] array
+    Assert.assertEquals(19, paths.get(0).getMatchedObject());
   }
 
   @Test
