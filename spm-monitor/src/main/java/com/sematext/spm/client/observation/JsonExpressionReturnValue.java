@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sematext.spm.client.json.JsonMatchingPath;
+import com.sematext.spm.client.json.JsonUtil;
 
 public class JsonExpressionReturnValue {
   public static ReturnValue getReturnValue(String expression) {
@@ -157,23 +158,28 @@ class FunctionReturnValue extends ReturnValue {
   
   public static boolean applies(String expression) {
     // just substring supported for now
-    return expression != null && expression.startsWith("substring_");
+    return expression != null && (expression.startsWith("substring_") || JsonUtil.isFunction(expression));
   }
   
   public FunctionReturnValue(String expression) {
-    if (expression != null && expression.startsWith("substring_")) {
-      function = expression.substring(0, expression.indexOf("(")).trim();
-      expression = expression.substring(expression.indexOf("(") + 1);
-      if (expression.endsWith(")")) {
-        expression = expression.substring(0, expression.length() - 1).trim();
-        nestedReturnValue = JsonExpressionReturnValue.getReturnValue(expression);
+    if (expression != null) {
+      if (expression.startsWith("substring_")) {
+        function = expression.substring(0, expression.indexOf("(")).trim();
+        expression = expression.substring(expression.indexOf("(") + 1);
+        if (expression.endsWith(")")) {
+          expression = expression.substring(0, expression.length() - 1).trim();
+          nestedReturnValue = JsonExpressionReturnValue.getReturnValue(expression);
+        }
+      } else if (JsonUtil.isFunction(expression)) {
+        function = expression;
       }
     }
   }
 
   @Override
   protected Object apply(List<JsonMatchingPath> matchingPaths) {
-    Object extractedValue = nestedReturnValue.apply(matchingPaths);
+    Object extractedValue = nestedReturnValue != null ?
+        nestedReturnValue.apply(matchingPaths) : matchingPaths.get(0).getMatchedObject();
     if (extractedValue != null) {
       try {
         if (function.startsWith("substring_")) {
@@ -190,6 +196,8 @@ class FunctionReturnValue extends ReturnValue {
           }
           return endIndex != -1 ? extractedValue.toString().substring(startIndex, endIndex) :
               extractedValue.toString().substring(startIndex);
+        } else if (JsonUtil.isFunction(function)) {
+          return JsonUtil.evaluateFunction(function, extractedValue);
         }
       } catch (Throwable thr) {
         throw new IllegalArgumentException("Can't apply returnValueFunction: " + function +

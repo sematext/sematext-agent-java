@@ -266,7 +266,7 @@ public final class JsonUtil {
     allMatchingPaths.add(new JsonMatchingPath(pathSoFar, currentNodePathAttributes, jsonNodeData));
   }
 
-  private static Object evaluateFunction(String node, Object element) {
+  public static Object evaluateFunction(String node, Object element) {
     Collection elementCollection;
     if (element instanceof Collection) {
       elementCollection = (Collection) element;
@@ -346,7 +346,7 @@ public final class JsonUtil {
     return jsonNodeData;
   }
   
-  private static boolean isFunction(String node) {
+  public static boolean isFunction(String node) {
     // no support for functions with args for now
     return node.replaceAll(" ", "").endsWith("()");
   }
