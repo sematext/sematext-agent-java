@@ -19,6 +19,8 @@
  */
 package com.sematext.spm.client.observation;
 
+import org.eclipse.collections.impl.list.mutable.FastList;
+
 import java.util.List;
 import java.util.Map;
 
@@ -178,24 +180,11 @@ class FunctionReturnValue extends ReturnValue {
 
   @Override
   protected Object apply(List<JsonMatchingPath> matchingPaths) {
-    Object extractedValue = nestedReturnValue != null ?
-        nestedReturnValue.apply(matchingPaths) : matchingPaths.get(0).getMatchedObject();
+    Object extractedValue = extractValue(matchingPaths);
     if (extractedValue != null) {
       try {
         if (function.startsWith("substring_")) {
-          String tmp1 = function.substring(function.indexOf("_") + 1);
-          int startIndex;
-          int endIndex;
-          int indexOfEndIndex = tmp1.indexOf("_");
-          if (indexOfEndIndex != -1) {
-            startIndex = Integer.parseInt(tmp1.substring(0, indexOfEndIndex));
-            endIndex = Integer.parseInt(tmp1.substring(indexOfEndIndex + 1).trim());
-          } else {
-            startIndex = Integer.parseInt(tmp1);
-            endIndex = -1;
-          }
-          return endIndex != -1 ? extractedValue.toString().substring(startIndex, endIndex) :
-              extractedValue.toString().substring(startIndex);
+          return substring(extractedValue);
         } else if (JsonUtil.isFunction(function)) {
           return JsonUtil.evaluateFunction(function, extractedValue);
         }
@@ -209,8 +198,44 @@ class FunctionReturnValue extends ReturnValue {
     return null;
   }
 
+  private Object substring(Object extractedValue) {
+    String tmp1 = function.substring(function.indexOf("_") + 1);
+    int startIndex;
+    int endIndex;
+    int indexOfEndIndex = tmp1.indexOf("_");
+    if (indexOfEndIndex != -1) {
+      startIndex = Integer.parseInt(tmp1.substring(0, indexOfEndIndex));
+      endIndex = Integer.parseInt(tmp1.substring(indexOfEndIndex + 1).trim());
+    } else {
+      startIndex = Integer.parseInt(tmp1);
+      endIndex = -1;
+    }
+    return endIndex != -1 ? extractedValue.toString().substring(startIndex, endIndex) :
+        extractedValue.toString().substring(startIndex);
+  }
+
+  private Object extractValue(List<JsonMatchingPath> matchingPaths) {
+    if (matchingPaths.size() == 0) {
+      return null;
+    } else if (matchingPaths.size() == 1) {
+      return nestedReturnValue != null ?
+          nestedReturnValue.apply(matchingPaths) : matchingPaths.get(0).getMatchedObject();
+    } else {
+      if (nestedReturnValue != null) {
+        // support not added yet
+        throw new IllegalArgumentException("Can't apply nestedReturnValue when multiple matching paths exist!");
+      } else {
+        List<Object> matchingObjects = new FastList<Object>(matchingPaths.size());
+        for (JsonMatchingPath path : matchingPaths) {
+          matchingObjects.add(path.getMatchedObject());
+        }
+        return matchingObjects;
+      }
+    }
+  }
+
   @Override
   protected boolean applicableOnMultiElementList() {
-    return false;
+    return true;
   }
 }

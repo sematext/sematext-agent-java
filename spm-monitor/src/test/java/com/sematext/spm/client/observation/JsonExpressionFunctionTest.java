@@ -68,6 +68,14 @@ public class JsonExpressionFunctionTest {
     func2 = new JsonExpressionFunctionForTesting2(
         "dummy5", "http://localhost/_cluster/health?format=smile", false, "$.datapoints", "max()");
     Assert.assertEquals(99, func2.calculate());
+
+    func2 = new JsonExpressionFunctionForTesting2(
+        "dummy5", "http://localhost/_cluster/health?format=smile", false, "$.datapoints[0:3]", "max()");
+    Assert.assertEquals(99, func2.calculate());
+
+    func2 = new JsonExpressionFunctionForTesting2(
+        "dummy5", "http://localhost/_cluster/health?format=smile", false, "$.datapoints[0:3]", "length()");
+    Assert.assertEquals(3, func2.calculate());
   }
 }
 
