@@ -23,8 +23,10 @@ package com.sematext.spm.client.functions;
 import java.util.Map;
 
 /**
- * Trims the specified unit string from the end of value of the metricName and returns Long.
+ * Trims the specified units string from the end of value of the metricName and returns Long.
+ * Can specify multiple units string, if the value can be in multiple units
  * e.g.LongTrimUnit(Value,ms) - trims `ms` from  the end of value of metric name `Value`
+ * e.g.LongTrimUnit(Value,s,ms) - trims `ms` or `s` (whichever is longest match) from  the end of value of metric name `Value`
  */
 public class LongTrimUnit extends TrimUnit {
   @Override public Object calculateAttribute(Map<String, Object> metrics, Object... params) {

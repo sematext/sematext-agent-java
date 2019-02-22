@@ -3,8 +3,9 @@ package com.sematext.spm.client.functions;
 import java.util.Map;
 
 /**
- * Trims the specified unit string from the end of value of the metricName and returns Double.
+ * Trims the specified units string from the end of value of the metricName and returns Double.
  * e.g.DoubleTrimUnit(Value,ms) - trims `ms` from  the end of value of metric name `Value`
+ * e.g.DoubleTrimUnit(Value,s,ms) - trims `ms` or `s` (whichever is longest match) from the end of value of metric name `Value`
  */
 public class DoubleTrimUnit extends TrimUnit {
     @Override public Object calculateAttribute(Map<String, Object> metrics, Object... params) {
