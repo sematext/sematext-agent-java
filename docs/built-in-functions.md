@@ -181,8 +181,7 @@ There are two groups of built-in functions:
         unit: ms
 ```
 
-- LongTrimTimeUnit - Automatically trims the time unit strings (ns, us, ms, s, m, h) from the end of value of the metric 
-and returns the value converted to specified time unit.
+- LongTrimTimeUnit - Automatically trims the time unit strings from the end of value of the metric and returns the value converted to specified time unit.
 E.g. LongTrimUnit(discoveryTime, ms) - trims the time unit from the end of value of metric `discoveryTime` and 
 convert & return the result in milliseconds.
 
