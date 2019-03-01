@@ -72,14 +72,19 @@ public class LongTrimTimeUnit implements CalculationFunction {
         }
     }
 
-    private long convert(String value, String metricName, TimeUnit toUnit) {
+    private Object convert(String value, String metricName, TimeUnit toUnit) {
         for (Map.Entry<String, TimeUnit> fromUnit : TIME_UNITS.entrySet()) {
             if (value.endsWith(fromUnit.getKey())) {
-                long time = Long.parseLong(value.substring(0, value.indexOf(fromUnit.getKey())).trim());
-                return toUnit.convert(time, fromUnit.getValue());
+                String trimmedValue = value.substring(0, value.indexOf(fromUnit.getKey())).trim();
+                return convert(trimmedValue, toUnit, fromUnit.getValue());
             }
         }
         throw new IllegalArgumentException(String.format("Cannot find units in value %s for %s", value, metricName));
+    }
+
+    protected Object convert(String trimmedValue, TimeUnit toUnit, TimeUnit fromUnit) {
+        long time = Long.parseLong(trimmedValue);
+        return toUnit.convert(time, fromUnit);
     }
 
     @Override
