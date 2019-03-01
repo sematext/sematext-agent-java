@@ -43,5 +43,9 @@ public class TrimTimeUnitTest {
         metrics.put("m3","10002ms");
         v = (Double) func.calculateAttribute(metrics, "m3", "s");
         Assert.assertEquals(10.002,v,0.0);
+
+        metrics.put("m4","139.148184ms");
+        v = (Double) func.calculateAttribute(metrics, "m4", "ms");
+        Assert.assertEquals(139.148184,v,0.0);
     }
 }
