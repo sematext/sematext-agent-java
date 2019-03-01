@@ -358,7 +358,7 @@ public final class MonitorAgent {
   }
 
   private static void startTagsSenderThread(final MonitorConfig config) {
-    Thread metainfoThread = new Thread(new Runnable() {
+    Thread tagsSenderThread = new Thread(new Runnable() {
       @Override
       public void run() {
         ScheduledExecutorService executorService = null;
@@ -384,12 +384,12 @@ public final class MonitorAgent {
     // mark monitor threads as daemon threads; on the other hand, that presents a problem for standalone monitor,
     // since JVM automatically exits if only daemon threads are left running. So, we need different setting
     if (MonitorUtil.MONITOR_RUNTIME_SETUP_JAVAAGENT.get()) {
-      metainfoThread.setDaemon(true);
+      tagsSenderThread.setDaemon(true);
     } else {
-      metainfoThread.setDaemon(false);
+      tagsSenderThread.setDaemon(false);
     }
 
-    metainfoThread.start();
+    tagsSenderThread.start();
   }
 
   private static JmxServiceContext prepareJmxServiceContext(String token, String jvmName, String subtype) {
