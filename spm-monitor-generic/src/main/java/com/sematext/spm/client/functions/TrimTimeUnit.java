@@ -5,13 +5,7 @@ import com.sematext.spm.client.observation.CalculationFunction;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-/**
- * - LongTrimTimeUnit - Trims the time unit strings from the end of value of the metricName
- * and returns the value converted to specified time unit.
- * E.g. LongTrimUnit(discoveryTime, ms) - trims the time unit from the end of value of metric `discoveryTime` and
- * convert & return the result in milliseconds.
- */
-public class TrimTimeUnit implements CalculationFunction {
+public abstract class TrimTimeUnit implements CalculationFunction {
     private static final Map<String, TimeUnit> TIME_UNITS = new LinkedHashMap<String, TimeUnit>();
 
     static {
@@ -82,10 +76,7 @@ public class TrimTimeUnit implements CalculationFunction {
         throw new IllegalArgumentException(String.format("Cannot find units in value %s for %s", value, metricName));
     }
 
-    protected Number convert(String trimmedValue, TimeUnit toUnit, TimeUnit fromUnit) {
-        long time = Long.parseLong(trimmedValue);
-        return toUnit.convert(time, fromUnit);
-    }
+    protected abstract Number convert(String trimmedValue, TimeUnit toUnit, TimeUnit fromUnit);
 
     @Override
     public String calculateTag(Map<String, String> objectNameTags, Object... params) {
