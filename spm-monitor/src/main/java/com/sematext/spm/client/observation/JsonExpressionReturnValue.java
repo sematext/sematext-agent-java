@@ -160,12 +160,12 @@ class FunctionReturnValue extends ReturnValue {
   
   public static boolean applies(String expression) {
     // just substring supported for now
-    return expression != null && (expression.startsWith("substring_") || JsonUtil.isFunction(expression));
+    return expression != null && (isSubstring(expression) || isCast(expression) || JsonUtil.isFunction(expression));
   }
   
   public FunctionReturnValue(String expression) {
     if (expression != null) {
-      if (expression.startsWith("substring_")) {
+      if (isSubstring(expression) || isCast(expression)) {
         function = expression.substring(0, expression.indexOf("(")).trim();
         expression = expression.substring(expression.indexOf("(") + 1);
         if (expression.endsWith(")")) {
@@ -178,13 +178,24 @@ class FunctionReturnValue extends ReturnValue {
     }
   }
 
+  private static boolean isSubstring(String expression) {
+    return expression.startsWith("substring_");
+  }
+  
+  private static boolean isCast(String expression) {
+    return expression.startsWith("long(") || expression.equals("long") ||
+        expression.startsWith("double(") || expression.equals("double");
+  }
+
   @Override
   protected Object apply(List<JsonMatchingPath> matchingPaths) {
     Object extractedValue = extractValue(matchingPaths);
     if (extractedValue != null) {
       try {
-        if (function.startsWith("substring_")) {
+        if (isSubstring(function)) {
           return substring(extractedValue);
+        } else if (isCast(function)) {
+          return doCast(extractedValue);
         } else if (JsonUtil.isFunction(function)) {
           return JsonUtil.evaluateFunction(function, extractedValue);
         }
@@ -196,6 +207,16 @@ class FunctionReturnValue extends ReturnValue {
     }
     
     return null;
+  }
+
+  private Object doCast(Object extractedValue) {
+    if (function.equals("long")) {
+      return ((Number) extractedValue).longValue();
+    } else if (function.equals("double")) {
+      return ((Number) extractedValue).doubleValue();
+    } else {
+      throw new IllegalArgumentException("Unrecognize cast expression: " + function);
+    }
   }
 
   private Object substring(Object extractedValue) {
