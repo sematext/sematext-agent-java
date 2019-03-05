@@ -35,7 +35,7 @@ import com.sematext.spm.client.StatValues;
 public class AllTagsStatsCollector {
   private static final Log LOG = LogFactory.getLog(AllTagsStatsCollector.class);
 
-  private MultipleTagsCollector tagsCollector;
+  private MultipleTagAliasesCollector tagsCollector;
   private File monitorPropsFile;
   private String appToken;
   private String jvmName;
@@ -46,7 +46,7 @@ public class AllTagsStatsCollector {
     this.jvmName = jvmName;
 
     // for 'plain' tags
-    tagsCollector = new MultipleTagsCollector(Serializer.INFLUX, appToken, jvmName, subType, monitorPropsFile);
+    tagsCollector = new MultipleTagAliasesCollector(Serializer.INFLUX, appToken, jvmName, subType, monitorPropsFile);
   }
 
   public List<StatValues> collect() {
@@ -57,7 +57,7 @@ public class AllTagsStatsCollector {
       monitorProperties.load(new FileInputStream(monitorPropsFile));
 
       if (tagsCollector != null) {
-        tagsCollector.refreshTagsDefinitions(monitorProperties);
+        tagsCollector.refreshTagAliasesDefinitions(monitorProperties);
         Iterator<StatValues> iter = tagsCollector.collectRawStatValues(null);
         StatValues val = mergeIntoOne(iter, "config");
         if (val != null) {

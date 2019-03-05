@@ -274,7 +274,7 @@ public final class InstallationProperties {
     final Map<String, String> defaults = new UnifiedMap<String, String>();
     defaults.put("server_base_url", config.getDefaultReceiverUrl());
     defaults.put("metrics_endpoint", config.getDefaultMetricsEndpoint());
-    defaults.put("tags_endpoint", config.getDefaultTagsEndpoint());
+    defaults.put("tag_aliases_endpoint", config.getDefaultTagsEndpoint());
     defaults.put("metainfo_endpoint", config.getDefaultMetainfoEndpoint());
 
     LOG.info("Using installation properties: " + propertyFiles + ".");
