@@ -49,7 +49,7 @@ public final class SenderUtil {
   // TODO - read from some internal configuration; used only when for some reason app configs don't have this property
   public static final String DEFAULT_SAAS_PROD_RECEIVER_URL = "http://spm-receiver.sematext.com";
   public static final String DEFAULT_SAAS_PROD_RECEIVER_METRICS_ENDPOINT = "/write?db=metrics";
-  public static final String DEFAULT_SAAS_PROD_RECEIVER_TAG_ALIASES_ENDPOINT = "/write?db=tag_aliases";
+  public static final String DEFAULT_SAAS_PROD_RECEIVER_TAG_ALIASES_ENDPOINT = "/write?db=tagAliases";
   public static final String DEFAULT_SAAS_PROD_RECEIVER_METAINFO_ENDPOINT = "/write?db=metainfo";
 
   public static final File DATA_SENDER_PROPERTIES_FILE = new File(SPM_SETUP_PROPERTIES_DIR, "agent.properties");
