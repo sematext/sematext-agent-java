@@ -32,15 +32,15 @@ import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.Serializer;
 import com.sematext.spm.client.StatValues;
 
-public class AllTagsStatsCollector {
-  private static final Log LOG = LogFactory.getLog(AllTagsStatsCollector.class);
+public class AllTagAliasStatsCollector {
+  private static final Log LOG = LogFactory.getLog(AllTagAliasStatsCollector.class);
 
   private MultipleTagAliasesCollector tagsCollector;
   private File monitorPropsFile;
   private String appToken;
   private String jvmName;
 
-  public AllTagsStatsCollector(String appToken, String jvmName, String subType, File monitorPropsFile) {
+  public AllTagAliasStatsCollector(String appToken, String jvmName, String subType, File monitorPropsFile) {
     this.monitorPropsFile = monitorPropsFile;
     this.appToken = appToken;
     this.jvmName = jvmName;

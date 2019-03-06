@@ -31,7 +31,7 @@ import com.sematext.spm.client.Sender.MonitorType;
 import com.sematext.spm.client.command.BasicCommandPollingSetup.CommandPollingRunner;
 import com.sematext.spm.client.jmx.JmxServiceContext;
 import com.sematext.spm.client.monitor.SourceConfigProperties;
-import com.sematext.spm.client.tag.AllTagsStatsCollector;
+import com.sematext.spm.client.tag.AllTagAliasStatsCollector;
 import com.sematext.spm.client.tracing.agent.impl.AgentInitializer;
 import com.sematext.spm.client.util.PropertiesReader;
 
@@ -111,14 +111,14 @@ public final class MonitorAgent {
     }
   }
 
-  static class TagsSenderTask implements Runnable {
+  static class TagAliasSenderTask implements Runnable {
     private MonitorConfig config;
-    private AllTagsStatsCollector allTagsCollector;
+    private AllTagAliasStatsCollector allTagsCollector;
 
-    public TagsSenderTask(MonitorConfig config) {
+    public TagAliasSenderTask(MonitorConfig config) {
       this.config = config;
       File propsFile = config.getMonitorPropertiesFile();
-      allTagsCollector = new AllTagsStatsCollector(config.getAppToken(), config.getJvmName(), config
+      allTagsCollector = new AllTagAliasStatsCollector(config.getAppToken(), config.getJvmName(), config
           .getSubType(), propsFile);
     }
 
@@ -367,7 +367,7 @@ public final class MonitorAgent {
               .format("tags-%s", MonitorUtil.getMonitorId(config.getMonitorPropertiesFile())),
                                                                   Thread.MIN_PRIORITY);
           executorService = Executors.newSingleThreadScheduledExecutor(threadFactory);
-          TagsSenderTask task = new TagsSenderTask(config);
+          TagAliasSenderTask task = new TagAliasSenderTask(config);
           executorService.scheduleAtFixedRate(task, 2 * SANITARY_START_INTERVAL, 10 * 60 * 1000, TimeUnit.MILLISECONDS);
           executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
