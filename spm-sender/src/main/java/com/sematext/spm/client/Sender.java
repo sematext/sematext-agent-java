@@ -55,7 +55,7 @@ public final class Sender {
   public enum SenderType {
     STATS,
     METRICS_METAINFO,
-    TAGS,
+    TAG_ALIAS,
     TRACING,
     SNAPSHOT
   }
@@ -109,7 +109,7 @@ public final class Sender {
 
         InstallationProperties properties =
             senderType == SenderType.STATS || senderType == SenderType.METRICS_METAINFO ||
-                senderType == SenderType.TAGS ?
+                senderType == SenderType.TAG_ALIAS ?
                 agentPropsFile :
                 senderType == SenderType.TRACING ? tracingProperties :
                     agentPropsFile;
@@ -120,7 +120,7 @@ public final class Sender {
         final Properties monitorProperties = new Properties();
 
         String monitorType = SenderType.STATS == senderType || SenderType.METRICS_METAINFO == senderType
-            || SenderType.TAGS == senderType ? null :
+            || SenderType.TAG_ALIAS == senderType ? null :
             SenderType.TRACING == senderType ? "tracing" :
                 SenderType.SNAPSHOT == senderType ? "snapshot" : senderType.toString().toLowerCase();
 
@@ -146,7 +146,7 @@ public final class Sender {
         agent = SenderFlumeAgentFactory.createAgent(senderConfig, globalConfig, propsFile,
                                                     monitorProperties,
                                                     senderType == SenderType.METRICS_METAINFO,
-                                                    senderType == SenderType.TAGS);
+                                                    senderType == SenderType.TAG_ALIAS);
         agent.start();
         LOG.info("Created and started flume agent for : " + ref.getConfig().getTokens());
 

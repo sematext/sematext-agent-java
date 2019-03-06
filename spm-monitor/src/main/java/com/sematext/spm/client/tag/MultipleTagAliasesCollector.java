@@ -85,7 +85,7 @@ public class MultipleTagAliasesCollector extends MultipleStatsCollector<String> 
     }
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
-    statValues.setMetricNamespace("tagAlias");
+    statValues.setMetricNamespace("tag.alias");
   }
 
   @Override

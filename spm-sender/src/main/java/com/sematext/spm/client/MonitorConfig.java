@@ -74,7 +74,7 @@ public class MonitorConfig extends InMemoryConfig {
   private MetricsMetainfoSender metricsMetainfoSender;
   private String metricCollectorsConfigValue;
 
-  private TagsSender tagsSender;
+  private TagAliasSender tagAliasSender;
 
   public MonitorConfig(String appToken, File monitorPropertiesFile, DataFormat format, Integer processOrdinal)
       throws ConfigurationFailedException {
@@ -183,8 +183,8 @@ public class MonitorConfig extends InMemoryConfig {
     readMetainfoSender(monitorProperties);
     readStatsLogger(getLogBasedir(), getLogMaxFileSize(), getLogMaxBackups(), format, processOrdinal);
 
-    if (tagsSender == null) {
-      tagsSender = new TagsSender();
+    if (tagAliasSender == null) {
+      tagAliasSender = new TagAliasSender();
     }
   }
 
@@ -207,10 +207,10 @@ public class MonitorConfig extends InMemoryConfig {
     }
   }
 
-  public void processTags(List<StatValues> tagsStats) {
-    if (tagsSender != null) {
-      LOG.info("Sending tags: " + tagsStats);
-      tagsSender.sendTags(tagsStats);
+  public void processTags(List<StatValues> tagAliasesStats) {
+    if (tagAliasSender != null) {
+      LOG.info("Sending tag aliases: " + tagAliasesStats);
+      tagAliasSender.sendTagAliases(tagAliasesStats);
     }
   }
 

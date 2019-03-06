@@ -77,7 +77,7 @@ public class AllTagsStatsCollector {
       StatValues sv = iter.next();
       if (merged == null) {
         merged = sv;
-        merged.getTags().put("tags.type", type);
+        merged.getTags().put("tag.alias.type", type);
       } else {
         merged.getTags().putAll(sv.getTags());
         merged.getMetrics().putAll(sv.getMetrics());
