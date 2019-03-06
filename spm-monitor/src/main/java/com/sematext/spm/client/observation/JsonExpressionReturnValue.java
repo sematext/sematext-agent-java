@@ -243,8 +243,12 @@ class FunctionReturnValue extends ReturnValue {
           nestedReturnValue.apply(matchingPaths) : matchingPaths.get(0).getMatchedObject();
     } else {
       if (nestedReturnValue != null) {
-        // support not added yet
-        throw new IllegalArgumentException("Can't apply nestedReturnValue when multiple matching paths exist!");
+        if (nestedReturnValue.applicableOnMultiElementList()) {
+          return nestedReturnValue.apply(matchingPaths);
+        } else {
+          // support not added yet
+          throw new IllegalArgumentException("Can't apply nestedReturnValue when multiple matching paths exist!");          
+        }
       } else {
         List<Object> matchingObjects = new FastList<Object>(matchingPaths.size());
         for (JsonMatchingPath path : matchingPaths) {

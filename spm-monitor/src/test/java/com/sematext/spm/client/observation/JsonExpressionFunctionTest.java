@@ -81,6 +81,9 @@ public class JsonExpressionFunctionTest {
         "dummy5", "http://localhost/_cluster/health?format=smile", false, "$.datapoints", "long(avg())");
     Assert.assertEquals(32l, func2.calculate());
     
+    func2 = new JsonExpressionFunctionForTesting2(
+        "dummy5", "http://localhost/_cluster/health?format=smile", false, "$.datapoints[0:5]", "long(avg())");
+    Assert.assertEquals(32l, func2.calculate());
   }
 }
 
