@@ -49,7 +49,7 @@ public abstract class BaseSenderConfigFactory implements SenderConfigFactory {
         setContentType(getContentType()).
         setReceiverUrl(properties.get("server_base_url")).
         setMetricsEndpoint(properties.get("metrics_endpoint")).
-        setTagAliasesEndpoint(properties.get("tag_alias_endpoint")).
+        setTagAliasEndpoint(properties.get("tag_alias_endpoint")).
         setMetainfoEndpoint(properties.get("metainfo_endpoint")).
         setProxyHost(properties.get("proxy_host")).
         setProxyPort(properties.get("proxy_port") != null &&

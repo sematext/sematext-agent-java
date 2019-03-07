@@ -138,7 +138,7 @@ public final class SenderFlumeAgentFactory {
 
     String receiverUrl = senderConfig.getReceiverUrl().trim();
     String metricsPath = senderConfig.getMetricsEndpoint().trim();
-    String tagsPath = senderConfig.getTagAliasesEndpoint().trim();
+    String tagsPath = senderConfig.getTagAliasEndpoint().trim();
     String metainfoPath = senderConfig.getMetainfoEndpoint().trim();
     
     String endpointPath = metricsPath;
