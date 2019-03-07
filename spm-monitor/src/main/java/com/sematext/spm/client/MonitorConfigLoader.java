@@ -107,7 +107,7 @@ public class MonitorConfigLoader {
 
       if (tags == null) {
         missedProperties
-            .add(new Property("SPM_MONITOR_TAG_ALIASES", "", "add tags if you want to use them, example: SPM_MONITOR_TAG_ALIASES=env:foo, role:bar"));
+            .add(new Property("SPM_MONITOR_TAG_ALIASES", "", "add tag aliases if you want to use them, example: SPM_MONITOR_TAG_ALIASES=env:foo, role:bar"));
       }
 
       String javaDefaults = props.getProperty("JAVA_DEFAULTS");
