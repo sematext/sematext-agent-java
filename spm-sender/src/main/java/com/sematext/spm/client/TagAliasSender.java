@@ -66,7 +66,7 @@ public class TagAliasSender {
   }
 
   private EmbeddedSource getSource() {
-    EmbeddedSource source = Sender.getSource(SenderType.TAG_ALIASES);
+    EmbeddedSource source = Sender.getSource(SenderType.TAG_ALIAS);
     return source;
   }
 }
