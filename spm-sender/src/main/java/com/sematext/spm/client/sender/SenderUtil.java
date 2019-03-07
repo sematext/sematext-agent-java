@@ -49,7 +49,7 @@ public final class SenderUtil {
   // TODO - read from some internal configuration; used only when for some reason app configs don't have this property
   public static final String DEFAULT_SAAS_PROD_RECEIVER_URL = "http://spm-receiver.sematext.com";
   public static final String DEFAULT_SAAS_PROD_RECEIVER_METRICS_ENDPOINT = "/write?db=metrics";
-  public static final String DEFAULT_SAAS_PROD_RECEIVER_TAG_ALIAS_ENDPOINT = "/write?db=tagAliases";
+  public static final String DEFAULT_SAAS_PROD_RECEIVER_TAG_ALIASES_ENDPOINT = "/write?db=tagAliases";
   public static final String DEFAULT_SAAS_PROD_RECEIVER_METAINFO_ENDPOINT = "/write?db=metainfo";
 
   public static final File DATA_SENDER_PROPERTIES_FILE = new File(SPM_SETUP_PROPERTIES_DIR, "agent.properties");
@@ -99,7 +99,7 @@ public final class SenderUtil {
         // if no proxy props file, read proxy settings from the freshest spm-setup properties file
         INSTALLATION_PROPERTIES.setProperty("server_base_url", tmpProps.getProperty("server_base_url"));
         INSTALLATION_PROPERTIES.setProperty("metrics_endpoint", tmpProps.getProperty("metrics_endpoint"));
-        INSTALLATION_PROPERTIES.setProperty("tag_alias_endpoint", tmpProps.getProperty("tag_alias_endpoint"));
+        INSTALLATION_PROPERTIES.setProperty("tag_aliases_endpoint", tmpProps.getProperty("tag_aliases_endpoint"));
         INSTALLATION_PROPERTIES.setProperty("metainfo_endpoint", tmpProps.getProperty("metainfo_endpoint"));
 
         INSTALLATION_PROPERTIES.setProperty("proxy_host", tmpProps.getProperty("proxy_host"));
@@ -120,8 +120,8 @@ public final class SenderUtil {
     if (INSTALLATION_PROPERTIES.get("metrics_endpoint") == null) {
       INSTALLATION_PROPERTIES.setProperty("metrics_endpoint", DEFAULT_SAAS_PROD_RECEIVER_METRICS_ENDPOINT);
     }
-    if (INSTALLATION_PROPERTIES.get("tag_alias_endpoint") == null) {
-      INSTALLATION_PROPERTIES.setProperty("tag_alias_endpoint", DEFAULT_SAAS_PROD_RECEIVER_TAG_ALIAS_ENDPOINT);
+    if (INSTALLATION_PROPERTIES.get("tag_aliases_endpoint") == null) {
+      INSTALLATION_PROPERTIES.setProperty("tag_aliases_endpoint", DEFAULT_SAAS_PROD_RECEIVER_TAG_ALIASES_ENDPOINT);
     }
     if (INSTALLATION_PROPERTIES.get("metainfo_endpoint") == null) {
       INSTALLATION_PROPERTIES.setProperty("metainfo_endpoint", DEFAULT_SAAS_PROD_RECEIVER_METAINFO_ENDPOINT);

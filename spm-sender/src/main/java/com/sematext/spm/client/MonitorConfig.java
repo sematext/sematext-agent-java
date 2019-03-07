@@ -207,7 +207,7 @@ public class MonitorConfig extends InMemoryConfig {
     }
   }
 
-  public void processTags(List<StatValues> tagAliasesStats) {
+  public void processTagAliases(List<StatValues> tagAliasesStats) {
     if (tagAliasSender != null) {
       LOG.info("Sending tag aliases: " + tagAliasesStats);
       tagAliasSender.sendTagAliases(tagAliasesStats);

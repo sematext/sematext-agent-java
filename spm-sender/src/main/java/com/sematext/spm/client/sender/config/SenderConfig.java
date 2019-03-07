@@ -29,7 +29,7 @@ public final class SenderConfig {
   private Set<String> tokens;
   private String receiverUrl;
   private String metricsEndpoint;
-  private String tagAliasEndpoint;
+  private String tagAliasesEndpoint;
   private String metainfoEndpoint;
   private String proxyHost;
   private Integer proxyPort;
@@ -99,7 +99,7 @@ public final class SenderConfig {
     if (proxyUser != null ? !proxyUser.equals(that.proxyUser) : that.proxyUser != null) return false;
     if (receiverUrl != null ? !receiverUrl.equals(that.receiverUrl) : that.receiverUrl != null) return false;
     if (metricsEndpoint != null ? !metricsEndpoint.equals(that.metricsEndpoint) : that.metricsEndpoint != null) return false;
-    if (tagAliasEndpoint != null ? !tagAliasEndpoint.equals(that.tagAliasEndpoint) : that.tagAliasEndpoint != null) return false;
+    if (tagAliasesEndpoint != null ? !tagAliasesEndpoint.equals(that.tagAliasesEndpoint) : that.tagAliasesEndpoint != null) return false;
     if (metainfoEndpoint != null ? !metainfoEndpoint.equals(that.metainfoEndpoint) : that.metainfoEndpoint != null) return false;
     if (tokens != null ? !tokens.equals(that.tokens) : that.tokens != null) return false;
 
@@ -112,7 +112,7 @@ public final class SenderConfig {
     result = 31 * result + (tokens != null ? tokens.hashCode() : 0);
     result = 31 * result + (receiverUrl != null ? receiverUrl.hashCode() : 0);
     result = 31 * result + (metricsEndpoint != null ? metricsEndpoint.hashCode() : 0);
-    result = 31 * result + (tagAliasEndpoint != null ? tagAliasEndpoint.hashCode() : 0);
+    result = 31 * result + (tagAliasesEndpoint != null ? tagAliasesEndpoint.hashCode() : 0);
     result = 31 * result + (metainfoEndpoint != null ? metainfoEndpoint.hashCode() : 0);
     result = 31 * result + (proxyHost != null ? proxyHost.hashCode() : 0);
     result = 31 * result + (proxyPort != null ? proxyPort.hashCode() : 0);
@@ -129,7 +129,7 @@ public final class SenderConfig {
         ", tokens=" + tokens +
         ", receiverUrl='" + receiverUrl + '\'' +
         ", metricsEndpoint='" + metricsEndpoint + '\'' +
-        ", tagAliasEndpoint='" + tagAliasEndpoint + '\'' +
+        ", tagAliasesEndpoint='" + tagAliasesEndpoint + '\'' +
         ", metainfoEndpoint='" + metainfoEndpoint + '\'' +
         ", proxyHost='" + proxyHost + '\'' +
         ", proxyPort=" + proxyPort +
@@ -168,7 +168,7 @@ public final class SenderConfig {
     }
 
     public Builder setTagAliasEndpoint(String tagAliasEndpoint) {
-      this.config.tagAliasEndpoint = tagAliasEndpoint;
+      this.config.tagAliasesEndpoint = tagAliasEndpoint;
       return this;
     }
 
@@ -225,8 +225,8 @@ public final class SenderConfig {
     return metricsEndpoint;
   }
 
-  public String getTagAliasEndpoint() {
-    return tagAliasEndpoint;
+  public String getTagAliasesEndpoint() {
+    return tagAliasesEndpoint;
   }
 
   public String getMetainfoEndpoint() {

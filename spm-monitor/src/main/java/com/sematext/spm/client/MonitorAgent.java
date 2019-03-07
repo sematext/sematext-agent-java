@@ -125,7 +125,7 @@ public final class MonitorAgent {
     @Override
     public void run() {
       try {
-        config.processTags(allTagsCollector.collect());
+        config.processTagAliases(allTagsCollector.collect());
       } catch (Throwable thr) {
         try {
           log.error("ERROR", thr);
