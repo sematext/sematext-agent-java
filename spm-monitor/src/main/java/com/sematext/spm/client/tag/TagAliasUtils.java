@@ -28,14 +28,14 @@ import java.util.regex.Pattern;
 import com.sematext.spm.client.StatsCollectorBadConfigurationException;
 import com.sematext.spm.client.util.StringUtils;
 
-public final class TagsUtils {
+public final class TagAliasUtils {
   private static final String TAG_KEY_VALUE_SEPARATOR = ":";
   private static final String KEY_VALUE_PATTERN = "[a-zA-Z0-9_\\-=\\+\\.]*";
 
-  private TagsUtils() {
+  private TagAliasUtils() {
   }
 
-  public static Set<String> parseTags(String tagsString) throws StatsCollectorBadConfigurationException {
+  public static Set<String> parseTagAliases(String tagsString) throws StatsCollectorBadConfigurationException {
     if (StringUtils.isEmpty(tagsString)) {
       return new HashSet<String>();
     }

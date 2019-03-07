@@ -37,15 +37,15 @@ import com.sematext.spm.client.StatValuesHelper;
 import com.sematext.spm.client.StatsCollectorBadConfigurationException;
 import com.sematext.spm.client.util.StringUtils;
 
-public class MultipleTagAliasesCollector extends MultipleStatsCollector<String> {
+public class MultipleTagAliasCollector extends MultipleStatsCollector<String> {
   private Set<String> trackedTagAliases;
 
   private final String appToken;
   private String jvmNameForTags;
   private final File propsFile;
 
-  public MultipleTagAliasesCollector(Serializer serializer, String appToken, String jvmName, String subType,
-                                     File monitorPropsFile) {
+  public MultipleTagAliasCollector(Serializer serializer, String appToken, String jvmName, String subType,
+                                   File monitorPropsFile) {
     super(serializer);
     this.propsFile = monitorPropsFile;
     this.appToken = appToken;
@@ -63,9 +63,9 @@ public class MultipleTagAliasesCollector extends MultipleStatsCollector<String> 
     }
   }
 
-  public void refreshTagAliasesDefinitions(Properties monitorProperties) throws StatsCollectorBadConfigurationException {
-    trackedTagAliases = TagsUtils
-        .parseTags(StringUtils.removeQuotes(monitorProperties.getProperty("SPM_MONITOR_TAG_ALIASES", "").trim()));
+  public void refreshTagAliasDefinitions(Properties monitorProperties) throws StatsCollectorBadConfigurationException {
+    trackedTagAliases = TagAliasUtils
+        .parseTagAliases(StringUtils.removeQuotes(monitorProperties.getProperty("SPM_MONITOR_TAG_ALIASES", "").trim()));
   }
 
   @Override
