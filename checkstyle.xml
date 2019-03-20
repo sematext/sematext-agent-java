@@ -18,8 +18,8 @@
  -->
 
 <!DOCTYPE module PUBLIC
-    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
-    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
 
@@ -49,7 +49,6 @@
 -->
 
 <module name="Checker">
-  <module name="SuppressionCommentFilter"/>
   <!-- Checks that a package.html file exists for each package.     -->
   <!-- See http://checkstyle.sf.net/config_javadoc.html#PackageHtml -->
   <!--module name="PackageHtml"/-->
@@ -98,8 +97,6 @@
 
 
   <module name="TreeWalker">
-
-    <module name="FileContentsHolder"/>
 
     <property name="cacheFile" value="${checkstyle.cache.file}"/>
 
@@ -166,7 +163,7 @@
     <module name="NoWhitespaceAfter">
       <!-- Default tokens without ARRAY_INIT and additional GENERIC_START -->
       <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT,
-                                         UNARY_MINUS, UNARY_PLUS, GENERIC_START"/>
+                                         UNARY_MINUS, UNARY_PLUS"/>
     </module>
     <module name="NoWhitespaceBefore">
       <!-- Default tokens and additional GENERIC_START and GENERIC_END -->
@@ -175,7 +172,7 @@
     </module>
     <module name="WhitespaceAfter">
       <!-- Default tokens and additional GENERIC_END -->
-      <property name="tokens" value="COMMA, SEMI, TYPECAST, GENERIC_END"/>
+      <property name="tokens" value="COMMA, SEMI, TYPECAST"/>
     </module>
     <module name="WhitespaceAround">
       <!-- Default tokens without GENERIC_START, GENERIC_END and WILDCARD_TYPE -->
@@ -204,9 +201,7 @@
     <!-- See http://checkstyle.sf.net/config_blocks.html -->
     <module name="AvoidNestedBlocks"/>
     <module name="EmptyBlock"/>
-    <module name="LeftCurly">
-      <property name="maxLineLength" value="120"/>
-    </module>
+    <module name="LeftCurly"/>
     <module name="NeedBraces"/>
     <module name="RightCurly"/>
 
@@ -221,7 +216,6 @@
       <property name="severity" value="ignore"/>
     </module>
     <module name="MissingSwitchDefault"/>
-    <module name="RedundantThrows"/>
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
 
@@ -247,8 +241,8 @@
       <property name="severity" value="warning"/>
     </module>
     <module name="UpperEll"/>
-
+    <module name="SuppressionCommentFilter"/>
   </module>
 
-  <module name="SuppressionCommentFilter"/>
+
 </module>
