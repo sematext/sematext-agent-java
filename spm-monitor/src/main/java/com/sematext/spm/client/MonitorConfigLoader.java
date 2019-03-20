@@ -101,13 +101,13 @@ public class MonitorConfigLoader {
       Properties props = new Properties();
       props.load(new FileInputStream(monitorProperties));
 
-      String tags = props.getProperty("SPM_MONITOR_TAGS");
+      String tags = props.getProperty("SPM_MONITOR_TAG_ALIASES");
 
       List<Property> missedProperties = new FastList<Property>();
 
       if (tags == null) {
         missedProperties
-            .add(new Property("SPM_MONITOR_TAGS", "", "add tags if you want to use them, example: SPM_MONITOR_TAGS=env:foo, role:bar"));
+            .add(new Property("SPM_MONITOR_TAG_ALIASES", "", "add tag aliases if you want to use them, example: SPM_MONITOR_TAG_ALIASES=env:foo, role:bar"));
       }
 
       String javaDefaults = props.getProperty("JAVA_DEFAULTS");

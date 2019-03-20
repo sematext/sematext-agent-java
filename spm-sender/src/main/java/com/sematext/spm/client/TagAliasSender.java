@@ -28,45 +28,45 @@ import java.util.List;
 
 import com.sematext.spm.client.Sender.SenderType;
 
-public class TagsSender {
-  private static final Log LOG = LogFactory.getLog(TagsSender.class);
+public class TagAliasSender {
+  private static final Log LOG = LogFactory.getLog(TagAliasSender.class);
 
   private Serializer serializer;
 
-  public TagsSender() {
+  public TagAliasSender() {
     serializer = Serializer.INFLUX;
   }
 
-  public void sendTags(List<StatValues> tagsStats) {
-    for (StatValues sv : tagsStats) {
+  public void sendTagAliases(List<StatValues> tagAliasesStats) {
+    for (StatValues sv : tagAliasesStats) {
       // timestamp send as -1 to force its omission
-      String tagEvent = serializer.serialize(sv.getMetricNamespace(), sv.getAppToken(), sv.getMetrics(),
+      String tagAliasEvent = serializer.serialize(sv.getMetricNamespace(), sv.getAppToken(), sv.getMetrics(),
                                              sv.getTags(), -1);
-      sendTagEvent(tagEvent);
+      sendTagAliasEvent(tagAliasEvent);
     }
   }
 
-  private void sendTagEvent(String tagEvent) {
+  private void sendTagAliasEvent(String tagAliasEvent) {
     try {
       EmbeddedSource source = getSource();
       if (source == null) {
-        LOG.warn("Tags source is still null, can't write metrics tags");
+        LOG.warn("Tag Aliases source is still null, can't write metrics tag aliases");
         return;
       }
       Event newEvent = new SimpleEvent();
-      newEvent.setBody(tagEvent.getBytes());
+      newEvent.setBody(tagAliasEvent.getBytes());
       source.put(newEvent);
     } catch (ChannelException ce) {
       // handling channel errors, like channel-full
       // in this case we will stop further writing to the channel
-      LOG.error("Failed to add metrics tags to flume channel", ce);
+      LOG.error("Failed to add metrics tag aliases to flume channel", ce);
     } catch (Throwable thr) {
-      LOG.error("Exception while processing metrics tags", thr);
+      LOG.error("Exception while processing metrics tag aliases", thr);
     }
   }
 
   private EmbeddedSource getSource() {
-    EmbeddedSource source = Sender.getSource(SenderType.TAGS);
+    EmbeddedSource source = Sender.getSource(SenderType.TAG_ALIASES);
     return source;
   }
 }

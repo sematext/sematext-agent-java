@@ -151,7 +151,7 @@ function sourceMonitorConfProperties() {
   unset SPM_MONITOR_COLLECT_INTERVAL
   unset SPM_MONITOR_TRACING_ENABLED
   unset THREAD_INSTRUMENTATION_ENABLED
-  unset SPM_MONITOR_TAGS
+  unset SPM_MONITOR_TAG_ALIASES
   unset SPM_MONITOR_JMX_PARAMS
   unset spm_monitor_logging_level
   unset SPM_MONITOR_LOGGING_LEVEL

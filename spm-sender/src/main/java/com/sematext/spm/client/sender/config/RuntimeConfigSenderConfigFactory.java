@@ -68,7 +68,7 @@ public class RuntimeConfigSenderConfigFactory extends BaseSenderConfigFactory {
       if (senderType == SenderType.TRACING || senderType == SenderType.SNAPSHOT) {
         senderSinkClass = HttpBinaryPostSink.class.getCanonicalName();
       } else if (senderType == SenderType.STATS || senderType == SenderType.METRICS_METAINFO
-          || senderType == SenderType.TAGS) {
+          || senderType == SenderType.TAG_ALIASES) {
         // senderSinkClass = CustomElasticSearchSink.class.getCanonicalName();
         senderSinkClass = InfluxSink.class.getCanonicalName();
       } else {
@@ -103,7 +103,7 @@ public class RuntimeConfigSenderConfigFactory extends BaseSenderConfigFactory {
         .getJvmName() +
         File.separator + this.source.getConfSubtype() +
         ((senderType == SenderType.METRICS_METAINFO ? File.separator + "metainfo" : "") +
-            (senderType == SenderType.TAGS ? File.separator + "tags" : "")) +
+            (senderType == SenderType.TAG_ALIASES ? File.separator + "tags" : "")) +
         File.separator + MonitorUtil.MONITOR_PROCESS_ORDINAL;
   }
 

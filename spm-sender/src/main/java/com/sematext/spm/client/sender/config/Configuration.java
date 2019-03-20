@@ -29,7 +29,7 @@ public final class Configuration {
   private final String senderApplicationsConfTemplateDir;
   private final String defaultReceiverUrl = "https://spm-receiver.sematext.com";
   private final String defaultMetricsEndpoint = SenderUtil.DEFAULT_SAAS_PROD_RECEIVER_METRICS_ENDPOINT;
-  private final String defaultTagsEndpoint = SenderUtil.DEFAULT_SAAS_PROD_RECEIVER_TAGS_ENDPOINT;
+  private final String defaultTagAliasEndpoint = SenderUtil.DEFAULT_SAAS_PROD_RECEIVER_TAG_ALIASES_ENDPOINT;
   private final String defaultMetainfoEndpoint = SenderUtil.DEFAULT_SAAS_PROD_RECEIVER_METAINFO_ENDPOINT;
   private final String configurationDir;
   private final String propertiesDir;
@@ -81,8 +81,8 @@ public final class Configuration {
     return defaultMetricsEndpoint;
   }
 
-  public String getDefaultTagsEndpoint() {
-    return defaultTagsEndpoint;
+  public String getDefaultTagAliasEndpoint() {
+    return defaultTagAliasEndpoint;
   }
 
   public String getDefaultMetainfoEndpoint() {

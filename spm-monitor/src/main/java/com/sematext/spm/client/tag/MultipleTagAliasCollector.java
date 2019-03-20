@@ -37,15 +37,15 @@ import com.sematext.spm.client.StatValuesHelper;
 import com.sematext.spm.client.StatsCollectorBadConfigurationException;
 import com.sematext.spm.client.util.StringUtils;
 
-public class MultipleTagsCollector extends MultipleStatsCollector<String> {
-  private Set<String> trackedTags;
+public class MultipleTagAliasCollector extends MultipleStatsCollector<String> {
+  private Set<String> trackedTagAliases;
 
   private final String appToken;
   private String jvmNameForTags;
   private final File propsFile;
 
-  public MultipleTagsCollector(Serializer serializer, String appToken, String jvmName, String subType,
-                               File monitorPropsFile) {
+  public MultipleTagAliasCollector(Serializer serializer, String appToken, String jvmName, String subType,
+                                   File monitorPropsFile) {
     super(serializer);
     this.propsFile = monitorPropsFile;
     this.appToken = appToken;
@@ -63,14 +63,14 @@ public class MultipleTagsCollector extends MultipleStatsCollector<String> {
     }
   }
 
-  public void refreshTagsDefinitions(Properties monitorProperties) throws StatsCollectorBadConfigurationException {
-    trackedTags = TagsUtils
-        .parseTags(StringUtils.removeQuotes(monitorProperties.getProperty("SPM_MONITOR_TAGS", "").trim()));
+  public void refreshTagAliasDefinitions(Properties monitorProperties) throws StatsCollectorBadConfigurationException {
+    trackedTagAliases = TagAliasUtils
+        .parseTagAliases(StringUtils.removeQuotes(monitorProperties.getProperty("SPM_MONITOR_TAG_ALIASES", "").trim()));
   }
 
   @Override
   protected Collection<String> getSlice(Map<String, Object> outerMetrics) {
-    return trackedTags;
+    return trackedTagAliases;
   }
 
   @Override
@@ -85,7 +85,7 @@ public class MultipleTagsCollector extends MultipleStatsCollector<String> {
     }
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
-    statValues.setMetricNamespace("tag");
+    statValues.setMetricNamespace("tag.alias");
   }
 
   @Override

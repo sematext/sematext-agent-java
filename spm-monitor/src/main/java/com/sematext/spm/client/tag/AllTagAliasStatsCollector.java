@@ -32,21 +32,21 @@ import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.Serializer;
 import com.sematext.spm.client.StatValues;
 
-public class AllTagsStatsCollector {
-  private static final Log LOG = LogFactory.getLog(AllTagsStatsCollector.class);
+public class AllTagAliasStatsCollector {
+  private static final Log LOG = LogFactory.getLog(AllTagAliasStatsCollector.class);
 
-  private MultipleTagsCollector tagsCollector;
+  private MultipleTagAliasCollector tagsCollector;
   private File monitorPropsFile;
   private String appToken;
   private String jvmName;
 
-  public AllTagsStatsCollector(String appToken, String jvmName, String subType, File monitorPropsFile) {
+  public AllTagAliasStatsCollector(String appToken, String jvmName, String subType, File monitorPropsFile) {
     this.monitorPropsFile = monitorPropsFile;
     this.appToken = appToken;
     this.jvmName = jvmName;
 
     // for 'plain' tags
-    tagsCollector = new MultipleTagsCollector(Serializer.INFLUX, appToken, jvmName, subType, monitorPropsFile);
+    tagsCollector = new MultipleTagAliasCollector(Serializer.INFLUX, appToken, jvmName, subType, monitorPropsFile);
   }
 
   public List<StatValues> collect() {
@@ -57,7 +57,7 @@ public class AllTagsStatsCollector {
       monitorProperties.load(new FileInputStream(monitorPropsFile));
 
       if (tagsCollector != null) {
-        tagsCollector.refreshTagsDefinitions(monitorProperties);
+        tagsCollector.refreshTagAliasDefinitions(monitorProperties);
         Iterator<StatValues> iter = tagsCollector.collectRawStatValues(null);
         StatValues val = mergeIntoOne(iter, "config");
         if (val != null) {
@@ -77,7 +77,7 @@ public class AllTagsStatsCollector {
       StatValues sv = iter.next();
       if (merged == null) {
         merged = sv;
-        merged.getTags().put("tags.type", type);
+        merged.getTags().put("tag.alias.type", type);
       } else {
         merged.getTags().putAll(sv.getTags());
         merged.getMetrics().putAll(sv.getMetrics());
