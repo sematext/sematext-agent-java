@@ -64,6 +64,13 @@ function setup_env {
       parse_param "$1"
       shift
     done
+    
+    if [ ! -f $SPM_HOME/properties/agent.properties ]; then
+      touch $SPM_HOME/properties/agent.properties
+    fi
+    if [ ! -f $SPM_HOME/properties/tracing.properties ]; then
+      touch $SPM_HOME/properties/tracing.properties
+    fi
 
     if [ ! -z "$REGION_PARAM" ]; then
       ADJUSTED_REGION=$(echo "$REGION_PARAM" | awk '{print tolower($0)}')
