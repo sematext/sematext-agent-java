@@ -66,10 +66,10 @@ function setup_env {
     done
     
     if [ ! -f $SPM_HOME/properties/agent.properties ]; then
-      touch $SPM_HOME/properties/agent.properties
+      sudo touch $SPM_HOME/properties/agent.properties
     fi
     if [ ! -f $SPM_HOME/properties/tracing.properties ]; then
-      touch $SPM_HOME/properties/tracing.properties
+      sudo touch $SPM_HOME/properties/tracing.properties
     fi
 
     if [ ! -z "$REGION_PARAM" ]; then
