@@ -247,7 +247,7 @@ function setup_conf {
     # set JAVA_DEFAULTS
     if [ "standalone" == "$MONITOR_TYPE" ]; then
       case $APP_TYPE in
-        es|solr|solrcloud)
+        elasticsearch|solr|solrcloud)
           echo -e "\n# DO NOT EDIT THE FOLLOWING PROPERTY!" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
           echo -e "JAVA_DEFAULTS=\"-server -Xmx320m -Xms64m -Xss256k\"" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
         ;;
