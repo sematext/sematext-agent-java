@@ -15,7 +15,7 @@ def label = "worker-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, serviceAccount: 'jenkins', containers: [
   containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:alpine', args: '${computer.jnlpmac} ${computer.name}'),
-  containerTemplate(name: 'maven', image: 'maven:3.5.3-jdk-8', command: 'cat', ttyEnabled: true, alwaysPullImage: true),
+  containerTemplate(name: 'maven', image: 'sematext/maven:latest', command: 'cat', ttyEnabled: true, alwaysPullImage: true),
 ],
 podRetention: never()) {
   node(label) {
@@ -30,20 +30,6 @@ podRetention: never()) {
         ]
       ])
     def gitBranch = sematextAgentJava.GIT_LOCAL_BRANCH
-
-    stage('Prereqs') {
-      try {
-        container('maven') {
-          sh """
-            apt-get update
-            apt-get install -y --no-install-recommends thrift-compiler
-            """
-        }
-      }
-      catch (exc) {
-        throw(exc)
-      }
-    }
 
     stage('Build') {
       try {
