@@ -32,13 +32,13 @@ To build Sematext App Agent you need:
 1) Linux based Operating System 
 2) Java 1.6+
 3) Maven 
-4) Thrift compiler v0.9.3
+4) Thrift compiler v0.12.0
     * Steps to install Thrift in Debian based systems
         ```bash
           sudo apt-get install automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
-          wget http://www.us.apache.org/dist/thrift/0.9.3/thrift-0.9.3.tar.gz
-          tar xfz thrift-0.9.3.tar.gz
-          cd thrift-0.9.3 && ./configure --enable-libs=no  && sudo make install
+          wget http://www.us.apache.org/dist/thrift/0.12.0/thrift-0.12.0.tar.gz
+          tar xfz thrift-0.12.0.tar.gz
+          cd thrift-0.12.0 && ./configure --enable-libs=no  && sudo make install
         ```
 5) fpm package manager 
     * For steps to install fpm refer [https://fpm.readthedocs.io/en/latest/installing.html](https://fpm.readthedocs.io/en/latest/installing.html)
