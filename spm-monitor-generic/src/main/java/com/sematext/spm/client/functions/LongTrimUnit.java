@@ -34,7 +34,7 @@ public class LongTrimUnit implements CalculationFunction {
       String metricName = params[0].toString();
       String unit = params[1].toString();
       String value = (String) metrics.get(metricName);
-      return Long.parseLong(value.substring(0, value.indexOf(unit)).trim());
+      return value == null ? null : Long.parseLong(value.substring(0, value.indexOf(unit)).trim());
     } else {
       throw new IllegalArgumentException("Missing metric name and unit in params");
     }

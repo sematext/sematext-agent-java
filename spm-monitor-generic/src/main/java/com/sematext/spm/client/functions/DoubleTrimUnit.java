@@ -14,7 +14,7 @@ public class DoubleTrimUnit implements CalculationFunction {
             String metricName = params[0].toString();
             String unit = params[1].toString();
             String value = (String) metrics.get(metricName);
-            return Double.parseDouble(value.substring(0, value.indexOf(unit)).trim());
+            return value == null ? null : Double.parseDouble(value.substring(0, value.indexOf(unit)).trim());
         } else {
             throw new IllegalArgumentException("Missing metric name and unit in params");
         }
