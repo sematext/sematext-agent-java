@@ -656,4 +656,18 @@ public class JsonUtilTest {
     paths = JsonUtil.findMatchingPaths(jsonData, "$.books.book");
     Assert.assertEquals(4.025, JsonUtil.findValueIn("ratings.avg()", paths.get(0).getMatchedObject()));
   }
+  
+  @Test
+  public void testFlinkStats() throws IOException {
+    InputStream response = getClass().getResourceAsStream("flink-stats.json");
+    TypeReference<Object> typeRef = new TypeReference<Object>() {
+    };
+    Object jsonData = new ObjectMapper(new JsonFactory()).readValue(response, typeRef);
+
+    List<JsonMatchingPath> paths = JsonUtil
+        .findMatchingPaths(jsonData, "$.[?(@.id=numRegisteredTaskManagers)].value");
+    Assert.assertEquals(1, paths.size());
+    Assert.assertEquals("2", paths.get(0).getMatchedObject());
+
+  }
 }

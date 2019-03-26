@@ -1,0 +1,86 @@
+[
+	{
+		"id": "numRegisteredTaskManagers",
+		"value": "2"
+	},
+	{
+		"id": "Status.JVM.Memory.NonHeap.Committed",
+		"value": "42762240"
+	},
+	{
+		"id": "Status.JVM.Memory.Mapped.TotalCapacity",
+		"value": "0"
+	},
+	{
+		"id": "taskSlotsAvailable",
+		"value": "1"
+	},
+	{
+		"id": "Status.JVM.Memory.NonHeap.Used",
+		"value": "40817552"
+	},
+	{
+		"id": "taskSlotsTotal",
+		"value": "2"
+	},
+	{
+		"id": "Status.JVM.Memory.Direct.MemoryUsed",
+		"value": "638722"
+	},
+	{
+		"id": "Status.JVM.Memory.Mapped.MemoryUsed",
+		"value": "0"
+	},
+	{
+		"id": "Status.JVM.CPU.Time",
+		"value": "168700000000"
+	},
+	{
+		"id": "Status.JVM.Threads.Count",
+		"value": "62"
+	},
+	{
+		"id": "Status.JVM.Memory.Direct.TotalCapacity",
+		"value": "638721"
+	},
+	{
+		"id": "numRunningJobs",
+		"value": "1"
+	},
+	{
+		"id": "Status.JVM.Memory.Heap.Committed",
+		"value": "1029177344"
+	},
+	{
+		"id": "Status.JVM.ClassLoader.ClassesLoaded",
+		"value": "7233"
+	},
+	{
+		"id": "Status.JVM.Memory.Mapped.Count",
+		"value": "0"
+	},
+	{
+		"id": "Status.JVM.Memory.Direct.Count",
+		"value": "27"
+	},
+	{
+		"id": "Status.JVM.CPU.Load",
+		"value": "0.007246376811594203"
+	},
+	{
+		"id": "Status.JVM.Memory.Heap.Max",
+		"value": "1029177344"
+	},
+	{
+		"id": "Status.JVM.Memory.Heap.Used",
+		"value": "117312232"
+	},
+	{
+		"id": "Status.JVM.ClassLoader.ClassesUnloaded",
+		"value": "1"
+	},
+	{
+		"id": "Status.JVM.Memory.NonHeap.Max",
+		"value": "-1"
+	}
+]
