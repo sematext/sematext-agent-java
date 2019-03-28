@@ -27,6 +27,12 @@ public class SubtypeCheck extends BeanConditionCheck {
 
   @Override
   protected boolean clauseSatisfies(String conditionValue, String expectedValue) {
-    return conditionValue != null ? conditionValue.equals(expectedValue) : false;
+    // switched initial logic to assume check passes even when sub-type is not defined (makes it possible to simplify
+    // installation to not require subType when it may be difficult to provide it during agent setup)
+    return noSubtype(conditionValue) || conditionValue.equals(expectedValue);
+  }
+
+  private boolean noSubtype(String conditionValue) {
+    return conditionValue == null || "".equals(conditionValue.trim());
   }
 }
