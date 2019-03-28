@@ -102,7 +102,7 @@ public final class JsonUtil {
 
     List<String> nodes = new ArrayList<String>(3);
 
-    boolean arrayExpOpen = false;
+    boolean bracketExpOpen = false;
     int indexOfNodeStart = 0;
     int i = 0;
     List<Integer> positionsOfEscapeChars = new ArrayList<Integer>();
@@ -111,11 +111,11 @@ public final class JsonUtil {
       char c = path.charAt(i);
 
       if (c == '[') {
-        if (!arrayExpOpen) {
-          arrayExpOpen = true;
+        if (!bracketExpOpen) {
+          bracketExpOpen = true;
         }
       } else if (c == '.') {
-        if (arrayExpOpen) {
+        if (bracketExpOpen) {
           ;
         } else {
           nodes.add(clearEscapeChars(path.substring(indexOfNodeStart, i), positionsOfEscapeChars));
@@ -123,10 +123,10 @@ public final class JsonUtil {
           positionsOfEscapeChars.clear();
         }
       } else if (c == ']') {
-        if (arrayExpOpen && ((i == path.length() - 1) || path.charAt(i + 1) == '.')) {
-          // consider as end of the array expression
+        if (bracketExpOpen && ((i == path.length() - 1) || path.charAt(i + 1) == '.')) {
+          // consider as end of the bracket expression
           nodes.add(clearEscapeChars(path.substring(indexOfNodeStart, i + 1), positionsOfEscapeChars));
-          arrayExpOpen = false;
+          bracketExpOpen = false;
           i++; // also skip the next .
           indexOfNodeStart = i + 1;
           positionsOfEscapeChars.clear();
@@ -180,39 +180,39 @@ public final class JsonUtil {
       // need to dig further
       String node = nodes[i].trim();
 
-      int indexOfArrayDefOpen = node.indexOf("[");
-      int lastIndexOfArrayDefClose = node.lastIndexOf("]");
+      int indexOfBracketDefOpen = node.indexOf("[");
+      int lastIndexOfBracketDefClose = node.lastIndexOf("]");
 
-      boolean array = false;
+      boolean bracket = false;
       boolean arrayMatchAll = false;
-      String arrayPartOfPath = "";
-      String arrayExpression = null;
+      String bracketPartOfPath = "";
+      String bracketExpression = null;
 
-      if (indexOfArrayDefOpen != -1 && lastIndexOfArrayDefClose != -1
-          && indexOfArrayDefOpen < lastIndexOfArrayDefClose) {
-        String arrayDef = node.substring(indexOfArrayDefOpen + 1, lastIndexOfArrayDefClose).trim();
-        array = true;
+      if (indexOfBracketDefOpen != -1 && lastIndexOfBracketDefClose != -1
+          && indexOfBracketDefOpen < lastIndexOfBracketDefClose) {
+        String bracketDef = node.substring(indexOfBracketDefOpen + 1, lastIndexOfBracketDefClose).trim();
+        bracket = true;
         // TODO add support for various array expressions
-        if (arrayDef.trim().equals("*")) {
+        if (bracketDef.trim().equals("*")) {
 //          arrayMatchAll = true;
 //          arrayDef = arrayDef.trim();
 //          arrayPartOfPath = "[*]";
           throw new IllegalArgumentException("Unsupported array expression '*' - it is ambiguous, matching paths can't be used for monitoring");
-        } else if (arrayDef.startsWith("?(@.") && arrayDef.endsWith(")")) {
+        } else if (bracketDef.startsWith("?(@.") && bracketDef.endsWith(")")) {
           arrayMatchAll = true;
-          arrayExpression = arrayDef.substring("?(".length(), arrayDef.lastIndexOf(")"));
+          bracketExpression = bracketDef.substring("?(".length(), bracketDef.lastIndexOf(")"));
         } else {
           // no sub-expression, just specific element position
           arrayMatchAll = false;
-          arrayExpression = arrayDef;
+          bracketExpression = bracketDef;
         }
 
-        node = node.substring(0, indexOfArrayDefOpen).trim();
+        node = node.substring(0, indexOfBracketDefOpen).trim();
       }
 
       if (isFunction(node)) {
-        traverseNode(pathSoFar + "." + node + arrayPartOfPath, nodes, i, allMatchingPaths, pathAttributes, array,
-          arrayMatchAll, arrayExpression, evaluateFunction(node, jsonNodeData));            
+        traverseNode(pathSoFar + "." + node + bracketPartOfPath, nodes, i, allMatchingPaths, pathAttributes, bracket,
+          arrayMatchAll, bracketExpression, evaluateFunction(node, jsonNodeData));            
       }
 
       if (jsonNodeData instanceof Map) {
@@ -231,20 +231,20 @@ public final class JsonUtil {
             Object element = jsonNodeDataMap.get(key);
 
             traverseNode(pathSoFar + "." + escapeSpecialChars(nodeValue)
-                             + arrayPartOfPath, nodes, i, allMatchingPaths, pathAttributes, array,
-                         arrayMatchAll, arrayExpression, element);
+                             + bracketPartOfPath, nodes, i, allMatchingPaths, pathAttributes, bracket,
+                         arrayMatchAll, bracketExpression, element);
 
             // remove from map
             pathAttributes.remove(nodeName);
           }
         } else {
-          traverseNode(pathSoFar + "." + node + arrayPartOfPath, nodes, i, allMatchingPaths, pathAttributes, array,
-              arrayMatchAll, arrayExpression, jsonNodeDataMap.get(node));            
+          traverseNode(pathSoFar + "." + node + bracketPartOfPath, nodes, i, allMatchingPaths, pathAttributes, bracket,
+              arrayMatchAll, bracketExpression, jsonNodeDataMap.get(node));            
         }
       } else if (jsonNodeData instanceof List) {
         if (node.trim().equals("")) {
-          traverseNode(pathSoFar + "." + node + arrayPartOfPath, nodes, i, allMatchingPaths, pathAttributes, array,
-                  arrayMatchAll, arrayExpression, jsonNodeData);
+          traverseNode(pathSoFar + "." + node + bracketPartOfPath, nodes, i, allMatchingPaths, pathAttributes, bracket,
+                  arrayMatchAll, bracketExpression, jsonNodeData);
         } else {
           throw new UnsupportedOperationException("Lists were supposed to be handled differently");
         }
@@ -372,10 +372,10 @@ public final class JsonUtil {
   }
 
   private static void traverseNode(String pathSoFar, String[] nodes, int i, List<JsonMatchingPath> allMatchingPaths,
-                                   Map<String, String> pathAttributes, boolean array, boolean arrayMatchAll,
-                                   String arrayExpression, Object element) {
+                                   Map<String, String> pathAttributes, boolean bracket, boolean arrayMatchAll,
+                                   String bracketExpression, Object element) {
     // TODO one day add support for array within array within array...
-    if (array) {
+    if (bracket) {
       if (element instanceof List) {
         // TODO add support for other array expressions
         if (arrayMatchAll) {
@@ -383,14 +383,14 @@ public final class JsonUtil {
           List<String> nodePathValueNames;
           List<Boolean> nodePathValueNameIsAttribute;
           List<String> nodePathAttributeNames;
-          if (arrayExpression != null) {
+          if (bracketExpression != null) {
             // most often only a single clause, so use predefined 1-sized array in that case, otherwise use size 2
             nodePaths = new ArrayList<String>(
-                arrayExpression.indexOf("@.") == arrayExpression.lastIndexOf("@.") ? 1 : 2);
+                bracketExpression.indexOf("@.") == bracketExpression.lastIndexOf("@.") ? 1 : 2);
             nodePathValueNames = new ArrayList<String>(nodePaths.size());
             nodePathValueNameIsAttribute = new ArrayList<Boolean>(nodePaths.size());
             nodePathAttributeNames = new ArrayList<String>(nodePaths.size());
-            for (String expression : extractExpressions(arrayExpression)) {
+            for (String expression : extractExpressions(bracketExpression)) {
               expression = expression.trim();
               if (expression.equals("")) {
                 continue;
@@ -494,14 +494,15 @@ public final class JsonUtil {
             }
           }
         } else {
-          arrayExpression = arrayExpression.trim();
-          int indexOfColon = arrayExpression.indexOf(":");
+          bracketExpression = bracketExpression.trim();
+          int indexOfColon = bracketExpression.indexOf(":");
           
           if (indexOfColon != -1) {
-            processArrayRange(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, arrayExpression, element,
+            processArrayRange(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, bracketExpression, element,
                 indexOfColon);
           } else {
-            processSingleArrayElement(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, arrayExpression, element);            
+            processSingleArrayElement(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, bracketExpression,
+                element);            
           }
         }
       }
