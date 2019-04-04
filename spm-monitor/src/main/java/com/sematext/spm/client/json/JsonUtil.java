@@ -85,12 +85,12 @@ public final class JsonUtil {
 
     String[] nodes = JsonPathExpressionParser.parseNodes(path);
 
-    traverse("$", jsonData, nodes, 0, allMatchingPaths, pathAttributes);
+    evaluateNode("$", jsonData, nodes, 0, allMatchingPaths, pathAttributes);
 
     return allMatchingPaths;
   }
 
-  private static void traverse(String pathSoFar, Object jsonNodeData, String[] nodes, int i,
+  private static void evaluateNode(String pathSoFar, Object jsonNodeData, String[] nodes, int i,
                                List<JsonMatchingPath> allMatchingPaths,
                                Map<String, String> pathAttributes) {
     if (jsonNodeData == null) {
@@ -103,39 +103,60 @@ public final class JsonUtil {
       // need to dig further
       String node = nodes[i].trim();
 
-      if (JsonPathExpressionParser.isFunction(node)) {
-        traverseNode(pathSoFar + "." + node, nodes, i, allMatchingPaths, pathAttributes,
-            JsonUtilFunctionEvaluator.evaluateFunction(node, jsonNodeData));            
-      }
+      // TODO in case of function we stepInto here and once more in if-else block below?
+      stepIntoFunctionNode(pathSoFar, jsonNodeData, nodes, i, allMatchingPaths, pathAttributes, node);
 
       if (jsonNodeData instanceof Map) {
-        Map<String, Object> jsonNodeDataMap = (Map<String, Object>) jsonNodeData;
-
-        if (JsonPathExpressionParser.isPlaceholder(node)) {
-          // means all nodes on "current" level match and we have to remember each node name as value
-          String nodeName = JsonPathExpressionParser.extractPlaceholderName(node);
-
-          for (String key : jsonNodeDataMap.keySet()) {
-            String nodeValue = key;
-
-            // add to map
-            pathAttributes.put(nodeName, nodeValue);
-
-            Object element = jsonNodeDataMap.get(key);
-            traverseNode(pathSoFar + "." + escapeSpecialChars(nodeValue), nodes, i, allMatchingPaths, pathAttributes, element);
-
-            // remove from map
-            pathAttributes.remove(nodeName);
-          }
-        } else {
-          traverseNode(pathSoFar + "." + node, nodes, i, allMatchingPaths, pathAttributes, jsonNodeDataMap.get(node));            
-        }
+        stepIntoMapNode(pathSoFar, jsonNodeData, nodes, i, allMatchingPaths, pathAttributes, node);
       } else if (jsonNodeData instanceof List) {
-          traverseNode(pathSoFar, nodes, i - 1, allMatchingPaths, pathAttributes, jsonNodeData);
+        stepIntoListNode(pathSoFar, jsonNodeData, nodes, i, allMatchingPaths, pathAttributes);
       } else {
         // if neither a map nor a list, and we still didn't reach the leaf we are looking for, just end the search
         return;
       }
+    }
+  }
+
+  private static void stepIntoListNode(String pathSoFar, Object jsonNodeData, String[] nodes, int i,
+      List<JsonMatchingPath> allMatchingPaths, Map<String, String> pathAttributes) {
+    stepIntoNode(pathSoFar, nodes, i - 1, allMatchingPaths, pathAttributes, jsonNodeData);
+  }
+
+  private static void stepIntoMapNode(String pathSoFar, Object jsonNodeData, String[] nodes, int i,
+      List<JsonMatchingPath> allMatchingPaths, Map<String, String> pathAttributes, String node) {
+    Map<String, Object> jsonNodeDataMap = (Map<String, Object>) jsonNodeData;
+
+    if (JsonPathExpressionParser.isPlaceholder(node)) {
+      stepIntoPlaceholder(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, node, jsonNodeDataMap);
+    } else {
+      stepIntoNode(pathSoFar + "." + node, nodes, i, allMatchingPaths, pathAttributes, jsonNodeDataMap.get(node));            
+    }
+  }
+
+  private static void stepIntoPlaceholder(String pathSoFar, String[] nodes, int i,
+      List<JsonMatchingPath> allMatchingPaths, Map<String, String> pathAttributes, String node,
+      Map<String, Object> jsonNodeDataMap) {
+    // means all nodes on "current" level match and we have to remember each node name as value
+    String nodeName = JsonPathExpressionParser.extractPlaceholderName(node);
+
+    for (String key : jsonNodeDataMap.keySet()) {
+      String nodeValue = key;
+
+      // temporarily add to map, remove after exiting from this node
+      pathAttributes.put(nodeName, nodeValue);
+
+      stepIntoNode(pathSoFar + "." + escapeSpecialChars(nodeValue), nodes, i, allMatchingPaths, pathAttributes,
+          jsonNodeDataMap.get(key));
+
+      pathAttributes.remove(nodeName);
+    }
+  }
+
+  private static void stepIntoFunctionNode(String pathSoFar, Object jsonNodeData, String[] nodes, int i,
+      List<JsonMatchingPath> allMatchingPaths, Map<String, String> pathAttributes, String node) {
+    if (JsonPathExpressionParser.isFunction(node)) {
+      stepIntoNode(pathSoFar + "." + node, nodes, i, allMatchingPaths, pathAttributes,
+          JsonUtilFunctionEvaluator.evaluateFunction(node, jsonNodeData));            
     }
   }
   
@@ -178,25 +199,24 @@ public final class JsonUtil {
     return jsonNodeData;
   }
   
-  private static void traverseNode(String pathSoFar, String[] nodes, int i, List<JsonMatchingPath> allMatchingPaths,
+  private static void stepIntoNode(String pathSoFar, String[] nodes, int i, List<JsonMatchingPath> allMatchingPaths,
                                    Map<String, String> pathAttributes, Object element) {
     if (element instanceof List) {
-      traverseList(pathSoFar, (List) element, nodes, i + 1, allMatchingPaths, pathAttributes);
+      evaluateListNode(pathSoFar, (List) element, nodes, i + 1, allMatchingPaths, pathAttributes);
     } else {
-      // jump into each of them
-      traverse(pathSoFar, element, nodes, i + 1, allMatchingPaths, pathAttributes);
+      evaluateNode(pathSoFar, element, nodes, i + 1, allMatchingPaths, pathAttributes);
     }
   }
 
-  private static void traverseList(String pathSoFar, List element, String[] nodes, int i, List<JsonMatchingPath> allMatchingPaths,
-      Map<String, String> pathAttributes) {
+  private static void evaluateListNode(String pathSoFar, List element, String[] nodes, int i,
+      List<JsonMatchingPath> allMatchingPaths, Map<String, String> pathAttributes) {
     String node = nodes[i];
     
     if (JsonPathExpressionParser.isMatchAll(node)) {
       int index = 0;
       for (Object listElement : element) {
         String tmpPathSoFar = pathSoFar + "[" + index++ + "]";
-        traverseNode(tmpPathSoFar, nodes, i, allMatchingPaths, pathAttributes, listElement);
+        stepIntoNode(tmpPathSoFar, nodes, i, allMatchingPaths, pathAttributes, listElement);
       }
     } else if (JsonPathExpressionParser.isBracketExpression(node)) {
       node = node.substring(2); // removes ?(
@@ -208,26 +228,13 @@ public final class JsonUtil {
       
       for (String expression : JsonPathExpressionParser.extractExpressions(node)) {
         expression = expression.trim();
-        if (expression.equals("")) {
-          continue;
+        if (!expression.equals("")) {
+          clauses.add(parseBracketClause(expression));
         }
-        if (expression.endsWith("&&")) {
-          expression = expression.substring(0, expression.length() - 2);
-        }
-        String path = expression.substring(0, expression.indexOf("=")).trim();
-        String value = expression.substring(expression.indexOf("=") + 1).trim();
-        
-        BracketExpressionClause clause;
-        if (JsonPathExpressionParser.isPlaceholder(value)) {
-          String attribName = value.substring(2, value.length() - 1).trim();
-          clause = new BracketExpressionClause(path, attribName, attribName, true);
-        } else {
-          clause = new BracketExpressionClause(path, null, value, false);
-        }
-        clauses.add(clause);
       }
 
-      // jump into every element, but before that check if all expression paths match condition and collect any path attribs
+      // jump into every element, but before that check if all expression paths match condition and collect any path
+      // attribs
       for (Object listElement : element) {
         // NOTE: for now we are assuming all clauses act as &&
 
@@ -287,7 +294,7 @@ public final class JsonUtil {
           resolvedExpression = resolvedExpression + ")";
           tmpPathSoFar = tmpPathSoFar + resolvedExpression + "]";
 
-          traverseNode(tmpPathSoFar, nodes, i, allMatchingPaths, pathAttributes, listElement);
+          stepIntoNode(tmpPathSoFar, nodes, i, allMatchingPaths, pathAttributes, listElement);
 
           for (BracketExpressionClause clause : clauses) {
             // when done with "current" list element, clear pathAttributes added by it
@@ -305,7 +312,7 @@ public final class JsonUtil {
       for (Object listElement : element) {
         pathAttributes.put(nodeName, String.valueOf(counter));
         
-        traverseNode(pathSoFar + "[" + counter + "]", nodes, i, allMatchingPaths, pathAttributes, listElement);
+        stepIntoNode(pathSoFar + "[" + counter + "]", nodes, i, allMatchingPaths, pathAttributes, listElement);
 
         counter++;
         pathAttributes.remove(nodeName);
@@ -319,6 +326,23 @@ public final class JsonUtil {
         processSingleArrayElement(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, node, element);            
       }
     }
+  }
+
+  private static BracketExpressionClause parseBracketClause(String expression) {
+    if (expression.endsWith("&&")) {
+      expression = expression.substring(0, expression.length() - 2);
+    }
+    String path = expression.substring(0, expression.indexOf("=")).trim();
+    String value = expression.substring(expression.indexOf("=") + 1).trim();
+    
+    BracketExpressionClause clause;
+    if (JsonPathExpressionParser.isPlaceholder(value)) {
+      String attribName = value.substring(2, value.length() - 1).trim();
+      clause = new BracketExpressionClause(path, attribName, attribName, true);
+    } else {
+      clause = new BracketExpressionClause(path, null, value, false);
+    }
+    return clause;
   }
 
   private static void processArrayRange(String pathSoFar, String[] nodes, int i,
@@ -343,7 +367,7 @@ public final class JsonUtil {
       List elementList = ((List) element);
       
       for (int k = arrayFirstElementIndex; k < Math.min(arrayAfterLastElementIndex, elementList.size()); k++) {                
-        traverseNode(pathSoFar + "[" + k + "]", nodes, i, allMatchingPaths,
+        stepIntoNode(pathSoFar + "[" + k + "]", nodes, i, allMatchingPaths,
             pathAttributes, elementList.get(k));
       }
     } else {
@@ -368,7 +392,7 @@ public final class JsonUtil {
             elementList.size() + " elements in array. Path so far was: " + pathSoFar);
       } else {
         // allMatchingPaths.add(new JsonMatchingPath(pathSoFar, Collections.EMPTY_MAP, elementList.get(index)));
-        traverseNode(pathSoFar + "[" + arrayExpression + "]", nodes, i, allMatchingPaths,
+        stepIntoNode(pathSoFar + "[" + arrayExpression + "]", nodes, i, allMatchingPaths,
             pathAttributes, elementList.get(index));
       }
     } else {
