@@ -60,6 +60,10 @@ public final class JsonPathExpressionParser {
     return value.startsWith("${") && value.endsWith("}");
   }
 
+  public static String extractPlaceholderName(String node) {
+    return node.substring(2, node.lastIndexOf("}"));
+  }
+
   public static boolean isBracketExpression(String node) {
     return node.startsWith("?(@.");
   }
