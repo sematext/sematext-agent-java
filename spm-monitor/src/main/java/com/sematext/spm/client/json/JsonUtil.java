@@ -28,13 +28,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
 
 public final class JsonUtil {
   private static final Log LOG = LogFactory.getLog(JsonUtil.class);
+  private static final Map<String, String[]> EXTRACTED_CLAUSES = new UnifiedMap<String, String[]>();
 
   private JsonUtil() {
   }
@@ -65,14 +65,14 @@ public final class JsonUtil {
 
     path = path.trim();
 
-    if (!path.startsWith("$.")) {
-      throw new IllegalArgumentException("Path should start with $.");
+    if (!path.startsWith("$")) {
+      throw new IllegalArgumentException("Path should start with $");
     } else {
-      path = path.substring(2).trim();
+      path = path.substring(1).trim();
     }
 
     if (path.equals("")) {
-      return Arrays.asList(new JsonMatchingPath("$.", Collections.EMPTY_MAP, jsonData));
+      return Arrays.asList(new JsonMatchingPath("$", Collections.EMPTY_MAP, jsonData));
     }
 
     List<JsonMatchingPath> allMatchingPaths = new ArrayList<JsonMatchingPath>();
@@ -83,89 +83,14 @@ public final class JsonUtil {
     // specific to each node) 
     Map<String, String> pathAttributes = new HashMap<String, String>();
 
-    String[] nodes = parseNodes(path);
+    String[] nodes = JsonPathExpressionParser.parseNodes(path);
 
     traverse("$", jsonData, nodes, 0, allMatchingPaths, pathAttributes);
 
     return allMatchingPaths;
   }
 
-  private static final Map<String, String[]> CACHED_PARSED_NODES = new UnifiedMap<String, String[]>();
 
-  public static String[] parseNodes(String path) {
-    // TODO - Currently we are caching the results. The cache might have millions of entries.
-    // Without caching,  we might have to parse the same thing N times.
-    String[] resNodes = CACHED_PARSED_NODES.get(path);
-    if (resNodes != null) {
-      return resNodes;
-    }
-
-    List<String> nodes = new ArrayList<String>(3);
-
-    boolean bracketExpOpen = false;
-    int indexOfNodeStart = 0;
-    int i = 0;
-    List<Integer> positionsOfEscapeChars = new ArrayList<Integer>();
-
-    for (; i < path.length(); i++) {
-      char c = path.charAt(i);
-
-      if (c == '[') {
-        if (!bracketExpOpen) {
-          bracketExpOpen = true;
-        }
-      } else if (c == '.') {
-        if (bracketExpOpen) {
-          ;
-        } else {
-          nodes.add(clearEscapeChars(path.substring(indexOfNodeStart, i), positionsOfEscapeChars));
-          indexOfNodeStart = i + 1;
-          positionsOfEscapeChars.clear();
-        }
-      } else if (c == ']') {
-        if (bracketExpOpen && ((i == path.length() - 1) || path.charAt(i + 1) == '.')) {
-          // consider as end of the bracket expression
-          nodes.add(clearEscapeChars(path.substring(indexOfNodeStart, i + 1), positionsOfEscapeChars));
-          bracketExpOpen = false;
-          i++; // also skip the next .
-          indexOfNodeStart = i + 1;
-          positionsOfEscapeChars.clear();
-        }
-      } else if (c == '\\') {
-        // escape char, meaning, the following char shouldn't be treated as special char
-        if (i < path.length() - 1) {
-          positionsOfEscapeChars.add(i - indexOfNodeStart);
-          i++;
-        }
-      } else {
-        ;
-      }
-    }
-
-    if (i != indexOfNodeStart) {
-      nodes.add(clearEscapeChars(path.substring(indexOfNodeStart, i), positionsOfEscapeChars));
-    }
-
-    resNodes = nodes.toArray(new String[nodes.size()]);
-    CACHED_PARSED_NODES.put(path, resNodes);
-
-    return resNodes;
-  }
-
-  private static String clearEscapeChars(String nodeName, List<Integer> positionsOfEscapeChars) {
-    if (positionsOfEscapeChars.size() > 0) {
-      String newStr = "";
-      int prevEscapeCharPos = -1;
-      for (Integer i : positionsOfEscapeChars) {
-        newStr = newStr + nodeName.substring(prevEscapeCharPos + 1, i);
-        prevEscapeCharPos = i;
-      }
-      newStr = newStr + nodeName.substring(prevEscapeCharPos + 1);
-      return newStr;
-    } else {
-      return nodeName;
-    }
-  }
 
   private static void traverse(String pathSoFar, Object jsonNodeData, String[] nodes, int i,
                                List<JsonMatchingPath> allMatchingPaths,
@@ -180,45 +105,15 @@ public final class JsonUtil {
       // need to dig further
       String node = nodes[i].trim();
 
-      int indexOfBracketDefOpen = node.indexOf("[");
-      int lastIndexOfBracketDefClose = node.lastIndexOf("]");
-
-      boolean bracket = false;
-      boolean arrayMatchAll = false;
-      String bracketPartOfPath = "";
-      String bracketExpression = null;
-
-      if (indexOfBracketDefOpen != -1 && lastIndexOfBracketDefClose != -1
-          && indexOfBracketDefOpen < lastIndexOfBracketDefClose) {
-        String bracketDef = node.substring(indexOfBracketDefOpen + 1, lastIndexOfBracketDefClose).trim();
-        bracket = true;
-        // TODO add support for various array expressions
-        if (bracketDef.trim().equals("*")) {
-//          arrayMatchAll = true;
-//          arrayDef = arrayDef.trim();
-//          arrayPartOfPath = "[*]";
-          throw new IllegalArgumentException("Unsupported array expression '*' - it is ambiguous, matching paths can't be used for monitoring");
-        } else if (bracketDef.startsWith("?(@.") && bracketDef.endsWith(")")) {
-          arrayMatchAll = true;
-          bracketExpression = bracketDef.substring("?(".length(), bracketDef.lastIndexOf(")"));
-        } else {
-          // no sub-expression, just specific element position
-          arrayMatchAll = false;
-          bracketExpression = bracketDef;
-        }
-
-        node = node.substring(0, indexOfBracketDefOpen).trim();
-      }
-
-      if (isFunction(node)) {
-        traverseNode(pathSoFar + "." + node + bracketPartOfPath, nodes, i, allMatchingPaths, pathAttributes, bracket,
-          arrayMatchAll, bracketExpression, evaluateFunction(node, jsonNodeData));            
+      if (JsonPathExpressionParser.isFunction(node)) {
+        traverseNode(pathSoFar + "." + node, nodes, i, allMatchingPaths, pathAttributes,
+            JsonUtilFunctionEvaluator.evaluateFunction(node, jsonNodeData));            
       }
 
       if (jsonNodeData instanceof Map) {
         Map<String, Object> jsonNodeDataMap = (Map<String, Object>) jsonNodeData;
 
-        if (node.startsWith("${") && node.endsWith("}")) {
+        if (JsonPathExpressionParser.isPlaceholder(node)) {
           // means all nodes on "current" level match and we have to remember each node name as value
           String nodeName = node.substring(2, node.lastIndexOf("}"));
 
@@ -229,32 +124,23 @@ public final class JsonUtil {
             pathAttributes.put(nodeName, nodeValue);
 
             Object element = jsonNodeDataMap.get(key);
-
-            traverseNode(pathSoFar + "." + escapeSpecialChars(nodeValue)
-                             + bracketPartOfPath, nodes, i, allMatchingPaths, pathAttributes, bracket,
-                         arrayMatchAll, bracketExpression, element);
+            traverseNode(pathSoFar + "." + escapeSpecialChars(nodeValue), nodes, i, allMatchingPaths, pathAttributes, element);
 
             // remove from map
             pathAttributes.remove(nodeName);
           }
         } else {
-          traverseNode(pathSoFar + "." + node + bracketPartOfPath, nodes, i, allMatchingPaths, pathAttributes, bracket,
-              arrayMatchAll, bracketExpression, jsonNodeDataMap.get(node));            
+          traverseNode(pathSoFar + "." + node, nodes, i, allMatchingPaths, pathAttributes, jsonNodeDataMap.get(node));            
         }
       } else if (jsonNodeData instanceof List) {
-        if (node.trim().equals("")) {
-          traverseNode(pathSoFar + "." + node + bracketPartOfPath, nodes, i, allMatchingPaths, pathAttributes, bracket,
-                  arrayMatchAll, bracketExpression, jsonNodeData);
-        } else {
-          throw new UnsupportedOperationException("Lists were supposed to be handled differently");
-        }
+          traverseNode(pathSoFar, nodes, i - 1, allMatchingPaths, pathAttributes, jsonNodeData);
       } else {
         // if neither a map nor a list, and we still didn't reach the leaf we are looking for, just end the search
         return;
       }
     }
   }
-
+  
   private static void addMatchingNode(String pathSoFar, Object jsonNodeData, List<JsonMatchingPath> allMatchingPaths,
       Map<String, String> pathAttributes) {
     Map<String, String> currentNodePathAttributes;
@@ -266,63 +152,11 @@ public final class JsonUtil {
     allMatchingPaths.add(new JsonMatchingPath(pathSoFar, currentNodePathAttributes, jsonNodeData));
   }
 
-  public static Object evaluateFunction(String node, Object element) {
-    Collection elementCollection;
-    if (element instanceof Collection) {
-      elementCollection = (Collection) element;
-    } else if (element instanceof Map) {
-      elementCollection = ((Map) element).values();
-    } else {
-      throw new UnsupportedOperationException(
-          String.format(
-              "Cannot evaluate function %s. Functions are allowed only on collections and maps, %s is not allowed",
-              node, element.getClass()));
-    }
-
-    if (elementCollection.isEmpty()) {
-      return null;
-    }
-    
-    String function = node.substring(0, node.indexOf("(")).trim();
-    Object result;
-    if ("length".equals(function)) {
-      result = elementCollection.size();
-    } else if ("max".equals(function)) {
-      result = Collections.max(elementCollection);
-    } else if ("min".equals(function)) {
-      result = Collections.min(elementCollection);
-    } else if ("sum".equals(function)) {
-      result = summarizeElements(node, elementCollection);
-    } else if ("avg".equals(function)) {
-      result = summarizeElements(node, elementCollection) / elementCollection.size();
-    } else {
-      throw new UnsupportedOperationException(String.format("Unknown function %s", node));
-    }
-    return result;
-  }
-
-  private static double summarizeElements(String node, Collection elementList) {
-    double tmpSum = 0d;
-    for (Object e : elementList) {
-      if (e instanceof Number) {
-        tmpSum += ((Number) e).doubleValue();
-      } else {
-        throw new IllegalArgumentException("For node " + node + " found element which is not a Number : " + e +
-            ", class: " + e.getClass());
-      }
-    }
-    return tmpSum;
-  }
-
-  private static String escapeSpecialChars(String nodeValue) {
-    return nodeValue.replace(".", "\\.").replace("[", "\\[").replace("]", "\\]");
-  }
-
   public static Object findValueIn(String expression, Object jsonNodeData) {
     // seems caching here had negative effect on CPU and only gave very small improvements in heap usage
 //    String [] expressionNodes = EXPRESSION_NODES.get(expression);
 //    if (expressionNodes == null) {
-    String[] expressionNodes = extractNodes(expression, ".");
+    String[] expressionNodes = JsonPathExpressionParser.extractExpressionClauses(expression, ".");
 //      EXPRESSION_NODES.put(expression, expressionNodes);
 //    }
 
@@ -332,12 +166,12 @@ public final class JsonUtil {
       if (jsonNodeData == null) {
         return null;
       }
-      if (isFunction(exNode)) {
+      if (JsonPathExpressionParser.isFunction(exNode)) {
         // function should be the last node in the expression.
         if (i != expressionNodes.length) {
           throw new IllegalArgumentException("function should be the last node in the expression.");
         }
-        jsonNodeData = evaluateFunction(exNode, jsonNodeData);
+        jsonNodeData = JsonUtilFunctionEvaluator.evaluateFunction(exNode, jsonNodeData);
       } else {
         jsonNodeData = ((Map<String, Object>) jsonNodeData).get(exNode);
       }
@@ -346,170 +180,159 @@ public final class JsonUtil {
     return jsonNodeData;
   }
   
-  public static boolean isFunction(String node) {
-    // no support for functions with args for now
-    return node.replaceAll(" ", "").endsWith("()");
-  }
-
-  public static String[] extractNodes(String value, String separator) {
-    String[] res;
-    int separatorLength = separator.length();
-    if (value.indexOf(separator) == -1) {
-      res = new String[1];
-      res[0] = value;
-    } else {
-      res = new String[countOf(value, separator) + 1];
-      int indexOfNextSeparator = value.indexOf(separator);
-      int clauseCount = 0;
-      while (indexOfNextSeparator != -1) {
-        res[clauseCount++] = value.substring(0, indexOfNextSeparator);
-        value = value.substring(indexOfNextSeparator + separatorLength);
-        indexOfNextSeparator = value.indexOf(separator);
-      }
-      res[clauseCount++] = value;
-    }
-    return res;
-  }
-
   private static void traverseNode(String pathSoFar, String[] nodes, int i, List<JsonMatchingPath> allMatchingPaths,
-                                   Map<String, String> pathAttributes, boolean bracket, boolean arrayMatchAll,
-                                   String bracketExpression, Object element) {
-    // TODO one day add support for array within array within array...
-    if (bracket) {
-      if (element instanceof List) {
-        // TODO add support for other array expressions
-        if (arrayMatchAll) {
-          List<String> nodePaths;
-          List<String> nodePathValueNames;
-          List<Boolean> nodePathValueNameIsAttribute;
-          List<String> nodePathAttributeNames;
-          if (bracketExpression != null) {
-            // most often only a single clause, so use predefined 1-sized array in that case, otherwise use size 2
-            nodePaths = new ArrayList<String>(
-                bracketExpression.indexOf("@.") == bracketExpression.lastIndexOf("@.") ? 1 : 2);
-            nodePathValueNames = new ArrayList<String>(nodePaths.size());
-            nodePathValueNameIsAttribute = new ArrayList<Boolean>(nodePaths.size());
-            nodePathAttributeNames = new ArrayList<String>(nodePaths.size());
-            for (String expression : extractExpressions(bracketExpression)) {
-              expression = expression.trim();
-              if (expression.equals("")) {
-                continue;
-              }
-              if (expression.endsWith("&&")) {
-                expression = expression.substring(0, expression.length() - 2);
-              }
-              String path = expression.substring(0, expression.indexOf("=")).trim();
-              String value = expression.substring(expression.indexOf("=") + 1).trim();
-              nodePaths.add(path);
-  
-              if (value.startsWith("${") && value.endsWith("}")) {
-                String attribName = value.substring(2, value.length() - 1).trim();
-                nodePathValueNames.add(attribName);
-                nodePathValueNameIsAttribute.add(Boolean.TRUE);
-                nodePathAttributeNames.add(attribName);
-              } else {
-                nodePathValueNames.add(value);
-                nodePathValueNameIsAttribute.add(Boolean.FALSE);
-              }
-            }
-          } else {
-            nodePaths = Collections.EMPTY_LIST;
-            nodePathValueNames = Collections.EMPTY_LIST;
-            nodePathValueNameIsAttribute = Collections.EMPTY_LIST;
-            nodePathAttributeNames = Collections.EMPTY_LIST;
-          }
-  
-          // jump into every element, but before that check if all expression paths match condition and collect any path attribs
-          for (Object listElement : ((List) element)) {
-            // NOTE: for now we are assuming all clauses act as &&
-  
-            String tmpPathSoFar = pathSoFar;
-  
-            // first check all clauses match...
-            boolean allClausesMatch = true;
-            for (int j = 0; j < nodePaths.size(); j++) {
-              String path = nodePaths.get(j);
-              String value = nodePathValueNames.get(j);
-              Boolean valueIsAttribute = nodePathValueNameIsAttribute.get(j);
-  
-              if (!valueIsAttribute) {
-                Object expressionValue = findValueIn(path, listElement);
-                // check if matches; if yes, continue, otherwise fail
-                if (expressionValue == null) {
-                  allClausesMatch = false;
-                  break;
-                } else {
-                  String[] values = EXTRACTED_CLAUSES.get(value);
-                  if (values == null) {
-                    values = extractNodes(value, "||");
-                    EXTRACTED_CLAUSES.put(value, values);
-                  }
-                  boolean atLeastOneMatches = false;
-                  for (String singleValue : values) {
-                    if (singleValue.equals(String.valueOf(expressionValue))) {
-                      atLeastOneMatches = true;
-                      break;
-                    }
-                  }
-                  if (atLeastOneMatches) {
-                    continue;
-                  } else {
-                    allClausesMatch = false;
-                    break;
-                  }
-                }
-              }
-            }
-  
-            if (allClausesMatch) {
-              tmpPathSoFar = tmpPathSoFar + "[";
-              String resolvedExpression = "?(";
-              // now extract attributes and along the way prepare path
-              for (int j = 0; j < nodePaths.size(); j++) {
-                String path = nodePaths.get(j);
-                String value = nodePathValueNames.get(j);
-                Boolean valueIsAttribute = nodePathValueNameIsAttribute.get(j);
-  
-                if (j > 0) {
-                  resolvedExpression = resolvedExpression + " && ";
-                }
-  
-                if (valueIsAttribute) {
-                  Object expressionValue = findValueIn(path, listElement);
-                  resolvedExpression = resolvedExpression + "@." + path + "=" + expressionValue;
-                  pathAttributes.put(value, String.valueOf(expressionValue));
-                } else {
-                  resolvedExpression = resolvedExpression + "@." + path + "=" + value;
-                }
-              }
-              resolvedExpression = resolvedExpression + ")";
-              tmpPathSoFar = tmpPathSoFar + resolvedExpression + "]";
-  
-              traverse(tmpPathSoFar, listElement, nodes, i + 1, allMatchingPaths, pathAttributes);
-  
-              for (String attribName : nodePathAttributeNames) {
-                // when done with "current" list element, clear pathAttributes added by it
-                pathAttributes.remove(attribName);
-              }
-            }
-          }
-        } else {
-          bracketExpression = bracketExpression.trim();
-          int indexOfColon = bracketExpression.indexOf(":");
-          
-          if (indexOfColon != -1) {
-            processArrayRange(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, bracketExpression, element,
-                indexOfColon);
-          } else {
-            processSingleArrayElement(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, bracketExpression,
-                element);            
-          }
-        }
-      }
-      // otherwise just ignore it, it doesn't match since it is not an array
+                                   Map<String, String> pathAttributes, Object element) {
+    if (element instanceof List) {
+      traverseList(pathSoFar, (List) element, nodes, i + 1, allMatchingPaths, pathAttributes);
     } else {
       // jump into each of them
       traverse(pathSoFar, element, nodes, i + 1, allMatchingPaths, pathAttributes);
+    }
+  }
+
+  private static void traverseList(String pathSoFar, List element, String[] nodes, int i, List<JsonMatchingPath> allMatchingPaths,
+      Map<String, String> pathAttributes) {
+    String node = nodes[i];
+    
+    if (JsonPathExpressionParser.isMatchAll(node)) {
+      int index = 0;
+      for (Object listElement : element) {
+        String tmpPathSoFar = pathSoFar + "[" + index++ + "]";
+        traverseNode(tmpPathSoFar, nodes, i, allMatchingPaths, pathAttributes, listElement);
+      }
+    } else if (JsonPathExpressionParser.isBracketExpression(node)) {
+      node = node.substring(2); // removes ?(
+      node = node.substring(0,  node.length() - 1); // removes ending )
+      List<String> nodePaths;
+      List<String> nodePathValueNames;
+      List<Boolean> nodePathValueNameIsAttribute;
+      List<String> nodePathAttributeNames;
+
+      // most often only a single clause, so use predefined 1-sized array in that case, otherwise use size 2
+      nodePaths = new ArrayList<String>(node.indexOf("@.") == node.lastIndexOf("@.") ? 1 : 2);
+      nodePathValueNames = new ArrayList<String>(nodePaths.size());
+      nodePathValueNameIsAttribute = new ArrayList<Boolean>(nodePaths.size());
+      nodePathAttributeNames = new ArrayList<String>(nodePaths.size());
+      for (String expression : JsonPathExpressionParser.extractExpressions(node)) {
+        expression = expression.trim();
+        if (expression.equals("")) {
+          continue;
+        }
+        if (expression.endsWith("&&")) {
+          expression = expression.substring(0, expression.length() - 2);
+        }
+        String path = expression.substring(0, expression.indexOf("=")).trim();
+        String value = expression.substring(expression.indexOf("=") + 1).trim();
+        nodePaths.add(path);
+
+        if (JsonPathExpressionParser.isPlaceholder(value)) {
+          String attribName = value.substring(2, value.length() - 1).trim();
+          nodePathValueNames.add(attribName);
+          nodePathValueNameIsAttribute.add(Boolean.TRUE);
+          nodePathAttributeNames.add(attribName);
+        } else {
+          nodePathValueNames.add(value);
+          nodePathValueNameIsAttribute.add(Boolean.FALSE);
+        }
+      }
+
+      // jump into every element, but before that check if all expression paths match condition and collect any path attribs
+      for (Object listElement : element) {
+        // NOTE: for now we are assuming all clauses act as &&
+
+        String tmpPathSoFar = pathSoFar;
+
+        // first check all clauses match...
+        boolean allClausesMatch = true;
+        for (int j = 0; j < nodePaths.size(); j++) {
+          String path = nodePaths.get(j);
+          String value = nodePathValueNames.get(j);
+          Boolean valueIsAttribute = nodePathValueNameIsAttribute.get(j);
+
+          if (!valueIsAttribute) {
+            Object expressionValue = findValueIn(path, listElement);
+            // check if matches; if yes, continue, otherwise fail
+            if (expressionValue == null) {
+              allClausesMatch = false;
+              break;
+            } else {
+              String[] values = EXTRACTED_CLAUSES.get(value);
+              if (values == null) {
+                values = JsonPathExpressionParser.extractExpressionClauses(value, "||");
+                EXTRACTED_CLAUSES.put(value, values);
+              }
+              boolean atLeastOneMatches = false;
+              for (String singleValue : values) {
+                if (singleValue.equals(String.valueOf(expressionValue))) {
+                  atLeastOneMatches = true;
+                  break;
+                }
+              }
+              if (atLeastOneMatches) {
+                continue;
+              } else {
+                allClausesMatch = false;
+                break;
+              }
+            }
+          }
+        }
+
+        if (allClausesMatch) {
+          tmpPathSoFar = tmpPathSoFar + "[";
+          String resolvedExpression = "?(";
+          // now extract attributes and along the way prepare path
+          for (int j = 0; j < nodePaths.size(); j++) {
+            String path = nodePaths.get(j);
+            String value = nodePathValueNames.get(j);
+            Boolean valueIsAttribute = nodePathValueNameIsAttribute.get(j);
+
+            if (j > 0) {
+              resolvedExpression = resolvedExpression + " && ";
+            }
+
+            if (valueIsAttribute) {
+              Object expressionValue = findValueIn(path, listElement);
+              resolvedExpression = resolvedExpression + "@." + path + "=" + expressionValue;
+              pathAttributes.put(value, String.valueOf(expressionValue));
+            } else {
+              resolvedExpression = resolvedExpression + "@." + path + "=" + value;
+            }
+          }
+          resolvedExpression = resolvedExpression + ")";
+          tmpPathSoFar = tmpPathSoFar + resolvedExpression + "]";
+
+          traverseNode(tmpPathSoFar, nodes, i, allMatchingPaths, pathAttributes, listElement);
+
+          for (String attribName : nodePathAttributeNames) {
+            // when done with "current" list element, clear pathAttributes added by it
+            pathAttributes.remove(attribName);
+          }
+        }
+      }
+    } else if (JsonPathExpressionParser.isPlaceholder(node)) {
+      // TODO de-duplicate the logic copied from traverse() method
+      
+      // means all nodes on "current" level match and we have to remember each node name as value
+      String nodeName = node.substring(2, node.lastIndexOf("}"));
+      
+      int counter = 0;
+      for (Object listElement : element) {
+        pathAttributes.put(nodeName, String.valueOf(counter));
+        
+        traverseNode(pathSoFar + "[" + counter + "]", nodes, i, allMatchingPaths, pathAttributes, listElement);
+
+        counter++;
+        pathAttributes.remove(nodeName);
+      }
+    } else {
+      int indexOfColon = node.indexOf(":");
+      
+      if (indexOfColon != -1) {
+        processArrayRange(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, node, element, indexOfColon);
+      } else {
+        processSingleArrayElement(pathSoFar, nodes, i, allMatchingPaths, pathAttributes, node, element);            
+      }
     }
   }
 
@@ -535,8 +358,8 @@ public final class JsonUtil {
       List elementList = ((List) element);
       
       for (int k = arrayFirstElementIndex; k < Math.min(arrayAfterLastElementIndex, elementList.size()); k++) {                
-        traverse(pathSoFar + "[" + k + "]", elementList.get(k), nodes, i + 1, allMatchingPaths,
-            pathAttributes);
+        traverseNode(pathSoFar + "[" + k + "]", nodes, i, allMatchingPaths,
+            pathAttributes, elementList.get(k));
       }
     } else {
       LOG.warn("Expected to find a list at " + pathSoFar + ", instead found " + element);
@@ -560,38 +383,12 @@ public final class JsonUtil {
             elementList.size() + " elements in array. Path so far was: " + pathSoFar);
       } else {
         // allMatchingPaths.add(new JsonMatchingPath(pathSoFar, Collections.EMPTY_MAP, elementList.get(index)));
-        traverse(pathSoFar + "[" + arrayExpression + "]", elementList.get(index), nodes, i + 1, allMatchingPaths,
-            pathAttributes);
+        traverseNode(pathSoFar + "[" + arrayExpression + "]", nodes, i, allMatchingPaths,
+            pathAttributes, elementList.get(index));
       }
     } else {
       LOG.warn("Expected to find a list at " + pathSoFar + ", instead found " + element);
     }
-  }
-
-  private static final Map<String, String[]> EXTRACTED_CLAUSES = new UnifiedMap<String, String[]>();
-
-  private static int countOf(String value, String substring) {
-    int indexOfNextOperator = value.indexOf(substring);
-    int countOfSubstring = 0;
-    int substringLength = substring.length();
-    while (indexOfNextOperator != -1) {
-      countOfSubstring++;
-      value = value.substring(indexOfNextOperator + substringLength);
-      indexOfNextOperator = value.indexOf(substring);
-    }
-    return countOfSubstring;
-  }
-
-  private static final Map<String, String[]> EXTRACTED_EXPRESSIONS = new UnifiedMap<String, String[]>();
-
-  private static String[] extractExpressions(String arrayExpression) {
-    String[] res = EXTRACTED_EXPRESSIONS.get(arrayExpression);
-    if (res == null) {
-      res = arrayExpression.split("@\\.");
-      EXTRACTED_EXPRESSIONS.put(arrayExpression, res);
-    }
-
-    return res;
   }
 
   /**
@@ -618,4 +415,8 @@ public final class JsonUtil {
 
     return jsonData;
   }
+  
+  private static String escapeSpecialChars(String nodeValue) {
+    return nodeValue.replace(".", "\\.").replace("[", "\\[").replace("]", "\\]");
+  }  
 }
