@@ -253,7 +253,7 @@ public final class SenderUtil {
 
       String externalyResolvedHostname = readExternallyResolvedHostname();
       if (externalyResolvedHostname != null && !externalyResolvedHostname.trim().equals("")) {
-        LOG.info("Resolved hostname to " + hostnameAlias + " based on " + RESOLVED_HOSTNAME_FILE);
+        LOG.info("Resolved hostname to " + externalyResolvedHostname + " based on " + RESOLVED_HOSTNAME_FILE);
         lastHostname = externalyResolvedHostname;
         return lastHostname;        
       }
