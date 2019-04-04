@@ -19,6 +19,7 @@
  */
 package com.sematext.spm.client.sender;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 
 import java.io.File;
@@ -26,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -61,6 +63,8 @@ public final class SenderUtil {
   public static final File DOCKER_SETUP_FILE = new File(SPM_HOME, ".docker");
 
   private static final String DOCKER_HOSTNAME_PROPERTY_NAME = "docker_hostname";
+
+  private static final File RESOLVED_HOSTNAME_FILE = new File(SPM_HOME, ".resolved-hostname");
 
   static {
     loadInstallationProperties();
@@ -247,6 +251,13 @@ public final class SenderUtil {
         return lastHostname;
       }
 
+      String externalyResolvedHostname = readExternallyResolvedHostname();
+      if (externalyResolvedHostname != null && !externalyResolvedHostname.trim().equals("")) {
+        LOG.info("Resolved hostname to " + hostnameAlias + " based on " + RESOLVED_HOSTNAME_FILE);
+        lastHostname = externalyResolvedHostname;
+        return lastHostname;        
+      }
+      
       // otherwise, resolve the hostname
       String hostname = MonitorUtil.resolveHostnameInJava();
 
@@ -260,6 +271,21 @@ public final class SenderUtil {
 
       return lastHostname;
     }
+  }
+
+  private static String readExternallyResolvedHostname() {
+    try {
+      if (RESOLVED_HOSTNAME_FILE.exists()) {
+        List lines = FileUtils.readLines(RESOLVED_HOSTNAME_FILE);
+        if (lines.size() > 0) {
+          return (String) lines.get(0);
+        }
+      }      
+    } catch (Throwable thr) {
+      LOG.error("Error while reading from " + RESOLVED_HOSTNAME_FILE);
+    }
+
+    return null;
   }
 
   private static String getHostnameAlias() {
