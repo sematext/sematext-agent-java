@@ -24,13 +24,20 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class JsonUtilTest {
   @Test
@@ -380,46 +387,6 @@ public class JsonUtilTest {
   }
 
   @Test
-  public void testParseNodes() {
-    String[] nodes = JsonUtil.parseNodes("$.nodes.${nodeId}.jvm.gc.collectors.${gcName}");
-    Assert.assertEquals(7, nodes.length);
-    Assert.assertEquals("$", nodes[0]);
-    Assert.assertEquals("nodes", nodes[1]);
-    Assert.assertEquals("${nodeId}", nodes[2]);
-    Assert.assertEquals("jvm", nodes[3]);
-    Assert.assertEquals("gc", nodes[4]);
-    Assert.assertEquals("collectors", nodes[5]);
-    Assert.assertEquals("${gcName}", nodes[6]);
-
-    nodes = JsonUtil.parseNodes("$.nodes.node\\.1.jvm.gc.collectors.${gcName}");
-    Assert.assertEquals(7, nodes.length);
-    Assert.assertEquals("$", nodes[0]);
-    Assert.assertEquals("nodes", nodes[1]);
-    Assert.assertEquals("node.1", nodes[2]);
-    Assert.assertEquals("jvm", nodes[3]);
-    Assert.assertEquals("gc", nodes[4]);
-    Assert.assertEquals("collectors", nodes[5]);
-    Assert.assertEquals("${gcName}", nodes[6]);
-
-    nodes = JsonUtil.parseNodes("$.upstreams.${nodeName}[?(@.responses.x=${xvalue})].responses");
-    Assert.assertEquals(4, nodes.length);
-    Assert.assertEquals("$", nodes[0]);
-    Assert.assertEquals("upstreams", nodes[1]);
-    Assert.assertEquals("${nodeName}[?(@.responses.x=${xvalue})]", nodes[2]);
-    Assert.assertEquals("responses", nodes[3]);
-
-    nodes = JsonUtil
-        .parseNodes("$._all.indices.${indexName}.shards.${shardName}[?(@.routing.node=${nodeId})].docs.count");
-    Assert.assertEquals(8, nodes.length);
-
-    nodes = JsonUtil.parseNodes("$.upstreams.someNode[?(@.responses.x=${xvalue} && @.responses.y=11)].responses");
-    Assert.assertEquals(4, nodes.length);
-
-    nodes = JsonUtil.parseNodes("$.upstreams.someNode[?(@.responses.x=${xva[lue} && @.responses.y=1]1)].responses");
-    Assert.assertEquals(4, nodes.length);
-  }
-
-  @Test
   public void testFindMatchingPaths_esIndexStats() throws JsonParseException, JsonMappingException, IOException {
     InputStream response = getClass().getResourceAsStream("es-indexStats.json");
     TypeReference<UnifiedMap<String, Object>> typeRef = new TypeReference<UnifiedMap<String, Object>>() {
@@ -483,6 +450,16 @@ public class JsonUtilTest {
     Collection<JsonMatchingPath> paths = JsonUtil
         .findDistinctMatchingPaths(jsonData, "$.routing_table.indices.${indexName}.shards.${shard}[?(@.node=${nodeId} && @.primary=true)]");
     Assert.assertEquals(10, paths.size());
+    Assert.assertEquals("$.routing_table.indices.someindex2.shards.4[?(@.node=zIXrWP-FQNecayS4PwS7wg && @.primary=true)]",
+        paths.iterator().next().getFullObjectPath());
+    
+    // test whether produced path really matches right object
+    Map<String, Object> matchingObject = ((Map<String, Object>) JsonUtil.findMatchingPaths(
+        jsonData, paths.iterator().next().getFullObjectPath()).get(0).getMatchedObject());
+    Assert.assertEquals("STARTED", matchingObject.get("state"));
+    Assert.assertEquals("7wdh4a6OS1CkGLVz_uKV3Q",
+        ((Map<String, Object>) matchingObject.get("allocation_id")).get("id"));
+
     paths = JsonUtil
         .findDistinctMatchingPaths(jsonData, "$.routing_table.indices.${indexName}.shards.${shard}[?(@.node=${nodeId} && @.primary=true && @.state=STARTED)]");
     Assert.assertEquals(10, paths.size());
@@ -523,6 +500,7 @@ public class JsonUtilTest {
 
     Collection<JsonMatchingPath> paths = JsonUtil.findDistinctMatchingPaths(jsonData, "$.[?(@.name=${threadPool})]");
     Assert.assertEquals(14, paths.size());
+    Assert.assertEquals("$[?(@.name=force_merge)]", paths.iterator().next().getFullObjectPath());
 
     Iterator<JsonMatchingPath> iter = paths.iterator();
     List<String> threadPools = Arrays.asList("bulk", "fetch_shard_started", "fetch_shard_store", "flush", "force_merge",
@@ -531,6 +509,10 @@ public class JsonUtilTest {
       JsonMatchingPath path = iter.next();
       Assert.assertEquals(true, threadPools.contains(path.getPathAttributes().get("threadPool")));
     }
+
+    paths = JsonUtil.findDistinctMatchingPaths(jsonData, "$[?(@.name=${threadPool})]");
+    Assert.assertEquals(14, paths.size());
+    Assert.assertEquals("$[?(@.name=force_merge)]", paths.iterator().next().getFullObjectPath());
   }
 
   @Test
@@ -565,20 +547,6 @@ public class JsonUtilTest {
 
     paths = JsonUtil.findMatchingPaths(jsonData, "$.server_zones.hg\\.nginx\\.org.processing");
     Assert.assertEquals(1, paths.size());
-  }
-
-  @Test
-  public void testExtractClauses() {
-    String[] clauses = JsonUtil.extractNodes("abc||def || ghi|| 1234", "||");
-    Assert.assertEquals(4, clauses.length);
-    Assert.assertEquals("abc", clauses[0]);
-    Assert.assertEquals("def ", clauses[1]);
-    Assert.assertEquals(" ghi", clauses[2]);
-    Assert.assertEquals(" 1234", clauses[3]);
-
-    clauses = JsonUtil.extractNodes("abc", "||");
-    Assert.assertEquals(1, clauses.length);
-    Assert.assertEquals("abc", clauses[0]);
   }
 
   @Test
@@ -668,6 +636,33 @@ public class JsonUtilTest {
         .findMatchingPaths(jsonData, "$.[?(@.id=numRegisteredTaskManagers)].value");
     Assert.assertEquals(1, paths.size());
     Assert.assertEquals("2", paths.get(0).getMatchedObject());
+  }
 
+  @Test
+  public void testArrayMatchAll() throws IOException {
+    InputStream response = getClass().getResourceAsStream("flink-stats.json");
+    TypeReference<Object> typeRef = new TypeReference<Object>() {
+    };
+    Object jsonData = new ObjectMapper(new JsonFactory()).readValue(response, typeRef);
+
+    List<JsonMatchingPath> paths = JsonUtil.findMatchingPaths(jsonData, "$.[*]");
+    Assert.assertEquals(21, paths.size());
+    Assert.assertEquals("2", ((Map<String, Object>) paths.get(0).getMatchedObject()).get("value"));
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.[*].value");
+    Assert.assertEquals(21, paths.size());
+    Assert.assertEquals("2", paths.get(0).getMatchedObject());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$[*].value");
+    Assert.assertEquals(21, paths.size());
+    Assert.assertEquals("2", paths.get(0).getMatchedObject());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$[*][value]");
+    Assert.assertEquals(21, paths.size());
+    Assert.assertEquals("2", paths.get(0).getMatchedObject());
+
+    paths = JsonUtil.findMatchingPaths(jsonData, "$.[*][value]");
+    Assert.assertEquals(21, paths.size());
+    Assert.assertEquals("2", paths.get(0).getMatchedObject());
   }
 }

@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.sematext.spm.client.json.JsonMatchingPath;
+import com.sematext.spm.client.json.JsonPathExpressionParser;
 import com.sematext.spm.client.json.JsonUtil;
+import com.sematext.spm.client.json.JsonUtilFunctionEvaluator;
 
 public class JsonExpressionReturnValue {
   public static ReturnValue getReturnValue(String expression) {
@@ -160,7 +162,8 @@ class FunctionReturnValue extends ReturnValue {
   
   public static boolean applies(String expression) {
     // just substring supported for now
-    return expression != null && (isSubstring(expression) || isCast(expression) || JsonUtil.isFunction(expression));
+    return expression != null && (isSubstring(expression) || isCast(expression) ||
+        JsonPathExpressionParser.isFunction(expression));
   }
   
   public FunctionReturnValue(String expression) {
@@ -172,7 +175,7 @@ class FunctionReturnValue extends ReturnValue {
           expression = expression.substring(0, expression.length() - 1).trim();
           nestedReturnValue = JsonExpressionReturnValue.getReturnValue(expression);
         }
-      } else if (JsonUtil.isFunction(expression)) {
+      } else if (JsonPathExpressionParser.isFunction(expression)) {
         function = expression;
       }
     }
@@ -196,8 +199,8 @@ class FunctionReturnValue extends ReturnValue {
           return substring(extractedValue);
         } else if (isCast(function)) {
           return doCast(extractedValue);
-        } else if (JsonUtil.isFunction(function)) {
-          return JsonUtil.evaluateFunction(function, extractedValue);
+        } else if (JsonPathExpressionParser.isFunction(function)) {
+          return JsonUtilFunctionEvaluator.evaluateFunction(function, extractedValue);
         }
       } catch (Throwable thr) {
         throw new IllegalArgumentException("Can't apply returnValueFunction: " + function +
