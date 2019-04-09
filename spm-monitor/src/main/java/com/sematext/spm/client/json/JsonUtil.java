@@ -210,6 +210,11 @@ public final class JsonUtil {
 
   private static void evaluateListNode(String pathSoFar, List element, String[] nodes, int i,
       List<JsonMatchingPath> allMatchingPaths, Map<String, String> pathAttributes) {
+    if (i == nodes.length) {
+      addMatchingNode(pathSoFar, element, allMatchingPaths, pathAttributes);
+      return;
+    }
+    
     String node = nodes[i];
     
     if (JsonPathExpressionParser.isMatchAll(node)) {
