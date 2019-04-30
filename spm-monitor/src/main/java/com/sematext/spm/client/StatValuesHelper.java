@@ -31,7 +31,7 @@ public final class StatValuesHelper {
 
   public static void fillHostTags(StatValues statValues, File propsFile) {
     try {
-      statValues.getTags().put("os.host", SenderUtil.calculateHostParameterValue(propsFile));
+      statValues.getTags().put("os.host", SenderUtil.calculateHostParameterValue());
     } catch (Throwable thr) {
       LOG.warn("Can't resolve os.host value, setting to unknown", thr);
       statValues.getTags().put("os.host", "unknown");

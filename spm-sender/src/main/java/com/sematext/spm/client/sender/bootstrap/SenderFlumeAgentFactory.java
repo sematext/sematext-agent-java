@@ -199,7 +199,7 @@ public final class SenderFlumeAgentFactory {
     // NOTE: hostname interceptor not used anymore since we try to optimize creation of bulk URLs (recreate only when hostname changes)
 
     properties.put(CustomElasticSearchRestClient.URL_PARAM_HOST, SenderUtil
-        .calculateHostParameterValue(monitorPropertiesFile, monitorProperties));
+        .calculateHostParameterValue());
     properties.put(CustomElasticSearchRestClient.URL_PARAM_DOCKER_HOSTNAME, SenderUtil.getDockerHostname());
     properties.put(CustomElasticSearchRestClient.URL_PARAM_CONTAINER_HOSTNAME, MonitorUtil
         .getContainerHostname(monitorPropertiesFile, monitorProperties));

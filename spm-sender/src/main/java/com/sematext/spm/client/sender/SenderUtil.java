@@ -211,20 +211,8 @@ public final class SenderUtil {
   private static long lastHostCalculationTime = -1l;
   private static String lastHostname = "unknown";
 
-  public synchronized static String calculateHostParameterValue(File monitorPropertiesFile)
-      throws FileNotFoundException, IOException {
-    long currentTime = System.currentTimeMillis();
-    if (lastHostCalculationTime != -1 && (lastHostCalculationTime + hostnameReadIntervalMs) > currentTime) {
-      return lastHostname;
-    }
 
-    Properties monitorProperties = new Properties();
-    monitorProperties.load(new FileInputStream(monitorPropertiesFile));
-    return calculateHostParameterValue(monitorPropertiesFile, monitorProperties);
-  }
-
-  public synchronized static String calculateHostParameterValue(File monitorPropertiesFile,
-                                                                Properties monitorProperties) {
+  public synchronized static String calculateHostParameterValue() {
     long currentTime = System.currentTimeMillis();
     if (lastHostCalculationTime != -1 && (lastHostCalculationTime + hostnameReadIntervalMs) > currentTime) {
       return lastHostname;
@@ -233,13 +221,13 @@ public final class SenderUtil {
     lastHostCalculationTime = currentTime;
 
     if (DOCKER_SETUP_FILE.exists()) {
-      String containerHostname = MonitorUtil.getContainerHostname(monitorPropertiesFile, monitorProperties);
-      if (containerHostname != null && !containerHostname.trim().equals("")) {
-        LOG.info("Resolved hostname to " + containerHostname + " based on calculated container hostname");
-        lastHostname = containerHostname;
-        return containerHostname;
+      String containerHostHostname = getDockerHostname();
+      if (containerHostHostname != null && !containerHostHostname.trim().equals("")) {
+        LOG.info("Resolved hostname to " + containerHostHostname + " based on calculated container host hostname");
+        lastHostname = containerHostHostname;
+        return containerHostHostname;
       } else {
-        LOG.warn("Couldn't resolve container hostname, returning value 'unknown'");
+        LOG.warn("Couldn't resolve container host hostname, returning value 'unknown'");
         lastHostname = "unknown";
         return lastHostname;
       }
