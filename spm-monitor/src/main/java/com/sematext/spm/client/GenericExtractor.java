@@ -249,7 +249,7 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
     File monitorPropertiesFile = monitorConfig.getMonitorPropertiesFile();
 
     partlyResolvedObservationConfigTags
-        .put(OS_HOST_TAG, SenderUtil.calculateHostParameterValue(monitorPropertiesFile, monitorProperties));
+        .put(OS_HOST_TAG, SenderUtil.calculateHostParameterValue());
 
     String dockerHostname = SenderUtil.getDockerHostname();
     if (dockerHostname != null) {
