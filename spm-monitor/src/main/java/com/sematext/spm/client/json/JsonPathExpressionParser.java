@@ -19,15 +19,23 @@
  */
 package com.sematext.spm.client.json;
 
-import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public final class JsonPathExpressionParser {
-  private static final Map<String, String[]> CACHED_PARSED_NODES = new UnifiedMap<String, String[]>();
-  private static final Map<String, String[]> EXTRACTED_EXPRESSIONS = new UnifiedMap<String, String[]>();
+  public static final Cache<String, String[]> CACHED_PARSED_NODES = CacheBuilder.newBuilder()
+      .maximumSize(300000)
+      .expireAfterAccess(30, TimeUnit.MINUTES)
+      .build();
+
+  public static final Cache<String, String[]> EXTRACTED_EXPRESSIONS = CacheBuilder.newBuilder()
+      .maximumSize(300000)
+      .expireAfterAccess(30, TimeUnit.MINUTES)
+      .build();
 
   private JsonPathExpressionParser() {}
 
@@ -73,7 +81,8 @@ public final class JsonPathExpressionParser {
   }
 
   public static String[] extractExpressions(String arrayExpression) {
-    String[] res = EXTRACTED_EXPRESSIONS.get(arrayExpression);
+    String[] res;
+    res = EXTRACTED_EXPRESSIONS.getIfPresent(arrayExpression);
     if (res == null) {
       res = arrayExpression.split("@\\.");
       EXTRACTED_EXPRESSIONS.put(arrayExpression, res);
@@ -83,9 +92,8 @@ public final class JsonPathExpressionParser {
   }
 
   public static String[] parseNodes(String path) {
-    // TODO - Currently we are caching the results. The cache might have millions of entries.
-    // Without caching,  we might have to parse the same thing N times.
-    String[] resNodes = CACHED_PARSED_NODES.get(path);
+    String[] resNodes;
+    resNodes = CACHED_PARSED_NODES.getIfPresent(path);
     if (resNodes != null) {
       return resNodes;
     }

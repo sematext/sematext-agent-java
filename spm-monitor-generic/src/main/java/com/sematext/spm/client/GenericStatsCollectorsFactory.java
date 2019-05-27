@@ -19,6 +19,9 @@
  */
 package com.sematext.spm.client;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
@@ -35,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,7 +82,11 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
   private static final Log LOG = LogFactory.getLog(GenericStatsCollectorsFactory.class);
   private final TracingMonitorConfigurator tracingConf = new TracingMonitorConfigurator();
 
-  public static final Map<String, StatsCollector<?>> EXISTING_COLLECTORS_MAP = new UnifiedMap<String, StatsCollector<?>>();
+  public static final Cache<String, StatsCollector<?>> EXISTING_COLLECTORS_MAP = CacheBuilder.newBuilder()
+      .maximumSize(300000)
+      .expireAfterAccess(30, TimeUnit.MINUTES)
+      .build();
+  
   private static final int MAX_PCTLS_DEFINITIONS = 10;
   private static int CURRENT_COUNT_PCTLS_DEFINITIONS = 0;
 
@@ -825,7 +833,8 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
   private static <T extends StatsCollector<?>> T findExistingCollector(Class<T> class1, String id) {
     String calculatedId = StatsCollector.calculateIdForCollector(class1, id);
 
-    StatsCollector<?> sc = EXISTING_COLLECTORS_MAP.get(calculatedId);
+    StatsCollector<?> sc;
+    sc = EXISTING_COLLECTORS_MAP.getIfPresent(calculatedId);
 
     if (sc != null) {
       if (LOG.isDebugEnabled()) {
