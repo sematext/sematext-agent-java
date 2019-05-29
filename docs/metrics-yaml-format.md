@@ -26,8 +26,9 @@ observation:
     is supported for `db` and `json` types.
     * DB data source
         * `query`: The SQL query be executed to collect metrics.
-        * `dbUrl`: The DB Connection string. e.g. `jdbc:clickhouse://${SPM_MONITOR_CLICKHOUSE_DB_HOST_PORT}/system` where
-        `SPM_MONITOR_CLICKHOUSE_DB_HOST_PORT` is placeholder for the variable passed from `setup-spm` script.  
+        * `dbUrl`: The DB Connection string. e.g. `jdbc:postgresql://${POSTGRESQL_HOST_PORT}/{POSTGRESQL_DB}` where
+        `POSTGRESQL_HOST_PORT` is placeholder for the variable passed from `setup-spm` script. It is recommended to name
+        the variable using `<INTEGRATION_NAME>_HOST_PORT` format.
         * `dbDriverClass`: Fully qualified DB driver class name. Refer to 
         [Adding custom classes to the agent](#adding-custom-classes-to-the-agent) for adding driver jar to agent.
         * `dbUser`: DB username (typically passed from setup script)
@@ -38,6 +39,7 @@ observation:
         * `dbAdditionalConnectionParams` - Any additional connection params to be passed to the DB connection.
     * JSON data source
         * `server` - The protocol, hostname and port sections of the HTTP URL to query for metrics  (typically passed from setup script)
+        It is recommended to name the variable using `<INTEGRATION_NAME>_HOST_PORT` format.
         * `url`: The path to query metrics. For example, if the metrics are exposed via `http://localhost:9090/node/stats`
          then `server` should be `http://localhost:9090` and `url` should be `/node/stats`.
         * `basicHttpAuthUsername`: Username for HTTP Basic authentication  (typically passed from setup script)
