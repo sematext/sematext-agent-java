@@ -72,7 +72,7 @@ public class TracingCrossAppCallStatsCollector extends MultipleStatsCollector<Cr
     statValues.getTags().put("tracing.cross.app.call.tag", call.tag());
     statValues.getTags().put("tracing.cross.app.call.request", call.request());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("tracing");

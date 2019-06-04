@@ -65,7 +65,7 @@ public class JvmGcStatsCollector extends SingleStatsCollector {
     statValues.getTags().put("jvm.gc", gcStats.getGcName());
     statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("jvm");

@@ -29,7 +29,7 @@ public final class StatValuesHelper {
   private StatValuesHelper() {
   }
 
-  public static void fillHostTags(StatValues statValues, File propsFile) {
+  public static void fillEnvTags(StatValues statValues, File propsFile) {
     try {
       statValues.getTags().put("os.host", SenderUtil.calculateHostParameterValue());
     } catch (Throwable thr) {
@@ -48,6 +48,27 @@ public final class StatValuesHelper {
       }
     } catch (Throwable thr) {
       LOG.warn("Can't resolve container.hostname value, leaving empty", thr);
+    }
+
+    try {
+      if (SenderUtil.isInContainer()) {
+        String containerName = SenderUtil.getContainerName();
+        if (containerName != null) {
+          statValues.getTags().put("container.name", containerName);
+        }
+
+        String containerId = SenderUtil.getContainerId();
+        if (containerId != null) {
+          statValues.getTags().put("container.id", containerId);
+        }
+
+        String containerImage = SenderUtil.getContainerImage();
+        if (containerImage != null) {
+          statValues.getTags().put("container.image", containerImage);
+        }
+      }
+    } catch (Throwable thr) {
+      LOG.warn("Can't resolve container tags, leaving empty", thr);
     }
   }
 }

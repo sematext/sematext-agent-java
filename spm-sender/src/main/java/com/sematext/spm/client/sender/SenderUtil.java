@@ -24,8 +24,6 @@ import org.apache.commons.io.comparator.LastModifiedFileComparator;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -66,8 +64,16 @@ public final class SenderUtil {
 
   private static final File RESOLVED_HOSTNAME_FILE = new File(SPM_HOME, ".resolved-hostname");
 
+  private static final String CONTAINER_HOST_HOSTNAME_ENV_NAME = "SEMATEXT_CONTAINER_HOST_HOSTNAME";
+  private static final String CONTAINER_NAME_ENV_NAME = "SEMATEXT_CONTAINER_NAME";
+  private static final String CONTAINER_ID_ENV_NAME = "SEMATEXT_CONTAINER_ID";
+  private static final String CONTAINER_IMAGE_ENV_NAME = "SEMATEXT_CONTAINER_IMAGE";
+  private static String containerHostHostName, containerName, containerId, containerImage;
+  private static boolean inContainer = false;
+
   static {
     loadInstallationProperties();
+    loadContainerProperties();
   }
 
   public static void loadInstallationProperties() {
@@ -132,6 +138,31 @@ public final class SenderUtil {
     }
   }
 
+  private static void loadContainerProperties() {
+    containerHostHostName = System.getenv(CONTAINER_HOST_HOSTNAME_ENV_NAME);
+    containerName = System.getenv(CONTAINER_NAME_ENV_NAME);
+    containerImage = System.getenv(CONTAINER_IMAGE_ENV_NAME);
+    containerId = System.getenv(CONTAINER_ID_ENV_NAME);
+    if (containerHostHostName == null &&
+        containerName == null &&
+        containerId == null &&
+        containerImage == null) {
+      return; // not container setup
+    } else {
+      checkEnvForNull(CONTAINER_HOST_HOSTNAME_ENV_NAME, containerHostHostName);
+      checkEnvForNull(CONTAINER_NAME_ENV_NAME, containerName);
+      checkEnvForNull(CONTAINER_ID_ENV_NAME, containerId);
+      checkEnvForNull(CONTAINER_IMAGE_ENV_NAME, containerImage);
+      inContainer = true;
+    }
+  }
+
+  private static void checkEnvForNull(String name, String value) {
+    if (value == null) {
+      throw new IllegalArgumentException(String.format("Agent seems to be running in container, but %s is not set", name));
+    }
+  }
+
   /**
    * @return properties files ordered by last modified date in descending order
    */
@@ -168,6 +199,11 @@ public final class SenderUtil {
   }
 
   public synchronized static String getDockerHostname() {
+
+    if (containerHostHostName != null) {
+      return containerHostHostName;
+    }
+
     long currentTime = System.currentTimeMillis();
     if (lastDockerHostCalculationTime != -1 && (lastDockerHostCalculationTime + hostnameReadIntervalMs) > currentTime) {
       return lastDockerHostname;
@@ -290,5 +326,25 @@ public final class SenderUtil {
     }
 
     return null;
+  }
+
+  public static String getContainerHostHostName() {
+    return containerHostHostName;
+  }
+
+  public static String getContainerName() {
+    return containerName;
+  }
+
+  public static String getContainerId() {
+    return containerId;
+  }
+
+  public static String getContainerImage() {
+    return containerImage;
+  }
+
+  public static boolean isInContainer() {
+    return inContainer;
   }
 }

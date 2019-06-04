@@ -100,7 +100,7 @@ public class HAProxyStatsCollector extends MultipleStatsCollector<HAProxyStats> 
     statValues.getTags().put("haproxy.type", stats.getType());
     statValues.getTags().put("haproxy.service", stats.getServiceName());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("haproxy");

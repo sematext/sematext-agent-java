@@ -106,7 +106,7 @@ public class RedisStatsCollector extends SingleStatsCollector {
 
     statValues.setTags(new UnifiedMap<String, String>());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("redis");

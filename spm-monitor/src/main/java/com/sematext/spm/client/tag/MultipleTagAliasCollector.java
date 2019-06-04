@@ -79,7 +79,7 @@ public class MultipleTagAliasCollector extends MultipleStatsCollector<String> {
     statValues.getMetrics().put(tag.substring(0, tag.indexOf(":")), tag.substring(tag.indexOf(":") + 1));
     statValues.setTags(new UnifiedMap<String, String>());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     if (jvmNameForTags != null) {
       statValues.getTags().put("jvm", jvmNameForTags);
     }
