@@ -44,6 +44,12 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
   public static final String JVM_NAME_TAG = "jvm";
   public static final String CONTAINER_HOSTNAME_TAG = "container.hostname";
   public static final String CONTAINER_HOST_HOSTNAME_TAG = "container.host.hostname";
+  public static final String CONTAINER_NAME_TAG = "container.name";
+  public static final String CONTAINER_ID_TAG = "container.id";
+  public static final String CONTAINER_IMAGE_TAG = "container.image";
+  public static final String K8S_POD_NAME_TAG = "kubernetes.pod.name";
+  public static final String K8S_NAMESPACE_ID_TAG = "kubernetes.namespace";
+  public static final String K8S_CLUSTER_TAG = "kubernetes.cluster.name";
   public static final String OS_HOST_TAG = "os.host";
 
   private static final Log LOG = LogFactory.getLog(GenericExtractor.class);
@@ -259,6 +265,37 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
     if (containerHostname != null) {
       partlyResolvedObservationConfigTags.put(CONTAINER_HOSTNAME_TAG, containerHostname);
     }
+
+    if (SenderUtil.isInContainer()) {
+      String containerName = SenderUtil.getContainerName();
+      if (containerName != null) {
+        partlyResolvedObservationConfigTags.put(CONTAINER_NAME_TAG, containerName);
+      }
+      String containerId = SenderUtil.getContainerId();
+      if (containerId != null) {
+        partlyResolvedObservationConfigTags.put(CONTAINER_ID_TAG, containerId);
+      }
+      String containerImage = SenderUtil.getContainerImage();
+      if (containerImage != null) {
+        partlyResolvedObservationConfigTags.put(CONTAINER_IMAGE_TAG, containerImage);
+      }
+    }
+
+    if (SenderUtil.isInKubernetes()) {
+      String podName = SenderUtil.getK8sPodName();
+      if (podName != null) {
+        partlyResolvedObservationConfigTags.put(K8S_POD_NAME_TAG, podName);
+      }
+      String namespace = SenderUtil.getK8sNamespace();
+      if (namespace != null) {
+        partlyResolvedObservationConfigTags.put(K8S_NAMESPACE_ID_TAG, namespace);
+      }
+      String cluster = SenderUtil.getK8sCluster();
+      if (cluster != null) {
+        partlyResolvedObservationConfigTags.put(K8S_CLUSTER_TAG, cluster);
+      }
+    }
+
     partlyResolvedObservationConfigTagsAsString = partlyResolvedObservationConfigTags.toString();
   }
 

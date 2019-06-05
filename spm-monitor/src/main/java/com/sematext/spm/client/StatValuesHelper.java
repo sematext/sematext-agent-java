@@ -47,7 +47,7 @@ public final class StatValuesHelper {
         statValues.getTags().put("container.hostname", containerHostname);
       }
     } catch (Throwable thr) {
-      LOG.warn("Can't resolve container.hostname value, leaving empty", thr);
+      LOG.warn("Can't resolve container.hostname value, skipping", thr);
     }
 
     try {
@@ -69,6 +69,27 @@ public final class StatValuesHelper {
       }
     } catch (Throwable thr) {
       LOG.warn("Can't resolve container tags, leaving empty", thr);
+    }
+
+    try {
+      if (SenderUtil.isInKubernetes()) {
+        String podName = SenderUtil.getK8sPodName();
+        if (podName != null) {
+          statValues.getTags().put("kubernetes.pod.name", podName);
+        }
+
+        String namespace = SenderUtil.getK8sNamespace();
+        if (namespace != null) {
+          statValues.getTags().put("kubernetes.namespace", namespace);
+        }
+
+        String cluster = SenderUtil.getK8sCluster();
+        if (cluster != null) {
+          statValues.getTags().put("kubernetes.cluster.name", cluster);
+        }
+      }
+    } catch (Throwable thr) {
+      LOG.warn("Can't resolve kubernetes tags, skipping", thr);
     }
   }
 }
