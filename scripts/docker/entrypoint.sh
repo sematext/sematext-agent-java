@@ -31,21 +31,21 @@ case $1 in
          bash \
             $SPM_HOME/bin/setup-spm  \
             --start-agent false \
-            --monitoring-token $MONITORING_TOKEN   \
-            --app-type $APP_TYPE  \
-            --app-subtype $APP_SUBTYPE \
-            --agent-type $AGENT_TYPE \
-            --jvm-name $JVM_NAME \
-            --jmx-params $JMX_PARAMS \
-            --metrics-receiver $METRICS_RECEIVER \
-            --tracing-receiver $TRACE_RECEIVER \
-            --region $REGION \
-            --jmx-host $JMX_HOST \
-            --jmx-port $JMX_PORT \
-            --jmx-pass-file $JMX_PASS_FILE \
-            --jmx-trust-store $JMX_TRUSTSTORE \
-            --jmx-trust-store-pass $JMX_TRUSTSTORE_PASS \
-            $EXTRA_PARAMS
+            --monitoring-token "$MONITORING_TOKEN"   \
+            --app-type "$APP_TYPE"  \
+            --app-subtype "$APP_SUBTYPE" \
+            --agent-type "$AGENT_TYPE" \
+            --jvm-name "$JVM_NAME" \
+            --jmx-params "$JMX_PARAMS" \
+            --metrics-receiver "$METRICS_RECEIVER" \
+            --tracing-receiver "$TRACE_RECEIVER" \
+            --region "$REGION" \
+            --jmx-host "$JMX_HOST" \
+            --jmx-port "$JMX_PORT" \
+            --jmx-pass-file "$JMX_PASS_FILE" \
+            --jmx-trust-store "$JMX_TRUSTSTORE" \
+            --jmx-trust-store-pass "$JMX_TRUSTSTORE_PASS" \
+            "$EXTRA_PARAMS"
 
          if [ $? -ne 0 ]; then
             exit 1
