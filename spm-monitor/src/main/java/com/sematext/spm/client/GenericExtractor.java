@@ -261,7 +261,7 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
     if (dockerHostname != null) {
       partlyResolvedObservationConfigTags.put(CONTAINER_HOST_HOSTNAME_TAG, dockerHostname);
     }
-    String containerHostname = MonitorUtil.getContainerHostname(monitorPropertiesFile, monitorProperties);
+    String containerHostname = MonitorUtil.getContainerHostname(monitorPropertiesFile, monitorProperties, SenderUtil.isInContainer());
     if (containerHostname != null) {
       partlyResolvedObservationConfigTags.put(CONTAINER_HOSTNAME_TAG, containerHostname);
     }

@@ -548,7 +548,7 @@ public final class MonitorUtil {
   private static long lastContainerHostnameCalculationTime = -1l;
   private static String lastContainerHostname = null;
 
-  public static String getContainerHostname(File monitorPropertiesFile) throws FileNotFoundException, IOException {
+  public static String getContainerHostname(File monitorPropertiesFile, boolean container) throws FileNotFoundException, IOException {
     long currentTime = System.currentTimeMillis();
     if (lastContainerHostnameCalculationTime != -1
         && (lastContainerHostnameCalculationTime + hostnameReadIntervalMs) > currentTime) {
@@ -557,10 +557,10 @@ public final class MonitorUtil {
 
     Properties monitorProperties = new Properties();
     monitorProperties.load(new FileInputStream(monitorPropertiesFile));
-    return getContainerHostname(monitorPropertiesFile, monitorProperties);
+    return getContainerHostname(monitorPropertiesFile, monitorProperties, container);
   }
 
-  public static String getContainerHostname(File monitorPropertiesFile, Properties monitorProperties) {
+  public static String getContainerHostname(File monitorPropertiesFile, Properties monitorProperties, boolean container) {
     long currentTime = System.currentTimeMillis();
     if (lastContainerHostnameCalculationTime != -1
         && (lastContainerHostnameCalculationTime + hostnameReadIntervalMs) > currentTime) {
@@ -569,7 +569,7 @@ public final class MonitorUtil {
 
     lastContainerHostnameCalculationTime = currentTime;
 
-    if (!DOCKER_SETUP_FILE.exists()) {
+    if (!DOCKER_SETUP_FILE.exists() && !container) {
       lastContainerHostname = null;
       return lastContainerHostname;
     }
@@ -620,6 +620,18 @@ public final class MonitorUtil {
                   }
                 }
 
+                lastContainerHostname = hostname;
+                return lastContainerHostname;
+              }
+            }
+          }
+
+          // look for properties ending with _HOST_PORT
+          for(String name : monitorProperties.stringPropertyNames()) {
+            if (name.endsWith("_HOST_PORT")) {
+              String value = monitorProperties.getProperty(name);
+              String hostname = extractHostFromUrl(value);
+              if (hostname != null && hostname.length() > 0) {
                 lastContainerHostname = hostname;
                 return lastContainerHostname;
               }

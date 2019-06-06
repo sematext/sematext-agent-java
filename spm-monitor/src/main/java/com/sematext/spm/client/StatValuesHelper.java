@@ -42,7 +42,7 @@ public final class StatValuesHelper {
       statValues.getTags().put("container.host.hostname", dockerHostname);
     }
     try {
-      String containerHostname = MonitorUtil.getContainerHostname(propsFile);
+      String containerHostname = MonitorUtil.getContainerHostname(propsFile, SenderUtil.isInContainer());
       if (containerHostname != null) {
         statValues.getTags().put("container.hostname", containerHostname);
       }
