@@ -17,7 +17,7 @@ function parse_param {
   else
     CURRENT_PARAM_VALUE=$TMP_PARAM
     
-    if [ -z $CURRENT_PARAM_NAME ]; then
+    if [ -z "$CURRENT_PARAM_NAME" ]; then
       echo "WARN: Found param value $CURRENT_PARAM_VALUE without preceding param name"
     else
       if [ "$CURRENT_PARAM_NAME" == "app-token" ]; then
@@ -177,14 +177,14 @@ function setup_conf {
       sed -i '/SPM_MONITOR_IN_PROCESS=/c\'"SPM_MONITOR_IN_PROCESS=\"false\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
       sed -i '/THREAD_INSTRUMENTATION_ENABLED=/c\'"THREAD_INSTRUMENTATION_ENABLED=false"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
       # if jmx-params are present, do the replacement right now
-      if [ !  -z $SPM_MONITOR_JMX_PARAMS ]; then
+      if [ !  -z "$SPM_MONITOR_JMX_PARAMS" ]; then
         sed -i '/SPM_MONITOR_JMX_PARAMS=\"\"/c\'"SPM_MONITOR_JMX_PARAMS=\"$SPM_MONITOR_JMX_PARAMS\""'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
-      elif [ ! -z $JMX_HOST ] && [ ! -z $JMX_PORT ]; then
+      elif [ ! -z "$JMX_HOST" ] && [ ! -z "$JMX_PORT" ]; then
         REPLACEMENT_JMX_LINE="SPM_MONITOR_JMX_PARAMS=\"-Dspm.remote.jmx.url=$JMX_HOST:$JMX_PORT\""
-        if [ ! -z $JMX_PASS_FILE ]; then
+        if [ ! -z "$JMX_PASS_FILE" ]; then
           REPLACEMENT_JMX_LINE=${REPLACEMENT_JMX_LINE::-1}
           REPLACEMENT_JMX_LINE="$REPLACEMENT_JMX_LINE -Dspm.remote.jmx.password.file=$JMX_PASS_FILE\""
-        elif [ ! -z $JMX_TRUSTSTORE ] && [ ! -z $JMX_TRUSTSTORE_PASS ]; then
+        elif [ ! -z "$JMX_TRUSTSTORE" ] && [ ! -z "$JMX_TRUSTSTORE_PASS" ]; then
           REPLACEMENT_JMX_LINE=${REPLACEMENT_JMX_LINE::-1}
           REPLACEMENT_JMX_LINE="$REPLACEMENT_JMX_LINE -Djavax.net.ssl.trustStore=$JMX_TRUSTSTORE -Djavax.net.ssl.trustStorePassword=$JMX_TRUSTSTORE_PASS -Dcom.sun.management.jmxremote.ssl.need.client.auth=true\""
         fi
@@ -256,13 +256,13 @@ function setup_conf {
     
     # separately set env properties if they were sent as params
     ENV_PARAMS=""
-    if [ ! -z $REGION_PARAM ]; then
+    if [ ! -z "$REGION_PARAM" ]; then
       ENV_PARAMS="$ENV_PARAMS --region $REGION_PARAM"
     fi
-    if [ ! -z $SPM_TRACING_RECEIVER_URL_PARAM ]; then
+    if [ ! -z "$SPM_TRACING_RECEIVER_URL_PARAM" ]; then
       ENV_PARAMS="$ENV_PARAMS --tracing-receiver $SPM_TRACING_RECEIVER_URL_PARAM"
     fi
-    if [ ! -z $SPM_MONITORING_RECEIVER_URL_PARAM ]; then
+    if [ ! -z "$SPM_MONITORING_RECEIVER_URL_PARAM" ]; then
       ENV_PARAMS="$ENV_PARAMS --monitoring-receiver $SPM_MONITORING_RECEIVER_URL_PARAM"
     fi
     if [ ! -z "$ENV_PARAMS" ]; then
