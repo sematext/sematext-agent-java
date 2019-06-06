@@ -155,7 +155,7 @@ public final class SenderUtil {
         containerName == null &&
         containerId == null &&
         containerImage == null) {
-      return; // not container setup
+      // not container setup
     } else {
       checkEnvForNull(CONTAINER_HOST_HOSTNAME_ENV_NAME, containerHostHostName);
       checkEnvForNull(CONTAINER_NAME_ENV_NAME, containerName);
@@ -172,7 +172,7 @@ public final class SenderUtil {
     if (k8sPodName == null &&
         k8sNamespace == null &&
         k8sCluster == null) {
-      return; // not k8s setup
+      // not k8s setup
     } else {
       checkEnvForNull(K8S_POD_ENV_NAME, k8sPodName);
       checkEnvForNull(K8S_NAMESPACE_ENV_NAME, k8sNamespace);
@@ -183,7 +183,7 @@ public final class SenderUtil {
 
   private static void checkEnvForNull(String name, String value) {
     if (value == null) {
-      throw new IllegalArgumentException(String.format("Agent seems to be running in container, but %s is not set", name));
+      throw new IllegalArgumentException(String.format("Agent seems to be running in container/kubernetes, but %s is not set", name));
     }
   }
 
