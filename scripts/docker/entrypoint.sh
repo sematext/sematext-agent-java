@@ -45,7 +45,7 @@ case $1 in
             --jmx-pass-file "$JMX_PASS_FILE" \
             --jmx-trust-store "$JMX_TRUSTSTORE" \
             --jmx-trust-store-pass "$JMX_TRUSTSTORE_PASS" \
-            "$EXTRA_PARAMS"
+            $EXTRA_PARAMS
 
          if [ $? -ne 0 ]; then
             exit 1
