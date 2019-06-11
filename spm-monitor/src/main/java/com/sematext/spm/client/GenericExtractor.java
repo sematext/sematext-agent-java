@@ -46,7 +46,7 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
   public static final String CONTAINER_HOST_HOSTNAME_TAG = "container.host.hostname";
   public static final String CONTAINER_NAME_TAG = "container.name";
   public static final String CONTAINER_ID_TAG = "container.id";
-  public static final String CONTAINER_IMAGE_TAG = "container.image";
+  public static final String CONTAINER_IMAGE_TAG = "container.image.name";
   public static final String K8S_POD_NAME_TAG = "kubernetes.pod.name";
   public static final String K8S_NAMESPACE_ID_TAG = "kubernetes.namespace";
   public static final String K8S_CLUSTER_TAG = "kubernetes.cluster.name";

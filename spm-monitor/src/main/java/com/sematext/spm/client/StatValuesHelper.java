@@ -64,7 +64,7 @@ public final class StatValuesHelper {
 
         String containerImage = SenderUtil.getContainerImage();
         if (containerImage != null) {
-          statValues.getTags().put("container.image", containerImage);
+          statValues.getTags().put("container.image.name", containerImage);
         }
       }
     } catch (Throwable thr) {
