@@ -92,4 +92,29 @@ public final class StatValuesHelper {
       LOG.warn("Can't resolve kubernetes tags, skipping", thr);
     }
   }
+
+  public static void fillEnvTagsForTagAliases(StatValues statValues) {
+    try {
+      statValues.getTags().put("os.host", SenderUtil.calculateHostParameterValue());
+    } catch (Throwable thr) {
+      LOG.warn("Can't resolve os.host value, setting to unknown", thr);
+      statValues.getTags().put("os.host", "unknown");
+    }
+
+    String dockerHostname = SenderUtil.getDockerHostname();
+    if (dockerHostname != null) {
+      statValues.getTags().put("container.host.hostname", dockerHostname);
+    }
+
+    try {
+      if (SenderUtil.isInContainer()) {
+        String containerId = SenderUtil.getContainerId();
+        if (containerId != null) {
+          statValues.getTags().put("container.id", containerId);
+        }
+      }
+    } catch (Throwable thr) {
+      LOG.warn("Can't resolve container id tag, leaving empty", thr);
+    }
+  }
 }
