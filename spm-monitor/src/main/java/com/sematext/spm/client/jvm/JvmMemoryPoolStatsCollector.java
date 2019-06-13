@@ -65,7 +65,7 @@ public class JvmMemoryPoolStatsCollector extends SingleStatsCollector {
     statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
     statValues.getTags().put("jvm.memory.pool", stats.getPoolName());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("jvm");

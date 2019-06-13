@@ -122,7 +122,7 @@ public class StormSupervisorStatsCollector extends MultipleStatsCollector<Tuple<
     statValues.getTags().put("storm.supervisor.id", stats.getFirst());
     statValues.getTags().put("storm.supervisor.host", String.valueOf(stats.getSecond().get(0)));
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("storm");

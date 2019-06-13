@@ -87,7 +87,7 @@ public class StormClusterStatsCollector extends SingleStatsCollector implements 
 
     statValues.setTags(new UnifiedMap<String, String>());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("storm");

@@ -202,7 +202,7 @@ public final class SenderFlumeAgentFactory {
         .calculateHostParameterValue());
     properties.put(CustomElasticSearchRestClient.URL_PARAM_DOCKER_HOSTNAME, SenderUtil.getDockerHostname());
     properties.put(CustomElasticSearchRestClient.URL_PARAM_CONTAINER_HOSTNAME, MonitorUtil
-        .getContainerHostname(monitorPropertiesFile, monitorProperties));
+        .getContainerHostname(monitorPropertiesFile, monitorProperties, SenderUtil.isInContainer()));
 
     // properties.put(CustomElasticSearchRestClient.URL_PARAM_VERSION, MonitorAgent.class.getPackage().getSpecificationVersion());
     properties.put(CustomElasticSearchRestClient.URL_PARAM_VERSION, SenderFlumeAgentFactory.class.getPackage()

@@ -100,7 +100,7 @@ public class RedisDbStatsCollector extends MultipleStatsCollector<Tuple<String, 
     statValues.setTags(new UnifiedMap<String, String>());
     statValues.getTags().put("redis.db", stats.getFirst());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("redis");

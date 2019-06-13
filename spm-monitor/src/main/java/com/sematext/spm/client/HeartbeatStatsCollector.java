@@ -93,7 +93,7 @@ public class HeartbeatStatsCollector extends MultipleStatsCollector<Integer> {
     // CollectionStats.CURRENT_RUN_GATHERED_LINES is on the level of whole agent
     statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("heartbeat");      

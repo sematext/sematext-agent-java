@@ -70,7 +70,7 @@ public class TracingDatabaseOperationStatsCollector extends MultipleStatsCollect
     statValues.getTags().put("tracing.db.operation.db", s.getId().getDatabase());
     statValues.getTags().put("tracing.db.operation.operation", s.getId().getOperation());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("tracing");

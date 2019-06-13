@@ -90,7 +90,7 @@ public class JvmOsStatsCollector extends SingleStatsCollector {
     statValues.setTags(new UnifiedMap<String, String>());
     statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("jvm");

@@ -29,7 +29,7 @@ public final class StatValuesHelper {
   private StatValuesHelper() {
   }
 
-  public static void fillHostTags(StatValues statValues, File propsFile) {
+  public static void fillEnvTags(StatValues statValues, File propsFile) {
     try {
       statValues.getTags().put("os.host", SenderUtil.calculateHostParameterValue());
     } catch (Throwable thr) {
@@ -42,12 +42,79 @@ public final class StatValuesHelper {
       statValues.getTags().put("container.host.hostname", dockerHostname);
     }
     try {
-      String containerHostname = MonitorUtil.getContainerHostname(propsFile);
+      String containerHostname = MonitorUtil.getContainerHostname(propsFile, SenderUtil.isInContainer());
       if (containerHostname != null) {
         statValues.getTags().put("container.hostname", containerHostname);
       }
     } catch (Throwable thr) {
-      LOG.warn("Can't resolve container.hostname value, leaving empty", thr);
+      LOG.warn("Can't resolve container.hostname value, skipping", thr);
+    }
+
+    try {
+      if (SenderUtil.isInContainer()) {
+        String containerName = SenderUtil.getContainerName();
+        if (containerName != null) {
+          statValues.getTags().put("container.name", containerName);
+        }
+
+        String containerId = SenderUtil.getContainerId();
+        if (containerId != null) {
+          statValues.getTags().put("container.id", containerId);
+        }
+
+        String containerImage = SenderUtil.getContainerImage();
+        if (containerImage != null) {
+          statValues.getTags().put("container.image.name", containerImage);
+        }
+      }
+    } catch (Throwable thr) {
+      LOG.warn("Can't resolve container tags, leaving empty", thr);
+    }
+
+    try {
+      if (SenderUtil.isInKubernetes()) {
+        String podName = SenderUtil.getK8sPodName();
+        if (podName != null) {
+          statValues.getTags().put("kubernetes.pod.name", podName);
+        }
+
+        String namespace = SenderUtil.getK8sNamespace();
+        if (namespace != null) {
+          statValues.getTags().put("kubernetes.namespace", namespace);
+        }
+
+        String cluster = SenderUtil.getK8sCluster();
+        if (cluster != null) {
+          statValues.getTags().put("kubernetes.cluster.name", cluster);
+        }
+      }
+    } catch (Throwable thr) {
+      LOG.warn("Can't resolve kubernetes tags, skipping", thr);
+    }
+  }
+
+  public static void fillEnvTagsForTagAliases(StatValues statValues) {
+    try {
+      statValues.getTags().put("os.host", SenderUtil.calculateHostParameterValue());
+    } catch (Throwable thr) {
+      LOG.warn("Can't resolve os.host value, setting to unknown", thr);
+      statValues.getTags().put("os.host", "unknown");
+    }
+
+    String dockerHostname = SenderUtil.getDockerHostname();
+    if (dockerHostname != null) {
+      statValues.getTags().put("container.host.hostname", dockerHostname);
+    }
+
+    try {
+      if (SenderUtil.isInContainer()) {
+        String containerId = SenderUtil.getContainerId();
+        if (containerId != null) {
+          statValues.getTags().put("container.id", containerId);
+        }
+      }
+    } catch (Throwable thr) {
+      LOG.warn("Can't resolve container id tag, leaving empty", thr);
     }
   }
 }

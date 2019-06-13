@@ -98,7 +98,7 @@ public class TracingReqStatsCollector extends MultipleStatsCollector<RequestMetr
     statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
     statValues.getTags().put("tracing.request", s.getId());
 
-    StatValuesHelper.fillHostTags(statValues, propsFile);
+    StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("tracing");

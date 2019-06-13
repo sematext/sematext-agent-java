@@ -24,8 +24,6 @@ import org.apache.commons.io.comparator.LastModifiedFileComparator;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -66,8 +64,24 @@ public final class SenderUtil {
 
   private static final File RESOLVED_HOSTNAME_FILE = new File(SPM_HOME, ".resolved-hostname");
 
+  private static final String CONTAINER_HOST_HOSTNAME_ENV_NAME = "SEMATEXT_CONTAINER_HOST_HOSTNAME";
+  private static final String CONTAINER_NAME_ENV_NAME = "SEMATEXT_CONTAINER_NAME";
+  private static final String CONTAINER_ID_ENV_NAME = "SEMATEXT_CONTAINER_ID";
+  private static final String CONTAINER_IMAGE_ENV_NAME = "SEMATEXT_CONTAINER_IMAGE";
+  private static String containerHostHostName, containerName, containerId, containerImage;
+
+  private static final String K8S_POD_ENV_NAME = "SEMATEXT_K8S_POD_NAME";
+  private static final String K8S_NAMESPACE_ENV_NAME = "SEMATEXT_K8S_NAMESPACE";
+  private static final String K8S_CLUSTER_ENV_NAME = "SEMATEXT_K8S_CLUSTER";
+  private static String k8sPodName, k8sNamespace, k8sCluster;
+
+  private static boolean inContainer = false;
+  private static boolean inKubernetes = false;
+
   static {
     loadInstallationProperties();
+    loadContainerProperties();
+    loadKubernetesProperties();
   }
 
   public static void loadInstallationProperties() {
@@ -132,6 +146,47 @@ public final class SenderUtil {
     }
   }
 
+  private static void loadContainerProperties() {
+    containerHostHostName = System.getenv(CONTAINER_HOST_HOSTNAME_ENV_NAME);
+    containerName = System.getenv(CONTAINER_NAME_ENV_NAME);
+    containerImage = System.getenv(CONTAINER_IMAGE_ENV_NAME);
+    containerId = System.getenv(CONTAINER_ID_ENV_NAME);
+    if (containerHostHostName == null &&
+        containerName == null &&
+        containerId == null &&
+        containerImage == null) {
+      // not container setup
+    } else {
+      checkEnvForNull(CONTAINER_HOST_HOSTNAME_ENV_NAME, containerHostHostName);
+      checkEnvForNull(CONTAINER_NAME_ENV_NAME, containerName);
+      checkEnvForNull(CONTAINER_ID_ENV_NAME, containerId);
+      checkEnvForNull(CONTAINER_IMAGE_ENV_NAME, containerImage);
+      inContainer = true;
+    }
+  }
+
+  private static void loadKubernetesProperties() {
+    k8sPodName = System.getenv(K8S_POD_ENV_NAME);
+    k8sNamespace = System.getenv(K8S_NAMESPACE_ENV_NAME);
+    k8sCluster = System.getenv(K8S_CLUSTER_ENV_NAME);
+    if (k8sPodName == null &&
+        k8sNamespace == null &&
+        k8sCluster == null) {
+      // not k8s setup
+    } else {
+      checkEnvForNull(K8S_POD_ENV_NAME, k8sPodName);
+      checkEnvForNull(K8S_NAMESPACE_ENV_NAME, k8sNamespace);
+      checkEnvForNull(K8S_CLUSTER_ENV_NAME, k8sCluster);
+      inKubernetes = true;
+    }
+  }
+
+  private static void checkEnvForNull(String name, String value) {
+    if (value == null) {
+      throw new IllegalArgumentException(String.format("Agent seems to be running in container/kubernetes, but %s is not set", name));
+    }
+  }
+
   /**
    * @return properties files ordered by last modified date in descending order
    */
@@ -168,6 +223,11 @@ public final class SenderUtil {
   }
 
   public synchronized static String getDockerHostname() {
+
+    if (containerHostHostName != null) {
+      return containerHostHostName;
+    }
+
     long currentTime = System.currentTimeMillis();
     if (lastDockerHostCalculationTime != -1 && (lastDockerHostCalculationTime + hostnameReadIntervalMs) > currentTime) {
       return lastDockerHostname;
@@ -220,12 +280,15 @@ public final class SenderUtil {
 
     lastHostCalculationTime = currentTime;
 
-    if (DOCKER_SETUP_FILE.exists()) {
-      String containerHostHostname = getDockerHostname();
-      if (containerHostHostname != null && !containerHostHostname.trim().equals("")) {
-        LOG.info("Resolved hostname to " + containerHostHostname + " based on calculated container host hostname");
-        lastHostname = containerHostHostname;
-        return containerHostHostname;
+    if (containerHostHostName != null) {
+      lastHostname = containerHostHostName;
+      return lastHostname;
+    } else if (DOCKER_SETUP_FILE.exists()) {
+      String containerHostHostnameFromDockerFile = getDockerHostname();
+      if (containerHostHostnameFromDockerFile != null && !containerHostHostnameFromDockerFile.trim().equals("")) {
+        LOG.info("Resolved hostname to " + containerHostHostnameFromDockerFile + " based on calculated container host hostname");
+        lastHostname = containerHostHostnameFromDockerFile;
+        return containerHostHostnameFromDockerFile;
       } else {
         LOG.warn("Couldn't resolve container host hostname, returning value 'unknown'");
         lastHostname = "unknown";
@@ -243,9 +306,9 @@ public final class SenderUtil {
       if (externalyResolvedHostname != null && !externalyResolvedHostname.trim().equals("")) {
         LOG.info("Resolved hostname to " + externalyResolvedHostname + " based on " + RESOLVED_HOSTNAME_FILE);
         lastHostname = externalyResolvedHostname;
-        return lastHostname;        
+        return lastHostname;
       }
-      
+
       // otherwise, resolve the hostname
       String hostname = MonitorUtil.resolveHostnameInJava();
 
@@ -290,5 +353,41 @@ public final class SenderUtil {
     }
 
     return null;
+  }
+
+  public static String getContainerHostHostName() {
+    return containerHostHostName;
+  }
+
+  public static String getContainerName() {
+    return containerName;
+  }
+
+  public static String getContainerId() {
+    return containerId;
+  }
+
+  public static String getContainerImage() {
+    return containerImage;
+  }
+
+  public static boolean isInContainer() {
+    return inContainer;
+  }
+
+  public static String getK8sPodName() {
+    return k8sPodName;
+  }
+
+  public static String getK8sNamespace() {
+    return k8sNamespace;
+  }
+
+  public static String getK8sCluster() {
+    return k8sCluster;
+  }
+
+  public static boolean isInKubernetes() {
+    return inKubernetes;
   }
 }
