@@ -37,7 +37,7 @@ case $1 in
             --agent-type "$AGENT_TYPE" \
             --jvm-name "$JVM_NAME" \
             --jmx-params "$JMX_PARAMS" \
-            --metrics-receiver "$METRICS_RECEIVER" \
+            --metrics-receiver "$SERVER_BASE_URL" \
             --tracing-receiver "$TRACE_RECEIVER" \
             --region "$REGION" \
             --jmx-host "$JMX_HOST" \
