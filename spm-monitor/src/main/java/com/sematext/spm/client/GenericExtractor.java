@@ -46,7 +46,9 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
   public static final String CONTAINER_HOST_HOSTNAME_TAG = "container.host.hostname";
   public static final String CONTAINER_NAME_TAG = "container.name";
   public static final String CONTAINER_ID_TAG = "container.id";
-  public static final String CONTAINER_IMAGE_TAG = "container.image.name";
+  public static final String CONTAINER_IMAGE_NAME_TAG = "container.image.name";
+  public static final String CONTAINER_IMAGE_TAG_TAG = "container.image.tag";
+  public static final String CONTAINER_IMAGE_DIGEST_TAG = "container.image.digest";
   public static final String K8S_POD_NAME_TAG = "kubernetes.pod.name";
   public static final String K8S_NAMESPACE_ID_TAG = "kubernetes.namespace";
   public static final String K8S_CLUSTER_TAG = "kubernetes.cluster.name";
@@ -275,9 +277,17 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
       if (containerId != null) {
         partlyResolvedObservationConfigTags.put(CONTAINER_ID_TAG, containerId);
       }
-      String containerImage = SenderUtil.getContainerImage();
-      if (containerImage != null) {
-        partlyResolvedObservationConfigTags.put(CONTAINER_IMAGE_TAG, containerImage);
+      String containerImageName = SenderUtil.getContainerImageName();
+      if (containerImageName != null) {
+        partlyResolvedObservationConfigTags.put(CONTAINER_IMAGE_NAME_TAG, containerImageName);
+      }
+      String containerImageTag = SenderUtil.getContainerImageTag();
+      if (containerImageTag != null) {
+        partlyResolvedObservationConfigTags.put(CONTAINER_IMAGE_TAG_TAG, containerImageTag);
+      }
+      String containerImageDigest = SenderUtil.getContainerImageDigest();
+      if (containerImageDigest != null) {
+        partlyResolvedObservationConfigTags.put(CONTAINER_IMAGE_DIGEST_TAG, containerImageDigest);
       }
     }
 

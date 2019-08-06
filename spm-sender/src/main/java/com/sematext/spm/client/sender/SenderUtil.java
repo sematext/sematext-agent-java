@@ -67,8 +67,10 @@ public final class SenderUtil {
   private static final String CONTAINER_HOST_HOSTNAME_ENV_NAME = "SEMATEXT_CONTAINER_HOST_HOSTNAME";
   private static final String CONTAINER_NAME_ENV_NAME = "SEMATEXT_CONTAINER_NAME";
   private static final String CONTAINER_ID_ENV_NAME = "SEMATEXT_CONTAINER_ID";
-  private static final String CONTAINER_IMAGE_ENV_NAME = "SEMATEXT_CONTAINER_IMAGE";
-  private static String containerHostHostName, containerName, containerId, containerImage;
+  private static final String CONTAINER_IMAGE_NAME_ENV_NAME = "SEMATEXT_CONTAINER_IMAGE_NAME";
+  private static final String CONTAINER_IMAGE_TAG_ENV_NAME = "SEMATEXT_CONTAINER_IMAGE_TAG";
+  private static final String CONTAINER_IMAGE_DIGEST_ENV_NAME = "SEMATEXT_CONTAINER_IMAGE_DIGEST";
+  private static String containerHostHostName, containerName, containerId, containerImageName, containerImageTag, containerImageDigest;
 
   private static final String K8S_POD_ENV_NAME = "SEMATEXT_K8S_POD_NAME";
   private static final String K8S_NAMESPACE_ENV_NAME = "SEMATEXT_K8S_NAMESPACE";
@@ -149,18 +151,20 @@ public final class SenderUtil {
   private static void loadContainerProperties() {
     containerHostHostName = System.getenv(CONTAINER_HOST_HOSTNAME_ENV_NAME);
     containerName = System.getenv(CONTAINER_NAME_ENV_NAME);
-    containerImage = System.getenv(CONTAINER_IMAGE_ENV_NAME);
+    containerImageName = System.getenv(CONTAINER_IMAGE_NAME_ENV_NAME);
+    containerImageTag = System.getenv(CONTAINER_IMAGE_TAG_ENV_NAME);
+    containerImageDigest = System.getenv(CONTAINER_IMAGE_DIGEST_ENV_NAME);
     containerId = System.getenv(CONTAINER_ID_ENV_NAME);
     if (containerHostHostName == null &&
         containerName == null &&
         containerId == null &&
-        containerImage == null) {
+        containerImageName == null) {
       // not container setup
     } else {
       checkEnvForNull(CONTAINER_HOST_HOSTNAME_ENV_NAME, containerHostHostName);
       checkEnvForNull(CONTAINER_NAME_ENV_NAME, containerName);
       checkEnvForNull(CONTAINER_ID_ENV_NAME, containerId);
-      checkEnvForNull(CONTAINER_IMAGE_ENV_NAME, containerImage);
+      checkEnvForNull(CONTAINER_IMAGE_NAME_ENV_NAME, containerImageName);
       inContainer = true;
     }
   }
@@ -183,7 +187,8 @@ public final class SenderUtil {
 
   private static void checkEnvForNull(String name, String value) {
     if (value == null) {
-      throw new IllegalArgumentException(String.format("Agent seems to be running in container/kubernetes, but %s is not set", name));
+      throw new IllegalArgumentException(
+          String.format("Agent seems to be running in container/kubernetes, but %s is not set", name));
     }
   }
 
@@ -271,7 +276,6 @@ public final class SenderUtil {
   private static long lastHostCalculationTime = -1l;
   private static String lastHostname = "unknown";
 
-
   public synchronized static String calculateHostParameterValue() {
     long currentTime = System.currentTimeMillis();
     if (lastHostCalculationTime != -1 && (lastHostCalculationTime + hostnameReadIntervalMs) > currentTime) {
@@ -286,7 +290,8 @@ public final class SenderUtil {
     } else if (DOCKER_SETUP_FILE.exists()) {
       String containerHostHostnameFromDockerFile = getDockerHostname();
       if (containerHostHostnameFromDockerFile != null && !containerHostHostnameFromDockerFile.trim().equals("")) {
-        LOG.info("Resolved hostname to " + containerHostHostnameFromDockerFile + " based on calculated container host hostname");
+        LOG.info("Resolved hostname to " + containerHostHostnameFromDockerFile
+                     + " based on calculated container host hostname");
         lastHostname = containerHostHostnameFromDockerFile;
         return containerHostHostnameFromDockerFile;
       } else {
@@ -331,7 +336,7 @@ public final class SenderUtil {
         if (lines.size() > 0) {
           return (String) lines.get(0);
         }
-      }      
+      }
     } catch (Throwable thr) {
       LOG.error("Error while reading from " + RESOLVED_HOSTNAME_FILE);
     }
@@ -367,8 +372,16 @@ public final class SenderUtil {
     return containerId;
   }
 
-  public static String getContainerImage() {
-    return containerImage;
+  public static String getContainerImageName() {
+    return containerImageName;
+  }
+
+  public static String getContainerImageTag() {
+    return containerImageTag;
+  }
+
+  public static String getContainerImageDigest() {
+    return containerImageDigest;
   }
 
   public static boolean isInContainer() {
