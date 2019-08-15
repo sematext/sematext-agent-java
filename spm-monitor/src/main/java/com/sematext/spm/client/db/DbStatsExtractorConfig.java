@@ -32,7 +32,7 @@ import com.sematext.spm.client.config.ObservationDefinitionConfig;
 public class DbStatsExtractorConfig extends StatsExtractorConfig<DbObservation> {
   private String dataRequestQuery;
   private String dbUrl;
-  private String dbDriverClass;
+  private String[] dbDriverClass;
   private String dbUser;
   private String dbPassword;
   private String dbAdditionalConnectionParams;
@@ -107,7 +107,7 @@ public class DbStatsExtractorConfig extends StatsExtractorConfig<DbObservation> 
     return dbUrl;
   }
 
-  public String getDbDriverClass() {
+  public String[] getDbDriverClass() {
     return dbDriverClass;
   }
 

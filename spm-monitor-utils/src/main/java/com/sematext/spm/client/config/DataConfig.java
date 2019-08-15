@@ -22,7 +22,7 @@ package com.sematext.spm.client.config;
 public class DataConfig {
   private String query;
   private String dbUrl;
-  private String dbDriverClass;
+  private String[] dbDriverClass;
   private String dbUser;
   private String dbPassword;
   private String dbAdditionalConnectionParams;
@@ -52,11 +52,11 @@ public class DataConfig {
     this.dbUrl = dbUrl;
   }
 
-  public String getDbDriverClass() {
+  public String[] getDbDriverClass() {
     return dbDriverClass;
   }
 
-  public void setDbDriverClass(String dbDriverClass) {
+  public void setDbDriverClass(String[] dbDriverClass) {
     this.dbDriverClass = dbDriverClass;
   }
 
