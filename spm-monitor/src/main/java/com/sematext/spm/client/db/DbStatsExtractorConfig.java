@@ -27,6 +27,7 @@ import com.sematext.spm.client.StatsExtractorConfig;
 import com.sematext.spm.client.attributes.MetricType;
 import com.sematext.spm.client.config.CollectorFileConfig;
 import com.sematext.spm.client.config.DataConfig;
+import com.sematext.spm.client.config.DbDriverConfig;
 import com.sematext.spm.client.config.ObservationDefinitionConfig;
 
 public class DbStatsExtractorConfig extends StatsExtractorConfig<DbObservation> {
@@ -62,8 +63,26 @@ public class DbStatsExtractorConfig extends StatsExtractorConfig<DbObservation> 
       throw new ConfigurationFailedException("Configuration of DB observation must contain one 'data' attribute.");
     } else {
       dataRequestQuery = data.getQuery();
-      dbUrl = data.getDbUrl();
-      dbDriverClass = data.getDbDriverClass();
+      if (data.getDbDriver() != null) {
+        for (DbDriverConfig c : data.getDbDriver()) {
+          try {
+            Class.forName(c.getClazz());
+            dbUrl = c.getUrl();
+            dbDriverClass = c.getClazz();
+            break;
+          } catch (ClassNotFoundException e) {
+            //ignore
+          }
+        }
+
+        if (dbDriverClass == null) {
+          throw new ConfigurationFailedException("Cannot load db driver class. Please check if the JDBC driver is in classpath");
+        }
+
+      } else {
+        dbUrl = data.getDbUrl();
+        dbDriverClass = data.getDbDriverClass();
+      }
       dbUser = data.getDbUser();
       dbPassword = data.getDbPassword();
       dbAdditionalConnectionParams = data.getDbAdditionalConnectionParams();

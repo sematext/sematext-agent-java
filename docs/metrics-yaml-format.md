@@ -26,6 +26,9 @@ observation:
     is supported for `db` and `json` types.
     * DB data source
         * `query`: The SQL query be executed to collect metrics.
+        * `dbDriver`: List of DB URL (`url`) and driver class (`clazz`) pairs. To be used when multiple drivers are 
+        possible for an integration. For example, MySQL & MariaDB. The agent will load each class in the list and 
+        use the pair for which it can load the class.
         * `dbUrl`: The DB Connection string. e.g. `jdbc:postgresql://${POSTGRESQL_HOST_PORT}/{POSTGRESQL_DB}` where
         `POSTGRESQL_HOST_PORT` is placeholder for the variable passed from `setup-spm` script. It is recommended to name
         the variable using `<INTEGRATION_NAME>_HOST_PORT` format.

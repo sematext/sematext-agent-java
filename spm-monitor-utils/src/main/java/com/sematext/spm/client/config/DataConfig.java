@@ -19,6 +19,8 @@
  */
 package com.sematext.spm.client.config;
 
+import java.util.List;
+
 public class DataConfig {
   private String query;
   private String dbUrl;
@@ -27,6 +29,7 @@ public class DataConfig {
   private String dbPassword;
   private String dbAdditionalConnectionParams;
   private boolean dbVerticalModel = false;
+  private List<DbDriverConfig> dbDriver;
 
   private String url;
   private String server;
@@ -165,5 +168,13 @@ public class DataConfig {
 
   public void setJsonHandlerClass(String jsonHandlerClass) {
     this.jsonHandlerClass = jsonHandlerClass;
+  }
+
+  public List<DbDriverConfig> getDbDriver() {
+    return dbDriver;
+  }
+
+  public void setDbDriver(List<DbDriverConfig> dbDriver) {
+    this.dbDriver = dbDriver;
   }
 }
