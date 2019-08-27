@@ -22,9 +22,11 @@ package com.sematext.spm.client;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Has to be set as the last collector in list.
@@ -46,6 +48,7 @@ public class HeartbeatStatsCollector extends MultipleStatsCollector<Integer> {
   private final String subType;
   private final File propsFile;
   private final String finalJvmName;
+  private boolean sendJvmName;
 
   public HeartbeatStatsCollector(Serializer serializer, String appToken, String jvmName, String subType) {
     super(serializer);
@@ -60,6 +63,19 @@ public class HeartbeatStatsCollector extends MultipleStatsCollector<Integer> {
     }
 
     this.propsFile = MonitorUtil.fetchSpmMonitorPropertiesFileObject(appToken, jvmName, subType);
+    
+    try {
+      Properties monitorProperties = new Properties();
+      monitorProperties.load(new FileInputStream(this.propsFile));
+      sendJvmName = "true".equalsIgnoreCase(MonitorUtil.stripQuotes(monitorProperties
+          .getProperty("SPM_MONITOR_SEND_JVM_NAME", "false")
+          .trim()).trim());
+    } catch (Exception e) {
+      LOG.warn("Error while reading monitor properties file " + this.propsFile +
+          ", sendJvmName will be set to 'false'", e);
+      sendJvmName = false; // default
+    }
+    
     LOG.info("Heartbeat stats collector initialized");
   }
   
@@ -91,7 +107,9 @@ public class HeartbeatStatsCollector extends MultipleStatsCollector<Integer> {
     // currently each agent monitors one specific MonitorConfig, but if we move to 1 agent monitoring
     // N configs, this tag will have to be removed (unless we refactor other things) because
     // CollectionStats.CURRENT_RUN_GATHERED_LINES is on the level of whole agent
-    statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
+    if (sendJvmName) {
+      statValues.getTags().put(GenericExtractor.JVM_NAME_TAG, finalJvmName);
+    }
 
     StatValuesHelper.fillEnvTags(statValues, propsFile);
     statValues.setTimestamp(System.currentTimeMillis());
