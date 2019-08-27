@@ -226,7 +226,7 @@ function setup_conf {
         SPM_MONITOR_COLLECTORS="$SPM_MONITOR_COLLECTORS,jvm"
         sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
         ;;
-      elasticsearch)
+      jvm|elasticsearch)
         sed -i '/SPM_MONITOR_SEND_JVM_NAME=/c\'"SPM_MONITOR_SEND_JVM_NAME=true"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
         ;;
       *)
