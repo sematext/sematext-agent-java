@@ -51,9 +51,9 @@ import com.sematext.spm.client.sender.flume.es.ProxyContext;
 public class HttpInfluxClient extends InfluxClient {
   private static final Log logger = LogFactory.getLog(HttpInfluxClient.class);
   
-  private static final int CONNECTION_TIMEOUT_MS = 30000;
-  private static final int CONNECTION_REQUEST_TIMEOUT_MS = 30000;
-  private static final int SOCKET_TIMEOUT_MS = 30000;
+  private static final int CONNECTION_TIMEOUT_MS = 15000;
+  private static final int CONNECTION_REQUEST_TIMEOUT_MS = 15000;
+  private static final int SOCKET_TIMEOUT_MS = 10000;
   
   private HttpClient httpClient;
   private String fixedFullUrl;
