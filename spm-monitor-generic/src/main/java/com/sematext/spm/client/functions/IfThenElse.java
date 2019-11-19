@@ -103,7 +103,9 @@ public class IfThenElse implements CalculationFunction {
         return null;
       }
     } else {
-      if (argValue.endsWith("l") ||
+      if (argValue.equalsIgnoreCase("null")) {
+        return null;
+      } else if (argValue.endsWith("l") ||
           argValue.endsWith("L")) {
         return parseLongLiteral(argValue);
       } else {

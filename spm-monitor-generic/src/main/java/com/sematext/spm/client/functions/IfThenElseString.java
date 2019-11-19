@@ -80,6 +80,8 @@ public class IfThenElseString extends IfThenElse {
         LOG.warn("Cannot find metric " + metricName);
         return null;
       }
+    } else if (argValue.equalsIgnoreCase("null")) {
+      return null;
     } else {
       return argValue;
     }
