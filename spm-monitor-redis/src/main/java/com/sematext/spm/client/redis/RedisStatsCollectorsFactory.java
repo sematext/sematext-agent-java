@@ -85,7 +85,7 @@ public class RedisStatsCollectorsFactory extends StatsCollectorsFactory<StatsCol
                                             monitorConfig.getSubType()),
                   // as last collector add HeartbeatCollector
                   new HeartbeatStatsCollector(
-                      Serializer.INFLUX, monitorConfig.getAppToken(), monitorConfig.getAppToken(),
+                      Serializer.INFLUX, monitorConfig.getAppToken(), monitorConfig.getJvmName(),
                       monitorConfig.getSubType()));
     }
   }

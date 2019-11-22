@@ -87,9 +87,6 @@ public class RedisStatsCollector extends SingleStatsCollector {
     } catch (Exception e) {
       throw new StatsCollectionFailedException("Can't grab stats for rdsinfo.", e);
     }
-    for (final RedisInfoMetricExtractor<?> extractor : extractors) {
-      statValues.add(extractor.extract(info));
-    }
 
     statValues.setMetrics(new UnifiedMap<String, Object>());
     statValues.getMetrics().put("memory.used", extractors.get(0).extract(info));
