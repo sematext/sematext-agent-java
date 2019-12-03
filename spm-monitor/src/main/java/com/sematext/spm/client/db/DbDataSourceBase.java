@@ -48,6 +48,7 @@ public class DbDataSourceBase {
   private static final long FRESH_DATA_TIMEOUT_MS = 5000;
   private static final long MAX_SUCCESSIVE_FAILED_TRIES = 5;
   private static final long ERROR_STATE_INACTIVITY_PAUSE = 2 * 60 * 1000; // 2 minutes
+  private static final int CONNECTION_VALID_CHECK_TIMEOUT = 30 * 1000;
 
   private DbConnectionManager dbConnectionManager;
   private String dbQuery;
@@ -102,9 +103,10 @@ public class DbDataSourceBase {
 
       Statement stmt = null;
       ResultSet rs = null;
-
+      Connection conn = null;
+      
       try {
-        Connection conn = dbConnectionManager.getConnection();
+        conn = dbConnectionManager.getConnection();
 
         if (conn == null) {
           LOG.error("DB connection not available, skipping query");
@@ -188,6 +190,16 @@ public class DbDataSourceBase {
         }
 
         recordFailedRequest();
+        
+        if (conn != null) {
+          try {
+            if (!conn.isValid(CONNECTION_VALID_CHECK_TIMEOUT)) {
+              dbConnectionManager.reconnect();
+            }
+          } catch (Throwable thr1) {
+            LOG.error("Error while checking connection validity", thr1);
+          }
+        }
 
         freshDbData = null;
         return freshDbData;

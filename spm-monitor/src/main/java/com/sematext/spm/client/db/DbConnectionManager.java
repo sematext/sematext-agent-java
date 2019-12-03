@@ -81,6 +81,7 @@ public class DbConnectionManager {
    * @return connection or null
    */
   public Connection reconnect() {
+    LOG.info("Reconnecting to DB...");
     return createNewConnection();
   }
 
@@ -93,6 +94,8 @@ public class DbConnectionManager {
   }
 
   private Connection createNewConnection() {
+    LOG.info("Creating new connection to DB - old connection (if exists) will be closed, new one created");
+
     // if old connection exists, try to close it first
     if (dbConnection != null) {
       try {
