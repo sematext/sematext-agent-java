@@ -193,8 +193,11 @@ public class DbDataSourceBase {
         
         if (conn != null) {
           try {
+            LOG.info("Checking connection validity...");
             if (!conn.isValid(CONNECTION_VALID_CHECK_TIMEOUT)) {
               dbConnectionManager.reconnect();
+            } else {
+              LOG.info("Connection is valid");
             }
           } catch (Throwable thr1) {
             LOG.error("Error while checking connection validity", thr1);
