@@ -59,7 +59,7 @@ function captureSysInfo() {
 DIAG_DIR=$BASE_DIAG_DIR
 captureSysInfo &> $DIAG_DIR/sys-info.txt
 
-echo Capturing SPM information...
+echo Capturing information...
 
 function versionDebian() {
   dpkg -s spm-client | grep "Version" | sed -E s/"Version:( *)(.*)"/"\2"/g
@@ -105,7 +105,7 @@ if [ $indexOfColon -gt 0 ]; then
   spmReceiver="${spmReceiver:0:indexOfColon}"
 fi
 
-echo "Resolved spm receiver to: $spmReceiver $spmReceiverPort" | tee -a $DIAG_DIR/resolved-spm-rec.txt
+echo "Resolved metrics receiver to: $spmReceiver $spmReceiverPort" | tee -a $DIAG_DIR/resolved-spm-rec.txt
 
 # check DNS
 spmReceiverHosts=$(getent hosts $spmReceiver | wc -l)
@@ -319,11 +319,11 @@ fi
 echo
 echo = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 echo
-echo SPM diagnostics info is in /tmp/$ARCHIVE_NAME
+echo Sematext diagnostics info is in /tmp/$ARCHIVE_NAME
 echo
 echo Please email the /tmp/$ARCHIVE_NAME file to support@sematext.com
 echo
-echo Thank you for using SPM!
+echo Thank you for using Sematext!
 echo
 echo = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 echo
