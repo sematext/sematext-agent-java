@@ -35,7 +35,7 @@ public final class AgentArgsParser {
   }
 
   private static final Pattern STANDALONE_PROPERTIES_FILE_NAME_RE = Pattern
-      .compile("^spm-monitor-(.*?)-?config-([\\w-]{36})-(\\w+).properties$");
+      .compile("^spm-monitor-(.*?)-?config-([\\w-]{36})-(.+).properties$");
 
   public static Map<String, String> parse(String args) {
     final Map<String, String> p = new HashMap<String, String>();
