@@ -16,11 +16,7 @@ class HostOverrideClientSocketFactory extends RMISocketFactory {
                 .createServerSocket(port);
     }
     public Socket createSocket(String host, int port) throws IOException {
-        if (host.contains("127.0.0.1") || host.contains("localhost")) {
-            return RMISocketFactory.getDefaultSocketFactory()
-                    .createSocket(this.host, port);
-        }
         return RMISocketFactory.getDefaultSocketFactory()
-                .createSocket(host, port);
+                .createSocket(this.host, port);
     }
 }
