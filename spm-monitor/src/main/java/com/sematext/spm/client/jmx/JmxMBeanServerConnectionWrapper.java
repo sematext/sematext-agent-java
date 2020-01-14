@@ -29,9 +29,9 @@ import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
+import java.rmi.server.RMISocketFactory;
 
 /**
  * Provides one JMX connection to all clients. Before giving the connection, it checks if the connection is still alive.
@@ -85,7 +85,13 @@ public final class JmxMBeanServerConnectionWrapper {
         credentials[1] = password;
         env.put(JMXConnector.CREDENTIALS, credentials);
       }
-
+      String[] tokens = jmxServiceUrl.split("//");
+      String host = tokens[tokens.length - 1].split(":")[0];
+      // cassandra overrides rmi.server.hostname property to localhost, so localhost address is embedded in RMI stub
+      // to overcome that, we override it to right host when creating socket
+      if (host.length() > 0 && !host.contains("localhost") && !host.contains("127.0.0.1")) {
+        RMISocketFactory.setSocketFactory(new HostOverrideClientSocketFactory(host));
+      }
       connector = JMXConnectorFactory.connect(jmxServiceURL, env);
       mbeanServer = connector.getMBeanServerConnection();
       LOG.info("Created JMX connection to " + mbeanServer + " at URL: " + jmxServiceURL);
