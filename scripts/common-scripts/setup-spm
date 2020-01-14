@@ -54,6 +54,10 @@ function parse_param {
         JMX_TRUSTSTORE_PASS=$CURRENT_PARAM_VALUE
       elif [ "$CURRENT_PARAM_NAME" == "start-agent" ]; then
         START_AGENT=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "copy-src-dir" ]; then
+        COPY_SRC_DIR=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "copy-dest-dir" ]; then
+        COPY_DEST_DIR=$CURRENT_PARAM_VALUE
       else
         ADDITIONAL_PARAMS[${#ADDITIONAL_PARAMS[@]}]="$CURRENT_PARAM_NAME=$CURRENT_PARAM_VALUE"
       fi  
@@ -267,6 +271,10 @@ function setup_conf {
     fi
     if [ ! -z "$ENV_PARAMS" ]; then
       bash ./setup-env $ENV_PARAMS
+    fi
+
+    if [ ! -z "$COPY_SRC_DIR" ] && [ ! -z "$COPY_DEST_DIR" ]; then
+      cp -r "$COPY_SRC_DIR"/* "$COPY_DEST_DIR"/
     fi
 
     if [ "true" == "$START_AGENT" ]; then
