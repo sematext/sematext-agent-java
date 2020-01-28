@@ -29,10 +29,10 @@ fi
 (( EUID )) && echo You need to be root. && exit 1
 
 if [ -z "$TOKEN" ]; then
-  tput setab 1
-  tput setaf 7
+  tput setab 1 >/dev/null 2>&1
+  tput setaf 7 >/dev/null 2>&1
   echo "Token parameter missing"
-  tput op
+  tput op >/dev/null 2>&1
   support
   exit 1
 fi
@@ -58,8 +58,8 @@ service spm-monitor start
 echo
 echo "Done"
 echo
-tput setab 3
-tput setaf 0
+tput setab 3 >/dev/null 2>&1
+tput setaf 0 >/dev/null 2>&1
 echo "NOTE: If you are using javaagent (in-process) monitor with token $TOKEN, please manually remove javaagent definition from your Java process arguments"
-tput op
+tput op >/dev/null 2>&1
 echo
