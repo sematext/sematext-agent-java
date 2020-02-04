@@ -137,19 +137,19 @@
     <repositories>
         <repository>
             <id>default</id>
-            <url>http://repo1.maven.org/maven2/</url>
+            <url>https://repo1.maven.org/maven2/</url>
         </repository>
         <repository>
             <id>apache_dev_repo</id>
-            <url>http://repository.apache.org/snapshots</url>
+            <url>https://repository.apache.org/snapshots</url>
         </repository>
         <repository>
             <id>apache_dev_repo_alternate</id>
-            <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+            <url>https://people.apache.org/repo/m2-snapshot-repository/</url>
         </repository>
         <repository>
             <id>java_net_repo</id>
-            <url>http://download.java.net/maven/2/</url>
+            <url>https://download.java.net/maven/2/</url>
         </repository>
         <repository>
             <id>cdh-maven-repo</id>
