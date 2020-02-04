@@ -45,6 +45,8 @@ case $1 in
             --jmx-pass-file "$JMX_PASS_FILE" \
             --jmx-trust-store "$JMX_TRUSTSTORE" \
             --jmx-trust-store-pass "$JMX_TRUSTSTORE_PASS" \
+            --copy-src-dir "$COPY_SRC_DIR" \
+            --copy-dest-dir "$COPY_DEST_DIR" \
             $EXTRA_PARAMS
 
          if [ $? -ne 0 ]; then
