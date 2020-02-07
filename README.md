@@ -2,10 +2,10 @@
 
 [![Build Status](https://travis-ci.org/sematext/sematext-agent-java.svg?branch=master)](https://travis-ci.org/sematext/sematext-agent-java)
 
-This repository contains the source code for Sematext App Agent. Sematext App Agent can be used to collect application 
-metrics from multiple data sources. The data sources and the metrics to be collected can be defined in 
+This repository contains the source code for Sematext App Agent. Sematext App Agent can be used to collect application
+metrics from multiple data sources. The data sources and the metrics to be collected can be defined in
 [Metrics Configuration YAML](/docs/metrics-yaml-format.md) files.
-There are number of built-in integrations available for various applications in 
+There are number of built-in integrations available for various applications in
 [sematext-agent-integrations](https://github.com/sematext/sematext-agent-integrations) repo.
 
 ## Data Sources
@@ -19,19 +19,19 @@ any Influx Line Protocol compatible endpoints like InfluxDB. In the future, we w
 like HTTP, Graphite, etc.
 
 ## Configuration
-The Agent supports a number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before 
+The Agent supports a number of [built-in functions](/docs/built-in-functions.md) to process the collected metrics before
 sending them to output. You can also plug-in custom functions.
 
-The [How-to Guide](/docs/how-to.md) describes how to configure the App Agent in some specific cases. 
+The [How-to Guide](/docs/how-to.md) describes how to configure the App Agent in some specific cases.
 
 ## Getting Started
 
 ### Build
-To build Sematext App Agent you need: 
+To build Sematext App Agent you need:
 
-1) Linux based Operating System 
+1) Linux based Operating System
 2) Java 1.6+
-3) Maven 
+3) Maven
 4) Thrift compiler v0.12.0
     * Steps to install Thrift in Debian based systems
         ```bash
@@ -40,7 +40,7 @@ To build Sematext App Agent you need:
           tar xfz thrift-0.12.0.tar.gz
           cd thrift-0.12.0 && ./configure --enable-libs=no  && sudo make install
         ```
-5) fpm package manager 
+5) fpm package manager
     * For steps to install fpm refer [https://fpm.readthedocs.io/en/latest/installing.html](https://fpm.readthedocs.io/en/latest/installing.html)
 
 After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions.
@@ -68,7 +68,7 @@ sudo docker run -i -t --name solr-app-agent -e MONITORING_TOKEN=<monitoring-toke
 
 
 ### Set up
-The packages can be installed using OS specific package manager like dpkg, yum, etc. Once installed a new App can be 
+The packages can be installed using OS specific package manager like dpkg, yum, etc. Once installed a new App can be
 set up by running `setup-spm` command. For example, to set up monitoring for a JVM application in standalone mode, add
 
 ```bash
@@ -84,12 +84,12 @@ sudo bash /opt/spm/bin/setup-spm  \
     --jmx-params '-Dspm.remote.jmx.url=localhost:3000'
 ```
 
-`<monitoring-token>` - Monitoring Token should point to Sematext App Token if you are sending metrics to Sematext. App is an entity to 
+`<monitoring-token>` - Monitoring Token should point to Sematext App Token if you are sending metrics to Sematext. App is an entity to
 group similar/related metrics. e.g. All Elasticsearch metrics can be grouped under Elasticsearch App. Each App has a unique token.
-For other Influx endpoints you can specify a hexadecimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx` 
+For other Influx endpoints you can specify a hexadecimal value with format `xxxxxxxx--xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 e.g. `d0add28a-0a0f-46b2-9e1e-4928db5200e7`.
 
-Visit [Sematext Documentation](https://sematext.com/docs/monitoring/spm-client) for more info on how to set up and 
+Visit [Sematext Documentation](https://sematext.com/docs/agents/sematext-agent/app-agent/) for more info on how to set up and
 configure the agent to ship metrics.
 
 By default, the agent sends the collected metrics to Sematext. You can configure a different Influx compatible destination
@@ -97,12 +97,12 @@ by changing the following properties in `/opt/spm/properties/agent.properties` f
 
 * `server_base_url` - Base URL of the destination server. e.g. `http://192.168.0.4:8086`
 * `metrics_endpoint` - Path to send the metrics. This will be appended with `server_base_url` to form the complete URL.
-    Default value is `/write?db=metrics`. You can update this property to send metrics to different endpoint 
+    Default value is `/write?db=metrics`. You can update this property to send metrics to different endpoint
     or to specify username/password for InfluxDB. e.g. `/write?db=mydb&u=user&p=pass`
-    
+
 ## Contributing
 We welcome bug fixes or feature enhancements to Sematext App Agent. When done working on and testing,
-just submit a pull request to have Sematext review and merge your changes. 
+just submit a pull request to have Sematext review and merge your changes.
 
 To add support for a new integration refer to [Adding a New Agent Integration](/docs/add-new-integration.md).
 
