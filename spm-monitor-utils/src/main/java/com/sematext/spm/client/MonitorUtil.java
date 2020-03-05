@@ -555,8 +555,7 @@ public final class MonitorUtil {
       return lastContainerHostname;
     }
 
-    Properties monitorProperties = new Properties();
-    monitorProperties.load(new FileInputStream(monitorPropertiesFile));
+    Properties monitorProperties = loadMonitorProperties(monitorPropertiesFile);
     return getContainerHostname(monitorPropertiesFile, monitorProperties, container);
   }
 
@@ -696,5 +695,31 @@ public final class MonitorUtil {
       log.error("Can't resolve the hostname, using 'unknown'. Restart SPM monitor after fixing machine's hostname configuration", e);
       return "unknown";
     }
+  }
+  
+  private static Map<String, Properties> LOADED_MONITOR_PROPERTIES = new HashMap<String, Properties>();
+  private static Map<String, Long> LAST_MONITOR_PROPERTIES_RELOAD_TIME = new HashMap<String, Long>();
+  private static long ONE_MINUTE_MS = 60 * 1000;
+  private static long MONITOR_PROPERTIES_RELOAD_INTERVAL = ONE_MINUTE_MS;
+
+  public static Properties loadMonitorProperties(File monitorPropertiesFile) {
+    long now = System.currentTimeMillis();
+    String fileName = monitorPropertiesFile.getName();
+    Properties monitorProperties = LOADED_MONITOR_PROPERTIES.get(fileName);
+    if (monitorProperties == null ||
+        (now - MONITOR_PROPERTIES_RELOAD_INTERVAL) > LAST_MONITOR_PROPERTIES_RELOAD_TIME.get(fileName)) {
+      
+      monitorProperties = new Properties();
+      try {
+        monitorProperties.load(new FileInputStream(monitorPropertiesFile));
+      } catch (Throwable thr) {
+        log.error("Can't load properties file " + monitorPropertiesFile, thr);
+      }
+
+      LOADED_MONITOR_PROPERTIES.put(fileName, monitorProperties);
+      LAST_MONITOR_PROPERTIES_RELOAD_TIME.put(fileName, now);
+    }
+    
+    return monitorProperties;
   }
 }

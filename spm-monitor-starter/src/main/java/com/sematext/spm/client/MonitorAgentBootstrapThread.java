@@ -112,8 +112,7 @@ public class MonitorAgentBootstrapThread extends Thread {
       }
 
       System.out.println("Monitor config file is : " + monitorConfigFile);
-      Properties monitorProps = new Properties();
-      monitorProps.load(new FileInputStream(monitorConfigFile));
+      Properties monitorProps = MonitorUtil.loadMonitorProperties(monitorConfigFile);
       String collectors = MonitorUtil.stripQuotes(monitorProps.getProperty("SPM_MONITOR_COLLECTORS").trim()).trim();
       for (String collector : collectors.split(",")) {
         collector = collector.trim();

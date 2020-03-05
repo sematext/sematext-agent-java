@@ -106,6 +106,7 @@ public class JvmNotifBasedGcStatsCollector
       statValues.getTags().put("jvm.gc", protoStats.getGcName());
 
       StatValuesHelper.fillEnvTags(statValues, propsFile);
+      StatValuesHelper.fillConfigTags(statValues, MonitorUtil.loadMonitorProperties(propsFile));
       statValues.setTimestamp(protoStats.getTimestamp());
       statValues.setAppToken(appToken);
       statValues.setMetricNamespace("jvm");

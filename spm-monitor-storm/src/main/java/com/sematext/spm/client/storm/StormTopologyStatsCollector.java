@@ -138,6 +138,7 @@ public class StormTopologyStatsCollector extends MultipleStatsCollector<Tuple<St
     statValues.getTags().put("storm.topology.status", String.valueOf(stats.getSecond().get(0)));
 
     StatValuesHelper.fillEnvTags(statValues, propsFile);
+    StatValuesHelper.fillConfigTags(statValues, MonitorUtil.loadMonitorProperties(propsFile));
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("storm");

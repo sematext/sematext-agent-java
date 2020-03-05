@@ -245,8 +245,8 @@ function setup_conf {
     
     echo -e "\nSPM_MONITOR_COLLECTORS=\"$SPM_MONITOR_COLLECTORS\"" >> $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
 
-    SPM_MONITOR_TAG_ALIASES_REPLACEMENT="SPM_MONITOR_TAG_ALIASES=\"appType:$APP_TYPE_TAG\""
-    sed -i '/SPM_MONITOR_TAG_ALIASES=\"\"/c\'"$SPM_MONITOR_TAG_ALIASES_REPLACEMENT"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
+    SPM_MONITOR_TAGS_REPLACEMENT="SPM_MONITOR_TAGS=\"appType:$APP_TYPE_TAG\""
+    sed -i '/SPM_MONITOR_TAGS=\"\"/c\'"$SPM_MONITOR_TAGS_REPLACEMENT"'' $SPM_HOME/spm-monitor/conf/spm-monitor$CONFIG_SUBTYPE-config-$MONITORING_TOKEN-$JVM_NAME.properties
 
     # set JAVA_DEFAULTS
     if [ "standalone" == "$MONITOR_TYPE" ]; then

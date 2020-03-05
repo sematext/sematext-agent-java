@@ -20,8 +20,11 @@
 package com.sematext.spm.client;
 
 import java.io.File;
+import java.util.Properties;
 
 import com.sematext.spm.client.sender.SenderUtil;
+import com.sematext.spm.client.tag.TagUtils;
+import com.sematext.spm.client.util.Tuple;
 
 public final class StatValuesHelper {
   private static final Log LOG = LogFactory.getLog(StatValuesHelper.class);
@@ -68,6 +71,12 @@ public final class StatValuesHelper {
     }
   }
 
+  public static void fillConfigTags(StatValues statValues, Properties monitorProperties) {
+    for (Tuple<String, String> tag : TagUtils.getConfigTags(monitorProperties)) {
+      addTag(statValues, tag.getFirst(), tag.getSecond());
+    }
+  }
+  
   private static void addTag(StatValues statValues, String name, String value) {
     if (value != null) {
       statValues.getTags().put(name, value);

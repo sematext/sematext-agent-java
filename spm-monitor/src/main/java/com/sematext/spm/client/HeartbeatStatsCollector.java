@@ -65,8 +65,7 @@ public class HeartbeatStatsCollector extends MultipleStatsCollector<Integer> {
     this.propsFile = MonitorUtil.fetchSpmMonitorPropertiesFileObject(appToken, jvmName, subType);
     
     try {
-      Properties monitorProperties = new Properties();
-      monitorProperties.load(new FileInputStream(this.propsFile));
+      Properties monitorProperties = MonitorUtil.loadMonitorProperties(this.propsFile);
       sendJvmName = "true".equalsIgnoreCase(MonitorUtil.stripQuotes(monitorProperties
           .getProperty("SPM_MONITOR_SEND_JVM_NAME", "false")
           .trim()).trim());

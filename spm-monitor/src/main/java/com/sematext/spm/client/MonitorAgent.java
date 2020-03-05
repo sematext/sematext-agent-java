@@ -31,7 +31,6 @@ import com.sematext.spm.client.Sender.MonitorType;
 import com.sematext.spm.client.command.BasicCommandPollingSetup.CommandPollingRunner;
 import com.sematext.spm.client.jmx.JmxServiceContext;
 import com.sematext.spm.client.monitor.SourceConfigProperties;
-import com.sematext.spm.client.tag.AllTagAliasStatsCollector;
 import com.sematext.spm.client.tracing.agent.impl.AgentInitializer;
 import com.sematext.spm.client.util.PropertiesReader;
 
@@ -105,33 +104,6 @@ public final class MonitorAgent {
         } catch (Throwable thr1) {
           System.err.println(MonitorAgent.class + " " + config.getMonitorPropertiesFile().getName() +
                                  " ERROR: error while processing metrics metainfo: '" + thr.getMessage() +
-                                 "' . Error was: " + thr1.getMessage());
-        }
-      }
-    }
-  }
-
-  static class TagAliasSenderTask implements Runnable {
-    private MonitorConfig config;
-    private AllTagAliasStatsCollector allTagsCollector;
-
-    public TagAliasSenderTask(MonitorConfig config) {
-      this.config = config;
-      File propsFile = config.getMonitorPropertiesFile();
-      allTagsCollector = new AllTagAliasStatsCollector(config.getAppToken(), config.getJvmName(), config
-          .getSubType(), propsFile);
-    }
-
-    @Override
-    public void run() {
-      try {
-        config.processTagAliases(allTagsCollector.collect());
-      } catch (Throwable thr) {
-        try {
-          log.error("ERROR", thr);
-        } catch (Throwable thr1) {
-          System.err.println(MonitorAgent.class + " " + config.getMonitorPropertiesFile().getName() +
-                                 " ERROR: error while processing metrics tags: '" + thr.getMessage() +
                                  "' . Error was: " + thr1.getMessage());
         }
       }
@@ -260,7 +232,6 @@ public final class MonitorAgent {
 
     startMonitorThread(metricsConfig);
     startMetricsMetainfoSenderThread(metricsConfig);
-    startTagsSenderThread(metricsConfig);
 
     //we init logs only for applications, we want to see all messages 1 place
     LogFactory.init(metricsConfig.getLogBasedir(), metricsConfig.getLogMaxFileSize(), metricsConfig
@@ -355,41 +326,6 @@ public final class MonitorAgent {
     }
 
     metainfoThread.start();
-  }
-
-  private static void startTagsSenderThread(final MonitorConfig config) {
-    Thread tagsSenderThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        ScheduledExecutorService executorService = null;
-        try {
-          ThreadFactory threadFactory = new PriorityThreadFactory(Executors.defaultThreadFactory(), String
-              .format("tags-%s", MonitorUtil.getMonitorId(config.getMonitorPropertiesFile())),
-                                                                  Thread.MIN_PRIORITY);
-          executorService = Executors.newSingleThreadScheduledExecutor(threadFactory);
-          TagAliasSenderTask task = new TagAliasSenderTask(config);
-          executorService.scheduleAtFixedRate(task, 2 * SANITARY_START_INTERVAL, 10 * 60 * 1000, TimeUnit.MILLISECONDS);
-          executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        } finally {
-          if (executorService != null && !executorService.isTerminated()) {
-            executorService.shutdownNow();
-          }
-        }
-      }
-    }, String.format("tags-%s", MonitorUtil.getMonitorId(config.getMonitorPropertiesFile())));
-
-    // in-process setup shouldn't interfere with regular start/stop procedure of host process, so we have to
-    // mark monitor threads as daemon threads; on the other hand, that presents a problem for standalone monitor,
-    // since JVM automatically exits if only daemon threads are left running. So, we need different setting
-    if (MonitorUtil.MONITOR_RUNTIME_SETUP_JAVAAGENT.get()) {
-      tagsSenderThread.setDaemon(true);
-    } else {
-      tagsSenderThread.setDaemon(false);
-    }
-
-    tagsSenderThread.start();
   }
 
   private static JmxServiceContext prepareJmxServiceContext(String token, String jvmName, String subtype) {

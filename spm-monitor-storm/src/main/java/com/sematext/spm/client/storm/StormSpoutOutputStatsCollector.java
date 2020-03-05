@@ -126,6 +126,7 @@ public class StormSpoutOutputStatsCollector extends MultipleStatsCollector<Tuple
     statValues.getTags().put("storm.spout.stream", stats.getFirst().get(2));
     statValues.getTags().put("storm.spout.executor.id", stats.getFirst().get(3));
     StatValuesHelper.fillEnvTags(statValues, propsFile);
+    StatValuesHelper.fillConfigTags(statValues, MonitorUtil.loadMonitorProperties(propsFile));
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("storm");

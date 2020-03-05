@@ -20,31 +20,60 @@
 
 package com.sematext.spm.client.tag;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sematext.spm.client.Log;
+import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.StatsCollectorBadConfigurationException;
 import com.sematext.spm.client.util.StringUtils;
+import com.sematext.spm.client.util.Tuple;
 
-public final class TagAliasUtils {
+public final class TagUtils {
+  private static final Log LOG = LogFactory.getLog(TagUtils.class);
   private static final String TAG_KEY_VALUE_SEPARATOR = ":";
   private static final String KEY_VALUE_PATTERN = "[a-zA-Z0-9_\\-=\\+\\.]*";
 
-  private TagAliasUtils() {
+  private static Set<Tuple<String, String>> LAST_CONFIG_TAGS = null;
+  private static long LAST_CONFIG_TAGS_RELOAD_TIME = -1;
+  private static long ONE_MINUTE_MS = 60 * 1000;
+  private static long CONFIG_TAGS_RELOAD_INTERVAL = 3 * ONE_MINUTE_MS;
+  
+  private TagUtils() {
   }
+  
+  public static Set<Tuple<String, String>> getConfigTags(Properties monitorProperties) {
+    long now = System.currentTimeMillis();
+    if (LAST_CONFIG_TAGS == null || (now - CONFIG_TAGS_RELOAD_INTERVAL) > LAST_CONFIG_TAGS_RELOAD_TIME) {
+      try {
+        LAST_CONFIG_TAGS = parseTags(
+            StringUtils.removeQuotes(monitorProperties.getProperty("SPM_MONITOR_TAGS", "").trim()));
+      } catch (Throwable thr) {
+        LOG.error("Error while reading config tags", thr);
+        LAST_CONFIG_TAGS = Collections.EMPTY_SET;
+      }
 
-  public static Set<String> parseTagAliases(String tagsString) throws StatsCollectorBadConfigurationException {
+      LAST_CONFIG_TAGS_RELOAD_TIME = now;
+    }
+   
+    return LAST_CONFIG_TAGS;
+  }
+  
+  private static Set<Tuple<String, String>> parseTags(String tagsString)
+      throws StatsCollectorBadConfigurationException {
     if (StringUtils.isEmpty(tagsString)) {
-      return new HashSet<String>();
+      return new HashSet<Tuple<String, String>>();
     }
 
     String[] tagsArray = tagsString.split(",");
 
     Pattern keyValuePattern = Pattern.compile(KEY_VALUE_PATTERN);
 
-    Set<String> tags = new HashSet<String>();
+    Set<Tuple<String, String>> tags = new HashSet<Tuple<String, String>>();
 
     for (String tagString : tagsArray) {
       String trimmedTag = StringUtils.trim(tagString);
@@ -80,7 +109,7 @@ public final class TagAliasUtils {
               "Tag's value can't be empty, can contain alphanumeric characters and _-+=. : " + keyValue[1]);
         }
 
-        tags.add(trimmedTag);
+        tags.add(Tuple.tuple(keyValue[0].trim(), keyValue[1].trim()));
       }
     }
     return tags;
