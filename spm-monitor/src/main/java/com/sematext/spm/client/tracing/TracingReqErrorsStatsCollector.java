@@ -71,6 +71,7 @@ public class TracingReqErrorsStatsCollector extends MultipleStatsCollector<Reque
     statValues.getTags().put("tracing.request", metric.getId());
 
     StatValuesHelper.fillEnvTags(statValues, propsFile);
+    StatValuesHelper.fillConfigTags(statValues, MonitorUtil.loadMonitorProperties(propsFile));
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("tracing");

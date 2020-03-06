@@ -128,6 +128,7 @@ public class StormBoltInputStatsCollector extends MultipleStatsCollector<Tuple<L
     statValues.getTags().put("storm.bolt.stream.component", stats.getFirst().get(4));
 
     StatValuesHelper.fillEnvTags(statValues, propsFile);
+    StatValuesHelper.fillConfigTags(statValues, MonitorUtil.loadMonitorProperties(propsFile));
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("storm");

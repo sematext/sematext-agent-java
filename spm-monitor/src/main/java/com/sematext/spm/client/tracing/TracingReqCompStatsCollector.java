@@ -70,6 +70,7 @@ public class TracingReqCompStatsCollector extends MultipleStatsCollector<Request
     statValues.getTags().put("tracing.component", s.getId().getComponent());
 
     StatValuesHelper.fillEnvTags(statValues, propsFile);
+    StatValuesHelper.fillConfigTags(statValues, MonitorUtil.loadMonitorProperties(propsFile));
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("tracing");

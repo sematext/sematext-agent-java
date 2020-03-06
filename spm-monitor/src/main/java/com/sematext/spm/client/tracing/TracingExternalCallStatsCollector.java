@@ -70,6 +70,7 @@ public class TracingExternalCallStatsCollector extends MultipleStatsCollector<Ex
     statValues.getTags().put("tracing.external.call.tag", call.tag());
 
     StatValuesHelper.fillEnvTags(statValues, propsFile);
+    StatValuesHelper.fillConfigTags(statValues, MonitorUtil.loadMonitorProperties(propsFile));
     statValues.setTimestamp(System.currentTimeMillis());
     statValues.setAppToken(appToken);
     statValues.setMetricNamespace("tracing");

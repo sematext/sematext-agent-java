@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.sematext.spm.client.aggregation.AgentAggregationFunction;
@@ -35,6 +36,9 @@ import com.sematext.spm.client.observation.AttributeObservation;
 import com.sematext.spm.client.observation.ObservationBean;
 import com.sematext.spm.client.observation.PercentilesDefinition;
 import com.sematext.spm.client.sender.SenderUtil;
+import com.sematext.spm.client.tag.TagUtils;
+import com.sematext.spm.client.util.StringUtils;
+import com.sematext.spm.client.util.Tuple;
 
 public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T extends StatsExtractor<S, O>,
     O extends ObservationBean<A, DATA_PROVIDER>, A extends AttributeObservation<DATA_SOURCE>, DATA_PROVIDER, DATA_SOURCE> {
@@ -304,6 +308,10 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
       if (cluster != null) {
         partlyResolvedObservationConfigTags.put(K8S_CLUSTER_TAG, cluster);
       }
+    }
+    
+    for (Tuple<String, String> tuple : TagUtils.getConfigTags(monitorProperties)) {
+      partlyResolvedObservationConfigTags.put(tuple.getFirst(), tuple.getSecond());
     }
 
     partlyResolvedObservationConfigTagsAsString = partlyResolvedObservationConfigTags.toString();
