@@ -702,7 +702,7 @@ public final class MonitorUtil {
   private static long ONE_MINUTE_MS = 60 * 1000;
   private static long MONITOR_PROPERTIES_RELOAD_INTERVAL = ONE_MINUTE_MS;
 
-  public static Properties loadMonitorProperties(File monitorPropertiesFile) {
+  public static synchronized Properties loadMonitorProperties(File monitorPropertiesFile) {
     long now = System.currentTimeMillis();
     String fileName = monitorPropertiesFile.getName();
     Properties monitorProperties = LOADED_MONITOR_PROPERTIES.get(fileName);
