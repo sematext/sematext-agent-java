@@ -47,7 +47,6 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
 
   public static final String JVM_NAME_TAG = "jvm";
   public static final String CONTAINER_HOSTNAME_TAG = "container.hostname";
-  public static final String CONTAINER_HOST_HOSTNAME_TAG = "container.host.hostname";
   public static final String CONTAINER_NAME_TAG = "container.name";
   public static final String CONTAINER_ID_TAG = "container.id";
   public static final String CONTAINER_IMAGE_NAME_TAG = "container.image.name";
@@ -263,11 +262,8 @@ public abstract class GenericExtractor<S extends StatsExtractorConfig<O>, T exte
     partlyResolvedObservationConfigTags
         .put(OS_HOST_TAG, SenderUtil.calculateHostParameterValue());
 
-    String dockerHostname = SenderUtil.getDockerHostname();
-    if (dockerHostname != null) {
-      partlyResolvedObservationConfigTags.put(CONTAINER_HOST_HOSTNAME_TAG, dockerHostname);
-    }
-    String containerHostname = MonitorUtil.getContainerHostname(monitorPropertiesFile, monitorProperties, SenderUtil.isInContainer());
+    String containerHostname = MonitorUtil.getContainerHostname(monitorPropertiesFile, monitorProperties,
+        SenderUtil.isInContainer());
     if (containerHostname != null) {
       partlyResolvedObservationConfigTags.put(CONTAINER_HOSTNAME_TAG, containerHostname);
     }

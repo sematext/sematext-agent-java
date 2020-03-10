@@ -714,8 +714,7 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
   }
 
   private static final Set<String> RESERVED_TAG_NAMES = new HashSet<String>(Arrays.asList(
-      GenericExtractor.OS_HOST_TAG, GenericExtractor.JVM_NAME_TAG,
-      GenericExtractor.CONTAINER_HOST_HOSTNAME_TAG, GenericExtractor.CONTAINER_HOSTNAME_TAG));
+      GenericExtractor.OS_HOST_TAG, GenericExtractor.JVM_NAME_TAG, GenericExtractor.CONTAINER_HOSTNAME_TAG));
 
   private void checkValidTagNames(File configFile, StatsExtractorConfig<?> newConfig)
       throws ConfigurationFailedException {

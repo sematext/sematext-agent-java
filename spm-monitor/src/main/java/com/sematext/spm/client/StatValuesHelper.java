@@ -40,7 +40,6 @@ public final class StatValuesHelper {
       statValues.getTags().put("os.host", "unknown");
     }
 
-    addTag(statValues, "container.host.hostname", SenderUtil.getDockerHostname());
     try {
       String containerHostname = MonitorUtil.getContainerHostname(propsFile, SenderUtil.isInContainer());
       addTag(statValues, "container.hostname", containerHostname);
@@ -80,25 +79,6 @@ public final class StatValuesHelper {
   private static void addTag(StatValues statValues, String name, String value) {
     if (value != null) {
       statValues.getTags().put(name, value);
-    }
-  }
-
-  public static void fillEnvTagsForTagAliases(StatValues statValues) {
-    try {
-      statValues.getTags().put("os.host", SenderUtil.calculateHostParameterValue());
-    } catch (Throwable thr) {
-      LOG.warn("Can't resolve os.host value, setting to unknown", thr);
-      statValues.getTags().put("os.host", "unknown");
-    }
-
-    addTag(statValues, "container.host.hostname", SenderUtil.getDockerHostname());
-
-    try {
-      if (SenderUtil.isInContainer()) {
-        addTag(statValues, "container.id", SenderUtil.getContainerId());
-      }
-    } catch (Throwable thr) {
-      LOG.warn("Can't resolve container id tag, leaving empty", thr);
     }
   }
 }
