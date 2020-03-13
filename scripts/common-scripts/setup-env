@@ -66,10 +66,10 @@ function setup_env {
     done
     
     if [ ! -f $SPM_HOME/properties/agent.properties ]; then
-      sudo touch $SPM_HOME/properties/agent.properties
+      touch $SPM_HOME/properties/agent.properties
     fi
     if [ ! -f $SPM_HOME/properties/tracing.properties ]; then
-      sudo touch $SPM_HOME/properties/tracing.properties
+      touch $SPM_HOME/properties/tracing.properties
     fi
 
     if [ ! -z "$REGION_PARAM" ]; then
@@ -90,82 +90,82 @@ function setup_env {
       SED_SPM_TRACING_RECEIVER_URL=$(echo "$SPM_TRACING_RECEIVER_URL" | sed 's/\//\\\//g')
 
       if `grep server_base_url $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SED_SPM_METRICS_RECEIVER_URL/" $SPM_HOME/properties/agent.properties
+        sed -i -e "s/.*server_base_url.*/server_base_url=$SED_SPM_METRICS_RECEIVER_URL/" $SPM_HOME/properties/agent.properties
       else
-        sudo echo "server_base_url=$SPM_METRICS_RECEIVER_URL" >> $SPM_HOME/properties/agent.properties
+        echo "server_base_url=$SPM_METRICS_RECEIVER_URL" >> $SPM_HOME/properties/agent.properties
       fi
 
       if `grep server_base_url $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SED_SPM_TRACING_RECEIVER_URL/" $SPM_HOME/properties/tracing.properties
+        sed -i -e "s/.*server_base_url.*/server_base_url=$SED_SPM_TRACING_RECEIVER_URL/" $SPM_HOME/properties/tracing.properties
       else
-        sudo echo "server_base_url=$SPM_TRACING_RECEIVER_URL" >> $SPM_HOME/properties/tracing.properties
+        echo "server_base_url=$SPM_TRACING_RECEIVER_URL" >> $SPM_HOME/properties/tracing.properties
       fi
     fi
     
     if [ ! -z "$SPM_TRACING_RECEIVER_URL_PARAM" ]; then
       if `grep server_base_url $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
         SPM_TRACING_RECEIVER_URL=$(echo "$SPM_TRACING_RECEIVER_URL_PARAM" | sed 's/\//\\\//g')
-        sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SPM_TRACING_RECEIVER_URL/" $SPM_HOME/properties/tracing.properties
+        sed -i -e "s/.*server_base_url.*/server_base_url=$SPM_TRACING_RECEIVER_URL/" $SPM_HOME/properties/tracing.properties
       else
-        sudo echo "server_base_url=$SPM_TRACING_RECEIVER_URL_PARAM" >> $SPM_HOME/properties/tracing.properties
+        echo "server_base_url=$SPM_TRACING_RECEIVER_URL_PARAM" >> $SPM_HOME/properties/tracing.properties
       fi
     fi
 
     if [ ! -z "$SPM_MONITORING_RECEIVER_URL_PARAM" ]; then
       if `grep server_base_url $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
         SPM_METRICS_RECEIVER_URL=$(echo "$SPM_MONITORING_RECEIVER_URL_PARAM" | sed 's/\//\\\//g')
-        sudo sed -i -e "s/.*server_base_url.*/server_base_url=$SPM_METRICS_RECEIVER_URL/" $SPM_HOME/properties/agent.properties
+        sed -i -e "s/.*server_base_url.*/server_base_url=$SPM_METRICS_RECEIVER_URL/" $SPM_HOME/properties/agent.properties
       else
-        sudo echo "server_base_url=$SPM_MONITORING_RECEIVER_URL_PARAM" >> $SPM_HOME/properties/agent.properties
+        echo "server_base_url=$SPM_MONITORING_RECEIVER_URL_PARAM" >> $SPM_HOME/properties/agent.properties
       fi
     fi
     
     if [ "true" == "$PROXY_HOST_PARAM_SET" ]; then
       if `grep proxy_host $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*proxy_host.*/proxy_host=$PROXY_HOST_PARAM/" $SPM_HOME/properties/agent.properties
+        sed -i -e "s/.*proxy_host.*/proxy_host=$PROXY_HOST_PARAM/" $SPM_HOME/properties/agent.properties
       else
-        sudo echo "proxy_host=$PROXY_HOST_PARAM" >> $SPM_HOME/properties/agent.properties
+        echo "proxy_host=$PROXY_HOST_PARAM" >> $SPM_HOME/properties/agent.properties
       fi
       if `grep proxy_host $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*proxy_host.*/proxy_host=$PROXY_HOST_PARAM/" $SPM_HOME/properties/tracing.properties
+        sed -i -e "s/.*proxy_host.*/proxy_host=$PROXY_HOST_PARAM/" $SPM_HOME/properties/tracing.properties
       else
-        sudo echo "proxy_host=$PROXY_HOST_PARAM" >> $SPM_HOME/properties/tracing.properties
+        echo "proxy_host=$PROXY_HOST_PARAM" >> $SPM_HOME/properties/tracing.properties
       fi
     fi
     if [ "true" == "$PROXY_PORT_PARAM_SET" ]; then
       if `grep proxy_port $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*proxy_port.*/proxy_port=$PROXY_PORT_PARAM/" $SPM_HOME/properties/agent.properties
+        sed -i -e "s/.*proxy_port.*/proxy_port=$PROXY_PORT_PARAM/" $SPM_HOME/properties/agent.properties
       else
-        sudo echo "proxy_port=$PROXY_PORT_PARAM" >> $SPM_HOME/properties/agent.properties
+        echo "proxy_port=$PROXY_PORT_PARAM" >> $SPM_HOME/properties/agent.properties
       fi
       if `grep proxy_port $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*proxy_port.*/proxy_port=$PROXY_PORT_PARAM/" $SPM_HOME/properties/tracing.properties
+        sed -i -e "s/.*proxy_port.*/proxy_port=$PROXY_PORT_PARAM/" $SPM_HOME/properties/tracing.properties
       else
-        sudo echo "proxy_port=$PROXY_PORT_PARAM" >> $SPM_HOME/properties/tracing.properties
+        echo "proxy_port=$PROXY_PORT_PARAM" >> $SPM_HOME/properties/tracing.properties
       fi
     fi
     if [ "true" == "$PROXY_USER_PARAM_SET" ]; then
       if `grep proxy_user_name $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*proxy_user_name.*/proxy_user_name=$PROXY_USER_PARAM/" $SPM_HOME/properties/agent.properties
+        sed -i -e "s/.*proxy_user_name.*/proxy_user_name=$PROXY_USER_PARAM/" $SPM_HOME/properties/agent.properties
       else
-        sudo echo "proxy_user_name=$PROXY_USER_PARAM" >> $SPM_HOME/properties/agent.properties
+        echo "proxy_user_name=$PROXY_USER_PARAM" >> $SPM_HOME/properties/agent.properties
       fi
       if `grep proxy_user_name $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*proxy_user_name.*/proxy_user_name=$PROXY_USER_PARAM/" $SPM_HOME/properties/tracing.properties
+        sed -i -e "s/.*proxy_user_name.*/proxy_user_name=$PROXY_USER_PARAM/" $SPM_HOME/properties/tracing.properties
       else
-        sudo echo "proxy_user_name=$PROXY_USER_PARAM" >> $SPM_HOME/properties/tracing.properties
+        echo "proxy_user_name=$PROXY_USER_PARAM" >> $SPM_HOME/properties/tracing.properties
       fi
     fi
     if [ "true" == "$PROXY_PASSWORD_PARAM_SET" ]; then
       if `grep proxy_password $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*proxy_password.*/proxy_password=$PROXY_PASSWORD_PARAM/" $SPM_HOME/properties/agent.properties
+        sed -i -e "s/.*proxy_password.*/proxy_password=$PROXY_PASSWORD_PARAM/" $SPM_HOME/properties/agent.properties
       else
-        sudo echo "proxy_password=$PROXY_PASSWORD_PARAM" >> $SPM_HOME/properties/agent.properties
+        echo "proxy_password=$PROXY_PASSWORD_PARAM" >> $SPM_HOME/properties/agent.properties
       fi
       if `grep proxy_password $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
-        sudo sed -i -e "s/.*proxy_password.*/proxy_password=$PROXY_PASSWORD_PARAM/" $SPM_HOME/properties/tracing.properties
+        sed -i -e "s/.*proxy_password.*/proxy_password=$PROXY_PASSWORD_PARAM/" $SPM_HOME/properties/tracing.properties
       else
-        sudo echo "proxy_password=$PROXY_PASSWORD_PARAM" >> $SPM_HOME/properties/tracing.properties
+        echo "proxy_password=$PROXY_PASSWORD_PARAM" >> $SPM_HOME/properties/tracing.properties
       fi
     fi
 }
