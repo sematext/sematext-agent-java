@@ -338,7 +338,7 @@ public final class SenderUtil {
         }
       }
     } catch (Throwable thr) {
-      LOG.error("Error while reading from " + RESOLVED_HOSTNAME_FILE);
+      LOG.error("Error while reading from " + RESOLVED_HOSTNAME_FILE, thr);
     }
 
     return null;
