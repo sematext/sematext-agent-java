@@ -28,11 +28,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,6 +78,11 @@ public final class MonitorUtil {
   // TODO done this way for reuse by various components, refactor in future
   public static final Map<String, CollectorFileConfig> FILE_NAME_TO_LOADED_YAML_CONFIG = new HashMap<String, CollectorFileConfig>();
 
+  // pre-defined list of all possible property names which could contain the hostname
+  private static final List<String> HOSTNAME_CONTAINING_PROPERTIES_NAMES;
+
+  private static final Set<String> REDIS_HOST_PROPERTIES_VARIANTS;
+  
   public static String JAVA_VERSION;
   public static int JAVA_MAJOR_VERSION;
 
@@ -99,6 +105,23 @@ public final class MonitorUtil {
       JAVA_VERSION = "8";
       JAVA_MAJOR_VERSION = 8;
     }
+  }
+  
+  static {
+    PROPERTY_VARIANTS = new HashMap<String, List<String>>();
+    
+    HOSTNAME_CONTAINING_PROPERTIES_NAMES = new ArrayList<String>();
+    HOSTNAME_CONTAINING_PROPERTIES_NAMES.addAll(getPropertyVariants("SPM_MONITOR_ES_NODE_HOSTPORT"));
+    HOSTNAME_CONTAINING_PROPERTIES_NAMES.addAll(getPropertyVariants("SPM_MONITOR_MYSQL_DB_HOST_PORT"));
+    HOSTNAME_CONTAINING_PROPERTIES_NAMES.addAll(getPropertyVariants("REDIS_HOST"));
+    HOSTNAME_CONTAINING_PROPERTIES_NAMES.addAll(getPropertyVariants("SPM_MONITOR_HAPROXY_STATS_URL"));
+    HOSTNAME_CONTAINING_PROPERTIES_NAMES.addAll(getPropertyVariants("SPM_MONITOR_NGINX_PLUS_STATUS_URL"));
+        // following properties should not be used, they may not point to the host being monitored
+        // "SPARK_API_HOST",
+        // "NIMBUS_HOST"
+    
+    REDIS_HOST_PROPERTIES_VARIANTS = new HashSet<String>();
+    REDIS_HOST_PROPERTIES_VARIANTS.addAll(getPropertyVariants("REDIS_HOST"));
   }
 
   /**
@@ -530,19 +553,6 @@ public final class MonitorUtil {
 
   }
 
-  // pre-defined list of all possible property names which could contain the hostname
-  private static final List<String> HOSTNAME_CONTAINING_PROPERTIES_NAMES = Arrays.asList(
-      "SPM_MONITOR_ES_NODE_HOSTPORT",
-      "SPM_MONITOR_MYSQL_DB_HOST_PORT",
-      "REDIS_HOST",
-      "SPM_MONITOR_HAPROXY_STATS_URL",
-      "SPM_MONITOR_NGINX_PLUS_STATUS_URL"
-
-      // following properties should not be used, they may not to point to the host being monitored
-      // "SPARK_API_HOST",
-      // "NIMBUS_HOST"
-  );
-
   private static long hostnameReadIntervalMs = 30 * 1000l;
 
   private static long lastContainerHostnameCalculationTime = -1l;
@@ -612,8 +622,9 @@ public final class MonitorUtil {
 
               if (hostname != null && !hostname.trim().equals("")) {
                 // special logic for REDIS_HOST/PORT and possible "localhost" value
-                if (hostname.equalsIgnoreCase("localhost") && propName.equals("REDIS_HOST")) {
-                  String port = monitorProperties.getProperty("REDIS_PORT", null);
+                if (hostname.equalsIgnoreCase("localhost") &&
+                    REDIS_HOST_PROPERTIES_VARIANTS.contains(propName)) {
+                  String port = MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties, "REDIS_PORT", null);
                   if (port != null && !port.trim().equals("")) {
                     hostname = hostname + ":" + port;
                   }
@@ -721,5 +732,44 @@ public final class MonitorUtil {
     }
     
     return monitorProperties;
+  }
+  
+
+  private static final Map<String, List<String>> PROPERTY_VARIANTS;
+
+  // should return the variants in order: ST_*, SPM_*, *
+  public static List<String> getPropertyVariants(String configPropertyName) {
+    if (PROPERTY_VARIANTS.containsKey(configPropertyName)) {
+      return PROPERTY_VARIANTS.get(configPropertyName);
+    } else {
+      List<String> propertyVariants = new ArrayList<String>();
+      
+      if (configPropertyName.startsWith("ST_")) {
+        propertyVariants.add(configPropertyName);
+        propertyVariants.add(configPropertyName.replaceFirst("ST_", "SPM_"));
+        propertyVariants.add(configPropertyName.replaceFirst("ST_", ""));
+      } else if (configPropertyName.startsWith("SPM_")) {
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_", "ST_"));
+        propertyVariants.add(configPropertyName);
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_", ""));
+      } else {
+        propertyVariants.add("ST_" + configPropertyName);
+        propertyVariants.add("SPM_" + configPropertyName);
+        propertyVariants.add(configPropertyName);
+      }
+      
+      PROPERTY_VARIANTS.put(configPropertyName, propertyVariants);
+      return propertyVariants;
+    }
+  }
+  
+  public static String getPropertyFromAnyNameVariant(Properties properties, String basePropertyName, String defaultValue) {
+    for (String propVariant : getPropertyVariants(basePropertyName)) {
+      String value = properties.getProperty(propVariant);
+      if (value != null) {
+        return value;
+      }
+    }
+    return defaultValue;
   }
 }
