@@ -649,6 +649,8 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
 
   private static final Map<String, Long> FILE_TO_LAST_MODIFIED = new HashMap<String, Long>();
   private static final Map<String, StatsExtractorConfig<?>> FILE_TO_LAST_CREATED_CONFIG_BEAN_MAP = new HashMap<String, StatsExtractorConfig<?>>();
+  
+  private static final Map<String, List<String>> PROPERTY_VARIANTS = new HashMap<String, List<String>>();
 
   private StatsExtractorConfig<?> getStatsExtractorConfig(File configFile, String configFileContent,
                                                           Properties monitorProperties, MonitorConfig monitorConfig)
@@ -657,10 +659,13 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
 
     // replace all monitor properties placeholders with real values from properties file
     for (Object property : monitorProperties.keySet()) {
-      String propertyNamePlaceholder = "${" + String.valueOf(property) + "}";
       String propertyValue = MonitorUtil.stripQuotes(monitorProperties.getProperty(String.valueOf(property), "").trim())
           .trim();
-      configFileContent = configFileContent.replace(propertyNamePlaceholder, propertyValue);
+
+      for (String propertyNameVariant : getPropertyVariants(String.valueOf(property))) {
+        String propertyNameVariantPlaceholder = "${" + String.valueOf(propertyNameVariant) + "}";
+        configFileContent = configFileContent.replace(propertyNameVariantPlaceholder, propertyValue);
+      }
     }
     if (LOG.isDebugEnabled()) {
       LOG.debug("Config file " + configFile + " after resolving the placeholders: " + configFileContent);
@@ -710,6 +715,32 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
       FILE_TO_LAST_CREATED_CONFIG_BEAN_MAP.put(fileKey, newConfig);
 
       return newConfig;
+    }
+  }
+
+  // should return the variants in order: ST_*, SPM_*, *
+  protected List<String> getPropertyVariants(String configPropertyName) {
+    if (PROPERTY_VARIANTS.containsKey(configPropertyName)) {
+      return PROPERTY_VARIANTS.get(configPropertyName);
+    } else {
+      List<String> propertyVariants = new ArrayList<String>();
+      
+      if (configPropertyName.startsWith("ST_")) {
+        propertyVariants.add(configPropertyName);
+        propertyVariants.add(configPropertyName.replace("ST_", "SPM_"));
+        propertyVariants.add(configPropertyName.replace("ST_", ""));
+      } else if (configPropertyName.startsWith("SPM_")) {
+        propertyVariants.add(configPropertyName.replace("SPM_", "ST_"));
+        propertyVariants.add(configPropertyName);
+        propertyVariants.add(configPropertyName.replace("SPM_", ""));
+      } else {
+        propertyVariants.add("ST_" + configPropertyName);
+        propertyVariants.add("SPM_" + configPropertyName);
+        propertyVariants.add(configPropertyName);
+      }
+      
+      PROPERTY_VARIANTS.put(configPropertyName, propertyVariants);
+      return propertyVariants;
     }
   }
 
