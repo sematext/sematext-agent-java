@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -154,5 +155,34 @@ public class GenericStatsCollectorsFactoryTest {
     f.resolveAttributePlaceholders(p, m, allTags);
     Assert.assertEquals(allTags.get("topic"), "mytopic");
     Assert.assertEquals(allTags.get("partition"), "1");
+  }
+  
+  @Test
+  public void testGetPropertyVariants() {
+    GenericStatsCollectorsFactory f = new GenericStatsCollectorsFactory();
+    List<String> variants = f.getPropertyVariants("SPM_SOME_PROP");
+    Assert.assertEquals(3, variants.size());
+    Assert.assertEquals("ST_SOME_PROP", variants.get(0));
+    Assert.assertEquals("SPM_SOME_PROP", variants.get(1));
+    Assert.assertEquals("SOME_PROP", variants.get(2));
+
+    variants = f.getPropertyVariants("ST_SOME_PROP");
+    Assert.assertEquals(3, variants.size());
+    Assert.assertEquals("ST_SOME_PROP", variants.get(0));
+    Assert.assertEquals("SPM_SOME_PROP", variants.get(1));
+    Assert.assertEquals("SOME_PROP", variants.get(2));
+
+    variants = f.getPropertyVariants("SOME_PROP");
+    Assert.assertEquals(3, variants.size());
+    Assert.assertEquals("ST_SOME_PROP", variants.get(0));
+    Assert.assertEquals("SPM_SOME_PROP", variants.get(1));
+    Assert.assertEquals("SOME_PROP", variants.get(2));
+    
+    variants = f.getPropertyVariants("ST_TEST_PROP");
+    Assert.assertEquals(3, variants.size());
+    Assert.assertEquals("ST_TEST_PROP", variants.get(0));
+    Assert.assertEquals("SPM_TEST_PROP", variants.get(1));
+    Assert.assertEquals("TEST_PROP", variants.get(2));
+
   }
 }
