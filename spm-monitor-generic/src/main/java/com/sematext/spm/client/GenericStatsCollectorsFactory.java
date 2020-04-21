@@ -658,6 +658,8 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
     String fileKey = configFile.getAbsolutePath();
 
     // replace all monitor properties placeholders with real values from properties file
+    // NOTE: assumption is that it is ok if behavior will be undefined when two props have the same variants (ST_PROP
+    // and SPM_PROP) because order of execution would affect the end result 
     for (Object property : monitorProperties.keySet()) {
       String propertyValue = MonitorUtil.stripQuotes(monitorProperties.getProperty(String.valueOf(property), "").trim())
           .trim();
