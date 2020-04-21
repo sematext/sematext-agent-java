@@ -727,12 +727,12 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
       
       if (configPropertyName.startsWith("ST_")) {
         propertyVariants.add(configPropertyName);
-        propertyVariants.add(configPropertyName.replace("ST_", "SPM_"));
-        propertyVariants.add(configPropertyName.replace("ST_", ""));
+        propertyVariants.add(configPropertyName.replaceFirst("ST_", "SPM_"));
+        propertyVariants.add(configPropertyName.replaceFirst("ST_", ""));
       } else if (configPropertyName.startsWith("SPM_")) {
-        propertyVariants.add(configPropertyName.replace("SPM_", "ST_"));
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_", "ST_"));
         propertyVariants.add(configPropertyName);
-        propertyVariants.add(configPropertyName.replace("SPM_", ""));
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_", ""));
       } else {
         propertyVariants.add("ST_" + configPropertyName);
         propertyVariants.add("SPM_" + configPropertyName);

@@ -177,5 +177,12 @@ public class GenericStatsCollectorsFactoryTest {
     Assert.assertEquals("ST_SOME_PROP", variants.get(0));
     Assert.assertEquals("SPM_SOME_PROP", variants.get(1));
     Assert.assertEquals("SOME_PROP", variants.get(2));
+    
+    variants = f.getPropertyVariants("ST_TEST_PROP");
+    Assert.assertEquals(3, variants.size());
+    Assert.assertEquals("ST_TEST_PROP", variants.get(0));
+    Assert.assertEquals("SPM_TEST_PROP", variants.get(1));
+    Assert.assertEquals("TEST_PROP", variants.get(2));
+
   }
 }
