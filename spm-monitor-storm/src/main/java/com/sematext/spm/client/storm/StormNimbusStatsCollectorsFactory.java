@@ -127,9 +127,10 @@ public class StormNimbusStatsCollectorsFactory extends StatsCollectorsFactory<St
       throws StatsCollectorBadConfigurationException {
     Integer nimbusPort = null;
     String nimbusHost = null;
-    String nimbusHostParam = MonitorUtil.stripQuotes(monitorProperties.getProperty("NIMBUS_HOST", "localhost").trim())
-        .trim();
-    String portParam = MonitorUtil.stripQuotes(monitorProperties.getProperty("NIMBUS_PORT", "localhost").trim()).trim();
+    String nimbusHostParam = MonitorUtil.stripQuotes(MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties,
+        "NIMBUS_HOST", "localhost").trim()).trim();
+    String portParam = MonitorUtil.stripQuotes(MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties,
+        "NIMBUS_PORT", "localhost").trim()).trim();
     if (nimbusHostParam != null && !nimbusHostParam.isEmpty()) {
       nimbusHost = nimbusHostParam;
     }

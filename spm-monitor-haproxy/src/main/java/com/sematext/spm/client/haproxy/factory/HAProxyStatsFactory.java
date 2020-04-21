@@ -53,13 +53,12 @@ public class HAProxyStatsFactory extends StatsCollectorsFactory<StatsCollector<?
                                                              List<? extends StatsCollector<?>> currentCollectors,
                                                              final MonitorConfig monitorConfig) {
     if (collectors == null) {
-      String statsUrl = MonitorUtil.stripQuotes(monitorProperties
-                                                    .getProperty("SPM_MONITOR_HAPROXY_STATS_URL", "http://localhost/haproxy_stats;csv")
-                                                    .trim()).trim();
-      String user = MonitorUtil.stripQuotes(monitorProperties.getProperty("SPM_MONITOR_HAPROXY_USER", "").trim())
-          .trim();
-      String password = MonitorUtil
-          .stripQuotesIfEnclosed(monitorProperties.getProperty("SPM_MONITOR_HAPROXY_PASSWORD", ""));
+      String statsUrl = MonitorUtil.stripQuotes(MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties,
+          "SPM_MONITOR_HAPROXY_STATS_URL", "http://localhost/haproxy_stats;csv").trim()).trim();
+      String user = MonitorUtil.stripQuotes(MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties,
+          "SPM_MONITOR_HAPROXY_USER", "").trim()).trim();
+      String password = MonitorUtil.stripQuotesIfEnclosed(MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties,
+          "SPM_MONITOR_HAPROXY_PASSWORD", ""));
 
       HttpDataSourceAuthentication auth = null;
       if (user != null && password != null) {

@@ -54,9 +54,12 @@ public class RedisStatsCollectorsFactory extends StatsCollectorsFactory<StatsCol
       throws StatsCollectorBadConfigurationException {
 
     Integer redisPort = null;
-    String hostParam = MonitorUtil.stripQuotes(monitorProperties.getProperty("REDIS_HOST", "localhost").trim()).trim();
-    String passwordParam = MonitorUtil.stripQuotesIfEnclosed(monitorProperties.getProperty("REDIS_PASSWORD", ""));
-    String portParam = MonitorUtil.stripQuotes(monitorProperties.getProperty("REDIS_PORT", "6379").trim()).trim();
+    String hostParam = MonitorUtil.stripQuotes(
+        MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties, "REDIS_HOST", "localhost").trim()).trim();
+    String passwordParam = MonitorUtil.stripQuotesIfEnclosed(
+        MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties, "REDIS_PASSWORD", ""));
+    String portParam = MonitorUtil.stripQuotes(
+        MonitorUtil.getPropertyFromAnyNameVariant(monitorProperties, "REDIS_PORT", "6379").trim()).trim();
 
     if (portParam != null && !portParam.isEmpty()) {
       try {
