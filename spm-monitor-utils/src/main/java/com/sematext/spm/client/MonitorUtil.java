@@ -744,20 +744,38 @@ public final class MonitorUtil {
     } else {
       List<String> propertyVariants = new ArrayList<String>();
       
-      if (configPropertyName.startsWith("ST_")) {
+      if (configPropertyName.startsWith("ST_MONITOR_")) {
         propertyVariants.add(configPropertyName);
+        propertyVariants.add(configPropertyName.replaceFirst("ST_MONITOR_", "ST_"));
+        propertyVariants.add(configPropertyName.replaceFirst("ST_", "SPM_"));
+        propertyVariants.add(configPropertyName.replaceFirst("ST_MONITOR_", "SPM_"));
+        propertyVariants.add(configPropertyName.replaceFirst("ST_MONITOR_", ""));
+      } else if (configPropertyName.startsWith("ST_")) {
+        propertyVariants.add(configPropertyName.replaceFirst("ST_", "ST_MONITOR_"));
+        propertyVariants.add(configPropertyName);
+        propertyVariants.add(configPropertyName.replaceFirst("ST_", "SPM_MONITOR_"));
         propertyVariants.add(configPropertyName.replaceFirst("ST_", "SPM_"));
         propertyVariants.add(configPropertyName.replaceFirst("ST_", ""));
-      } else if (configPropertyName.startsWith("SPM_")) {
+      } else if (configPropertyName.startsWith("SPM_MONITOR_")) {
         propertyVariants.add(configPropertyName.replaceFirst("SPM_", "ST_"));
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_MONITOR_", "ST_"));
+        propertyVariants.add(configPropertyName);
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_MONITOR_", "SPM_"));
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_MONITOR_", ""));
+      } else if (configPropertyName.startsWith("SPM_")) {
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_", "ST_MONITOR_"));
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_", "ST_"));
+        propertyVariants.add(configPropertyName.replaceFirst("SPM_", "SPM_MONITOR_"));
         propertyVariants.add(configPropertyName);
         propertyVariants.add(configPropertyName.replaceFirst("SPM_", ""));
       } else {
+        propertyVariants.add("ST_MONITOR_" + configPropertyName);
         propertyVariants.add("ST_" + configPropertyName);
+        propertyVariants.add("SPM_MONITOR_" + configPropertyName);
         propertyVariants.add("SPM_" + configPropertyName);
         propertyVariants.add(configPropertyName);
       }
-      
+        
       PROPERTY_VARIANTS.put(configPropertyName, propertyVariants);
       return propertyVariants;
     }

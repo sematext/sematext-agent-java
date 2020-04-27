@@ -29,28 +29,52 @@ public class MonitorUtilTest {
   @Test
   public void testGetPropertyVariants() {
     List<String> variants = MonitorUtil.getPropertyVariants("SPM_SOME_PROP");
-    Assert.assertEquals(3, variants.size());
-    Assert.assertEquals("ST_SOME_PROP", variants.get(0));
-    Assert.assertEquals("SPM_SOME_PROP", variants.get(1));
-    Assert.assertEquals("SOME_PROP", variants.get(2));
+    Assert.assertEquals(5, variants.size());
+    Assert.assertEquals("ST_MONITOR_SOME_PROP", variants.get(0));
+    Assert.assertEquals("ST_SOME_PROP", variants.get(1));
+    Assert.assertEquals("SPM_MONITOR_SOME_PROP", variants.get(2));
+    Assert.assertEquals("SPM_SOME_PROP", variants.get(3));
+    Assert.assertEquals("SOME_PROP", variants.get(4));
+
+    variants = MonitorUtil.getPropertyVariants("SPM_MONITOR_SOME_PROP");
+    Assert.assertEquals(5, variants.size());
+    Assert.assertEquals("ST_MONITOR_SOME_PROP", variants.get(0));
+    Assert.assertEquals("ST_SOME_PROP", variants.get(1));
+    Assert.assertEquals("SPM_MONITOR_SOME_PROP", variants.get(2));
+    Assert.assertEquals("SPM_SOME_PROP", variants.get(3));
+    Assert.assertEquals("SOME_PROP", variants.get(4));
 
     variants = MonitorUtil.getPropertyVariants("ST_SOME_PROP");
-    Assert.assertEquals(3, variants.size());
-    Assert.assertEquals("ST_SOME_PROP", variants.get(0));
-    Assert.assertEquals("SPM_SOME_PROP", variants.get(1));
-    Assert.assertEquals("SOME_PROP", variants.get(2));
+    Assert.assertEquals(5, variants.size());
+    Assert.assertEquals("ST_MONITOR_SOME_PROP", variants.get(0));
+    Assert.assertEquals("ST_SOME_PROP", variants.get(1));
+    Assert.assertEquals("SPM_MONITOR_SOME_PROP", variants.get(2));
+    Assert.assertEquals("SPM_SOME_PROP", variants.get(3));
+    Assert.assertEquals("SOME_PROP", variants.get(4));
+
+    variants = MonitorUtil.getPropertyVariants("ST_MONITOR_SOME_PROP");
+    Assert.assertEquals(5, variants.size());
+    Assert.assertEquals("ST_MONITOR_SOME_PROP", variants.get(0));
+    Assert.assertEquals("ST_SOME_PROP", variants.get(1));
+    Assert.assertEquals("SPM_MONITOR_SOME_PROP", variants.get(2));
+    Assert.assertEquals("SPM_SOME_PROP", variants.get(3));
+    Assert.assertEquals("SOME_PROP", variants.get(4));
 
     variants = MonitorUtil.getPropertyVariants("SOME_PROP");
-    Assert.assertEquals(3, variants.size());
-    Assert.assertEquals("ST_SOME_PROP", variants.get(0));
-    Assert.assertEquals("SPM_SOME_PROP", variants.get(1));
-    Assert.assertEquals("SOME_PROP", variants.get(2));
+    Assert.assertEquals(5, variants.size());
+    Assert.assertEquals("ST_MONITOR_SOME_PROP", variants.get(0));
+    Assert.assertEquals("ST_SOME_PROP", variants.get(1));
+    Assert.assertEquals("SPM_MONITOR_SOME_PROP", variants.get(2));
+    Assert.assertEquals("SPM_SOME_PROP", variants.get(3));
+    Assert.assertEquals("SOME_PROP", variants.get(4));
     
     variants = MonitorUtil.getPropertyVariants("ST_TEST_PROP");
-    Assert.assertEquals(3, variants.size());
-    Assert.assertEquals("ST_TEST_PROP", variants.get(0));
-    Assert.assertEquals("SPM_TEST_PROP", variants.get(1));
-    Assert.assertEquals("TEST_PROP", variants.get(2));
+    Assert.assertEquals(5, variants.size());
+    Assert.assertEquals("ST_MONITOR_TEST_PROP", variants.get(0));
+    Assert.assertEquals("ST_TEST_PROP", variants.get(1));
+    Assert.assertEquals("SPM_MONITOR_TEST_PROP", variants.get(2));
+    Assert.assertEquals("SPM_TEST_PROP", variants.get(3));
+    Assert.assertEquals("TEST_PROP", variants.get(4));
   }
   
   @Test
