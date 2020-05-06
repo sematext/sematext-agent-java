@@ -89,8 +89,10 @@ public final class JmxMBeanServerConnectionWrapper {
       String host = tokens[tokens.length - 1].split(":")[0];
       // cassandra overrides rmi.server.hostname property to localhost, so localhost address is embedded in RMI stub
       // to overcome that, we override it to right host when creating socket
-      if (host.length() > 0 && !host.contains("localhost") && !host.contains("127.0.0.1")) {
-        RMISocketFactory.setSocketFactory(new HostOverrideClientSocketFactory(host));
+      if (RMISocketFactory.getSocketFactory() == null) {
+        if (host.length() > 0 && !host.contains("localhost") && !host.contains("127.0.0.1")) {
+          RMISocketFactory.setSocketFactory(new HostOverrideClientSocketFactory(host));
+        }
       }
       connector = JMXConnectorFactory.connect(jmxServiceURL, env);
       mbeanServer = connector.getMBeanServerConnection();
