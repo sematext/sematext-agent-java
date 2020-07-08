@@ -198,7 +198,9 @@ public class DbDataSourceBase {
           lastDataFetchTime = System.currentTimeMillis();
           successiveFailedTries = 0;
 
-          LOG.info("Result for " + dbQuery + " : " + freshDbData);
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Result for " + dbQuery + " : " + freshDbData);
+          }
 
           return freshDbData;
         }
