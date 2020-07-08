@@ -58,6 +58,11 @@ public class DbStatsExtractor extends StatsExtractor<DbStatsExtractorConfig, DbO
       return EMPTY_OBSERVATION_BEAN_DUMP;
     }
 
+    if (data.size() > 1 && Boolean.TRUE.equals(observation.getSingleRowResult())) {
+      throw new IllegalStateException(
+          "DB data result should contain max 1 row since 'singleRowResult' is set to true!");
+    }
+    
     boolean createCopies = data.size() > 1 && !hasRowIdsDefined(observation);
     
     for (Map<String, Object> rowData : data) {
@@ -87,7 +92,7 @@ public class DbStatsExtractor extends StatsExtractor<DbStatsExtractorConfig, DbO
           finalDump.add(singleDump.iterator().next());
         }
       } else {
-        throw new IllegalStateException("DB bean dumps should contain max 1 element!");
+        throw new IllegalStateException("DB bean dump should contain max 1 element!");
       }
     }
 

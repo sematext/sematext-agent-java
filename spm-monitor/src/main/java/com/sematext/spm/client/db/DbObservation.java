@@ -42,17 +42,21 @@ public class DbObservation extends ObservationBean<DbAttributeObservation, Map<S
 
   private List<String> rowIdColumns;
   
+  private Boolean singleRowResult;
+  
   // used when instantiating a "real" DbObservation object for some particular db bean (resulting object is not just a 
   // config holder anymore)
   public DbObservation(DbObservation orig, String beanName) {
     super(orig, Collections.EMPTY_MAP);
     this.beanName = beanName;
     this.rowIdColumns = orig.getRowIdColumns();
+    this.singleRowResult = orig.getSingleRowResult();
   }
 
   public DbObservation(ObservationDefinitionConfig observationDefinition) throws ConfigurationFailedException {
     super(observationDefinition);
     readRowIdColumns(observationDefinition);
+    readSingleRowResult(observationDefinition);
   }
 
   public ObservationBean getCopy() throws ConfigurationFailedException {
@@ -100,6 +104,7 @@ public class DbObservation extends ObservationBean<DbAttributeObservation, Map<S
     readAcceptElements(observationDefinition);
     
     readRowIdColumns(observationDefinition);
+    readSingleRowResult(observationDefinition);
   }
 
   private void readRowIdColumns(ObservationDefinitionConfig observationDefinition) {
@@ -117,6 +122,16 @@ public class DbObservation extends ObservationBean<DbAttributeObservation, Map<S
     }
   }
 
+  private void readSingleRowResult(ObservationDefinitionConfig observationDefinition) {
+    if ("true".equalsIgnoreCase(observationDefinition.getSingleRowResult())) {
+      singleRowResult = Boolean.TRUE;
+    } else if ("false".equalsIgnoreCase(observationDefinition.getSingleRowResult())) {
+      singleRowResult = Boolean.FALSE;
+    } else {
+      singleRowResult = null;
+    }
+  }
+  
   @Override
   public String getName() {
     return beanName;
@@ -142,5 +157,9 @@ public class DbObservation extends ObservationBean<DbAttributeObservation, Map<S
 
   public List<String> getRowIdColumns() {
     return rowIdColumns;
+  }
+
+  public Boolean getSingleRowResult() {
+    return singleRowResult;
   }
 }

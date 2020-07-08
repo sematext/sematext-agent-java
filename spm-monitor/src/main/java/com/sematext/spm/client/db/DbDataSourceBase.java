@@ -127,6 +127,9 @@ public class DbDataSourceBase {
           }
 
           if (verticalDataModel) {
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("Processing vertical model for " + dbQuery);
+            }
             // expect N rows for single resulting Map; reuse the map that was possibly previously used
             Map<String, Object> data;
             if (freshDbData.size() == 1) {
@@ -138,10 +141,18 @@ public class DbDataSourceBase {
               freshDbData.add(data);
             }
 
+            int counter = 0;
             while (rs.next()) {
+              counter++;
               data.put(rs.getString(1).trim(), rs.getObject(2));
             }
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("Processed for " + dbQuery + " " + counter + " RS entries with result: " + data);
+            }
           } else {
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("Processing horizontal model for " + dbQuery);
+            }
             // expect N rows for N resulting Maps
             // we'll try to reuse Map objects that exist from previous collections
             int currentRow = 0;
@@ -164,10 +175,18 @@ public class DbDataSourceBase {
               currentRow++;
             }
 
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("Processed for " + dbQuery + " " + currentRow + " RS entries with result before cleaning : " + freshDbData);
+            }
+
             // in the end remove any rows that were left in freshDbData from before
             if (currentRow < freshDbData.size()) {
               // if there are 4 rows, value of "currentRow" at this point will be 4 (equal to count of rows found in this iteration)
               freshDbData.subList(currentRow, freshDbData.size()).clear();
+            }
+            
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("For " + dbQuery + " RS entries with result after cleaning : " + freshDbData);
             }
           }
 
@@ -178,6 +197,8 @@ public class DbDataSourceBase {
 
           lastDataFetchTime = System.currentTimeMillis();
           successiveFailedTries = 0;
+
+          LOG.info("Result for " + dbQuery + " : " + freshDbData);
 
           return freshDbData;
         }

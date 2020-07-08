@@ -95,11 +95,12 @@ public class DbStatsExtractorConfig extends StatsExtractorConfig<DbObservation> 
         for (DbAttributeObservation dba : dbo.getAttributeObservations()) {
           MetricType metricType = dba.getMetricType();
           if (metricType != MetricType.GAUGE && metricType != MetricType.TEXT) {
-            if (dbo.getRowIdColumns() == null || dbo.getRowIdColumns().isEmpty()) {
+            if ((dbo.getRowIdColumns() == null || dbo.getRowIdColumns().isEmpty()) &&
+                (!Boolean.TRUE.equals(dbo.getSingleRowResult()))) {
               throw new ConfigurationFailedException("Found metric " + dba.getFinalName() + " of type " + metricType +
                   " defined in combination with dbVerticalDataModel=" + dbVerticalDataModel +
-                  ". Such combination is allowed only if rowIdColumns attribute is specified as well " +
-                  "(since agent has to be able to uniquely identify each result row)");              
+                  ". Such combination is allowed only if rowIdColumns attribute is specified as well or if attribute " +
+                  " singleRowResult is set to true (since agent has to be able to uniquely identify each result row)");              
             }
           }
         }

@@ -28,6 +28,7 @@ public class ObservationDefinitionConfig {
   private String path;
   private String metricNamespace;
   private String rowIdColumns;
+  private String singleRowResult;
 
   private List<MetricConfig> metric = Collections.EMPTY_LIST;
   private List<TagConfig> tag = Collections.EMPTY_LIST;
@@ -113,5 +114,13 @@ public class ObservationDefinitionConfig {
 
   public void setRowIdColumns(String rowIdColumns) {
     this.rowIdColumns = rowIdColumns;
+  }
+
+  public String getSingleRowResult() {
+    return singleRowResult;
+  }
+
+  public void setSingleRowResult(String singleRowResult) {
+    this.singleRowResult = singleRowResult;
   }
 }
