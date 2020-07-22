@@ -161,9 +161,13 @@ public class DbConnectionManager {
                                             "url: " + dbUrl + ", user: " + user);
       }
       
-      AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
+      }
     } catch (Throwable thr) {
-      AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
+      }
       if (consecutiveConnErrors == 0) {
         // print stacktrace only for first error, no need to fill logs with pile of exactly the same exception traces
         LOG.error("Error while creating DB connection to url:" + dbUrl + ", user: " + user +
