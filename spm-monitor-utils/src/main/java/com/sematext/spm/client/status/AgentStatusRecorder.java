@@ -19,8 +19,6 @@
  */
 package com.sematext.spm.client.status;
 
-import com.amazonaws.services.ec2.model.Status;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
