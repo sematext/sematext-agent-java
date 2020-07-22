@@ -29,6 +29,8 @@ import com.sematext.spm.client.config.CollectorFileConfig;
 import com.sematext.spm.client.config.DataConfig;
 import com.sematext.spm.client.config.DbDriverConfig;
 import com.sematext.spm.client.config.ObservationDefinitionConfig;
+import com.sematext.spm.client.status.AgentStatusRecorder;
+import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
 
 public class DbStatsExtractorConfig extends StatsExtractorConfig<DbObservation> {
   private String dataRequestQuery;
@@ -76,7 +78,11 @@ public class DbStatsExtractorConfig extends StatsExtractorConfig<DbObservation> 
         }
 
         if (dbDriverClass == null) {
-          throw new ConfigurationFailedException("Cannot load db driver class. Please check if the JDBC driver is in classpath");
+          String msg = "Cannot load db driver class. Please check if the JDBC driver is in classpath";
+          if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+            AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, msg);
+          }
+          throw new ConfigurationFailedException(msg);
         }
 
       } else {
