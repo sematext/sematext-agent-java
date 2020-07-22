@@ -47,6 +47,8 @@ import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.sender.flume.SinkConstants;
 import com.sematext.spm.client.sender.flume.es.ProxyContext;
+import com.sematext.spm.client.status.AgentStatusRecorder;
+import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
 
 public class HttpInfluxClient extends InfluxClient {
   private static final Log logger = LogFactory.getLog(HttpInfluxClient.class);
@@ -207,6 +209,10 @@ public class HttpInfluxClient extends InfluxClient {
           // throw (which causes retry) only if it was not a case of bad request (which would fail again)
           throw new EventDeliveryException(msg);
         }
+      }
+      
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateMetricsSent(true);
       }
 
       logger.info("Batch of size " + entity.length() + " chars successfully sent");
