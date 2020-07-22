@@ -22,7 +22,6 @@ package com.sematext.spm.client.status;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -96,12 +95,12 @@ public class AgentStatusRecorder {
     
     this.statusFile = getStatusFile();
     
-    statusValues.put(StatusField.STARTED_AT, new Date());
-    statusValues.put(StatusField.LAST_UPDATE, new Date());
+    statusValues.put(StatusField.STARTED_AT, System.currentTimeMillis());
+    statusValues.put(StatusField.LAST_UPDATE, System.currentTimeMillis());
     statusValues.put(StatusField.METRICS_COLLECTED, false);
     statusValues.put(StatusField.METRICS_SENT, false);
     statusValues.put(StatusField.CONNECTION_STATUS, ConnectionStatus.CONNECTING);
-    statusValues.put(StatusField.CONNECTION_ERRORS, new HashMap<String, Date>());
+    statusValues.put(StatusField.CONNECTION_ERRORS, new HashMap<String, Long>());
 
     GLOBAL_INSTANCE = this;
     
@@ -110,7 +109,7 @@ public class AgentStatusRecorder {
   
   public void updateConnectionStatus(ConnectionStatus newStatus) {
     ConnectionStatus previousStatus = (ConnectionStatus) statusValues.get(StatusField.CONNECTION_STATUS);
-    Date now = new Date();
+    long now = System.currentTimeMillis();
     
     if (previousStatus == ConnectionStatus.CONNECTING || previousStatus == ConnectionStatus.FAILED) {
       // we can update in any case
@@ -120,7 +119,7 @@ public class AgentStatusRecorder {
       // setting to failed (e.g. in case of json some URLs may be ok, some not because of new version of monitored
       // service)
       if (newStatus == ConnectionStatus.FAILED) {
-        if ((now.getTime() - CONNECTION_OK_EXPIRY_TIME_MS) > lastConnectionOkStatusTime) {
+        if ((now - CONNECTION_OK_EXPIRY_TIME_MS) > lastConnectionOkStatusTime) {
           statusValues.put(StatusField.CONNECTION_STATUS, newStatus);  
         }
       } else {
@@ -138,28 +137,28 @@ public class AgentStatusRecorder {
   }
 
   public void updateConnectionStatus(ConnectionStatus newStatus, String newError) {
-    Map<String, Date> connErrors = (Map<String, Date>) statusValues.get(StatusField.CONNECTION_ERRORS);
-    connErrors.put(newError, new Date());
+    Map<String, Long> connErrors = (Map<String, Long>) statusValues.get(StatusField.CONNECTION_ERRORS);
+    connErrors.put(newError, System.currentTimeMillis());
     updateConnectionStatus(newStatus);
   }
 
   public void updateMetricsCollected(boolean metricsCollected) {
     statusValues.put(StatusField.METRICS_COLLECTED, metricsCollected);
-    statusValues.put(StatusField.LAST_UPDATE, new Date());
+    statusValues.put(StatusField.LAST_UPDATE, System.currentTimeMillis());
     record();
   }
 
   public void updateMetricsSent(boolean metricsSent) {
     statusValues.put(StatusField.METRICS_SENT, metricsSent);
-    statusValues.put(StatusField.LAST_UPDATE, new Date());
+    statusValues.put(StatusField.LAST_UPDATE, System.currentTimeMillis());
     record();
   }
 
   public void addConnectionError(String errorMessage) {
-    Map<String, Date> connErrors = (Map<String, Date>) statusValues.get(StatusField.CONNECTION_ERRORS);
-    connErrors.put(errorMessage, new Date());
+    Map<String, Long> connErrors = (Map<String, Long>) statusValues.get(StatusField.CONNECTION_ERRORS);
+    connErrors.put(errorMessage, System.currentTimeMillis());
 
-    statusValues.put(StatusField.LAST_UPDATE, new Date());
+    statusValues.put(StatusField.LAST_UPDATE, System.currentTimeMillis());
     
     record();
   }
