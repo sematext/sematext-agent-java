@@ -31,6 +31,9 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
+import com.sematext.spm.client.status.AgentStatusRecorder;
+import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
+
 import java.rmi.server.RMISocketFactory;
 
 /**
@@ -133,7 +136,9 @@ public final class JmxMBeanServerConnectionWrapper {
       lastSuccessTime = System.currentTimeMillis();
       lastFailedTime = 0L;
       consecutiveConnErrors = 0;
+      AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
     } catch (Throwable thr) {
+      AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
       if (consecutiveConnErrors == 0) {
         // print stacktrace only for first error, no need to fill logs with pile of exactly the same exception traces
         LOG.error("Can't connect to JMX server " + ctx.getUrl() + " with user " + ctx.getUsername(), thr);

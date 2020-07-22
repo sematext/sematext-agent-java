@@ -23,9 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import com.sematext.spm.client.Log;
@@ -34,7 +32,12 @@ import com.sematext.spm.client.MonitorUtil;
 import com.sematext.spm.client.util.FileUtil;
 
 public class AgentStatusRecorder {
+  // static to be accessible from everywhere (since each agent monitors just one thing), but should be refactored so
+  // it isn't static
+  public static AgentStatusRecorder GLOBAL_INSTANCE;
+
   private static final Log LOG = LogFactory.getLog(AgentStatusRecorder.class);
+  private static final long CONNECTION_OK_EXPIRY_TIME_MS = 5 * 60 * 1000;
 
   public enum ConnectionStatus {
     OK,
@@ -58,6 +61,8 @@ public class AgentStatusRecorder {
   
   private File statusFile;
   
+  private long lastConnectionOkStatusTime = 0l;
+  
 
   public AgentStatusRecorder(String appToken, File monitorPropertiesFile, Integer processOrdinal) {
     this.appToken = appToken;
@@ -73,23 +78,57 @@ public class AgentStatusRecorder {
     statusValues.put(METRICS_SENT, false);
     statusValues.put(CONNECTION_STATUS, ConnectionStatus.CONNECTING);
     statusValues.put(CONNECTION_ERRORS, new HashMap<String, Date>());
+
+    GLOBAL_INSTANCE = this;
     
     record();
   }
   
   public void updateConnectionStatus(ConnectionStatus newStatus) {
-    statusValues.put(CONNECTION_STATUS, newStatus);
-    statusValues.put(LAST_UPDATE, new Date());
+    ConnectionStatus previousStatus = (ConnectionStatus) statusValues.get(CONNECTION_STATUS);
+    Date now = new Date();
+    
+    if (previousStatus == ConnectionStatus.CONNECTING || previousStatus == ConnectionStatus.FAILED) {
+      // we can update in any case
+      statusValues.put(CONNECTION_STATUS, newStatus);  
+    } else {
+      // if connection was OK before, but now not anymore, we should wait for CONNECTION_OK_EXPIRY_TIME_MS before
+      // setting to failed (e.g. in case of json some URLs may be ok, some not because of new version of monitored
+      // service)
+      if (newStatus == ConnectionStatus.FAILED) {
+        if ((now.getTime() - CONNECTION_OK_EXPIRY_TIME_MS) > lastConnectionOkStatusTime) {
+          statusValues.put(CONNECTION_STATUS, newStatus);  
+        }
+      } else {
+        statusValues.put(CONNECTION_STATUS, newStatus);
+      }
+    }
+    
+    if (newStatus == ConnectionStatus.OK) {
+      lastConnectionOkStatusTime = System.currentTimeMillis();
+    }
 
+    statusValues.put(LAST_UPDATE, now);
+    
     record();
   }
-  
-  public void updateMetricsCollectedSent(boolean metricsCollected, boolean metricSent) {
+
+  public void updateConnectionStatus(ConnectionStatus newStatus, String newError) {
+    Map<String, Date> connErrors = (Map<String, Date>) statusValues.get(CONNECTION_ERRORS);
+    connErrors.put(newError, new Date());
+    updateConnectionStatus(newStatus);
+  }
+
+  public void updateMetricsCollected(boolean metricsCollected) {
     statusValues.put(METRICS_COLLECTED, metricsCollected);
+    statusValues.put(LAST_UPDATE, new Date());
+  }
+
+  public void updateMetricsSent(boolean metricSent) {
     statusValues.put(METRICS_SENT, metricSent);
     statusValues.put(LAST_UPDATE, new Date());
   }
-  
+
   public void addConnectionError(String errorMessage) {
     Map<String, Date> connErrors = (Map<String, Date>) statusValues.get(CONNECTION_ERRORS);
     connErrors.put(errorMessage, new Date());
