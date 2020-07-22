@@ -136,9 +136,13 @@ public final class JmxMBeanServerConnectionWrapper {
       lastSuccessTime = System.currentTimeMillis();
       lastFailedTime = 0L;
       consecutiveConnErrors = 0;
-      AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
+      }
     } catch (Throwable thr) {
-      AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
+      }
       if (consecutiveConnErrors == 0) {
         // print stacktrace only for first error, no need to fill logs with pile of exactly the same exception traces
         LOG.error("Can't connect to JMX server " + ctx.getUrl() + " with user " + ctx.getUsername(), thr);
