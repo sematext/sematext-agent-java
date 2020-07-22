@@ -61,6 +61,7 @@ public final class MonitorUtil {
           System.getProperty("spm.home") : createPathString("opt", "spm");
 
   public static final String MONITOR_LOCK_FILE_DIR = FileUtil.path(SPM_HOME, "spm-monitor", "run");
+  public static final String MONITOR_STATUS_FILE_DIR = FileUtil.path(SPM_HOME, "spm-monitor", "run");
   public static final String MONITOR_APPLICATIONS_LOGS_BASE = createPathString(SPM_HOME, "spm-monitor", "logs", "applications");
 
   public static Integer MONITOR_PROCESS_ORDINAL = null;
