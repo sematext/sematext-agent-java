@@ -19,8 +19,11 @@
  */
 package com.sematext.spm.client.status;
 
+import com.amazonaws.services.ec2.model.Status;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,25 +48,48 @@ public class AgentStatusRecorder {
     FAILED
   }
   
-  public static final String LAST_UPDATE = "lastUpdate";
-  public static final String STARTED_AT = "startedAt";
-  public static final String CONNECTION_ERRORS = "connectionErrors";
-  public static final String METRICS_COLLECTED = "metricsCollected";
-  public static final String METRICS_SENT = "metricsSent";
+  public enum StatusField {
+    STARTED_AT("startedAt", 1),
+    LAST_UPDATE("lastUpdate", 2),
+    METRICS_COLLECTED("metricsCollected", 3),
+    METRICS_SENT("metricsSent", 4),
+    CONNECTION_STATUS("connectionStatus", 5),
+    CONNECTION_ERRORS("connectionErrors", 6);
+    
+    private String displayName;
+    private int position;
+    
+    private StatusField(String displayName, int position) {
+      this.displayName = displayName;
+      this.position = position;
+    }
+    
+    public int getPosition() {
+      return position;
+    }
+    
+    public String getDisplayName() {
+      return displayName;
+    }
+  }
 
-  public static final String CONNECTION_STATUS = "connectionStatus";
-
+  private Comparator<StatusField> statusFieldComparator = new Comparator<AgentStatusRecorder.StatusField>() {
+    @Override
+    public int compare(StatusField o1, StatusField o2) {
+      return o1.getPosition() - o2.getPosition();
+    }
+  };
+  
   private String appToken;
   private String jvmName;
   private String subType;
   private Integer processOrdinal;
-  private Map<String, Object> statusValues = new TreeMap<String, Object>();
+  private Map<StatusField, Object> statusValues = new TreeMap<StatusField, Object>(statusFieldComparator);
   
   private File statusFile;
   
   private long lastConnectionOkStatusTime = 0l;
   
-
   public AgentStatusRecorder(String appToken, File monitorPropertiesFile, Integer processOrdinal) {
     this.appToken = appToken;
     this.jvmName = MonitorUtil.extractJvmName(monitorPropertiesFile.getAbsolutePath(), appToken);
@@ -72,12 +98,12 @@ public class AgentStatusRecorder {
     
     this.statusFile = getStatusFile();
     
-    statusValues.put(STARTED_AT, new Date());
-    statusValues.put(LAST_UPDATE, new Date());
-    statusValues.put(METRICS_COLLECTED, false);
-    statusValues.put(METRICS_SENT, false);
-    statusValues.put(CONNECTION_STATUS, ConnectionStatus.CONNECTING);
-    statusValues.put(CONNECTION_ERRORS, new HashMap<String, Date>());
+    statusValues.put(StatusField.STARTED_AT, new Date());
+    statusValues.put(StatusField.LAST_UPDATE, new Date());
+    statusValues.put(StatusField.METRICS_COLLECTED, false);
+    statusValues.put(StatusField.METRICS_SENT, false);
+    statusValues.put(StatusField.CONNECTION_STATUS, ConnectionStatus.CONNECTING);
+    statusValues.put(StatusField.CONNECTION_ERRORS, new HashMap<String, Date>());
 
     GLOBAL_INSTANCE = this;
     
@@ -85,22 +111,22 @@ public class AgentStatusRecorder {
   }
   
   public void updateConnectionStatus(ConnectionStatus newStatus) {
-    ConnectionStatus previousStatus = (ConnectionStatus) statusValues.get(CONNECTION_STATUS);
+    ConnectionStatus previousStatus = (ConnectionStatus) statusValues.get(StatusField.CONNECTION_STATUS);
     Date now = new Date();
     
     if (previousStatus == ConnectionStatus.CONNECTING || previousStatus == ConnectionStatus.FAILED) {
       // we can update in any case
-      statusValues.put(CONNECTION_STATUS, newStatus);  
+      statusValues.put(StatusField.CONNECTION_STATUS, newStatus);  
     } else {
       // if connection was OK before, but now not anymore, we should wait for CONNECTION_OK_EXPIRY_TIME_MS before
       // setting to failed (e.g. in case of json some URLs may be ok, some not because of new version of monitored
       // service)
       if (newStatus == ConnectionStatus.FAILED) {
         if ((now.getTime() - CONNECTION_OK_EXPIRY_TIME_MS) > lastConnectionOkStatusTime) {
-          statusValues.put(CONNECTION_STATUS, newStatus);  
+          statusValues.put(StatusField.CONNECTION_STATUS, newStatus);  
         }
       } else {
-        statusValues.put(CONNECTION_STATUS, newStatus);
+        statusValues.put(StatusField.CONNECTION_STATUS, newStatus);
       }
     }
     
@@ -108,42 +134,42 @@ public class AgentStatusRecorder {
       lastConnectionOkStatusTime = System.currentTimeMillis();
     }
 
-    statusValues.put(LAST_UPDATE, now);
+    statusValues.put(StatusField.LAST_UPDATE, now);
     
     record();
   }
 
   public void updateConnectionStatus(ConnectionStatus newStatus, String newError) {
-    Map<String, Date> connErrors = (Map<String, Date>) statusValues.get(CONNECTION_ERRORS);
+    Map<String, Date> connErrors = (Map<String, Date>) statusValues.get(StatusField.CONNECTION_ERRORS);
     connErrors.put(newError, new Date());
     updateConnectionStatus(newStatus);
   }
 
   public void updateMetricsCollected(boolean metricsCollected) {
-    statusValues.put(METRICS_COLLECTED, metricsCollected);
-    statusValues.put(LAST_UPDATE, new Date());
+    statusValues.put(StatusField.METRICS_COLLECTED, metricsCollected);
+    statusValues.put(StatusField.LAST_UPDATE, new Date());
     record();
   }
 
   public void updateMetricsSent(boolean metricsSent) {
-    statusValues.put(METRICS_SENT, metricsSent);
-    statusValues.put(LAST_UPDATE, new Date());
+    statusValues.put(StatusField.METRICS_SENT, metricsSent);
+    statusValues.put(StatusField.LAST_UPDATE, new Date());
     record();
   }
 
   public void addConnectionError(String errorMessage) {
-    Map<String, Date> connErrors = (Map<String, Date>) statusValues.get(CONNECTION_ERRORS);
+    Map<String, Date> connErrors = (Map<String, Date>) statusValues.get(StatusField.CONNECTION_ERRORS);
     connErrors.put(errorMessage, new Date());
 
-    statusValues.put(LAST_UPDATE, new Date());
+    statusValues.put(StatusField.LAST_UPDATE, new Date());
     
     record();
   }
   
   private void record() {
     StringBuffer content = new StringBuffer(100);
-    for (String key : statusValues.keySet()) {
-      content.append(key);
+    for (StatusField key : statusValues.keySet()) {
+      content.append(key.getDisplayName());
       content.append("=");
       // raw serialization for now, but consider serializing e.g. errors differently
       content.append(statusValues.get(key));
