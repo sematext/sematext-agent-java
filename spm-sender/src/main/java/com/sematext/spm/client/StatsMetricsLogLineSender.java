@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sematext.spm.client.Sender.SenderType;
+import com.sematext.spm.client.status.AgentStatusRecorder;
 
 public class StatsMetricsLogLineSender implements StatsLogLineBuilder<String, StatsCollector<String>> {
   private static final Log LOG = LogFactory.getLog(StatsMetricsLogLineSender.class);
@@ -95,6 +96,12 @@ public class StatsMetricsLogLineSender implements StatsLogLineBuilder<String, St
         // in this case we will stop further writing to the channel
         LOG.error("Failed to add stats line to flume channel, skipping writing of remaining lines", ce);
         break;
+      }
+    }
+    
+    if (CollectionStats.CURRENT_RUN_GATHERED_LINES.get() > 0) {
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateMetricsCollected(true);
       }
     }
 

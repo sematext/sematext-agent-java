@@ -122,11 +122,13 @@ public class AgentStatusRecorder {
   public void updateMetricsCollected(boolean metricsCollected) {
     statusValues.put(METRICS_COLLECTED, metricsCollected);
     statusValues.put(LAST_UPDATE, new Date());
+    record();
   }
 
-  public void updateMetricsSent(boolean metricSent) {
-    statusValues.put(METRICS_SENT, metricSent);
+  public void updateMetricsSent(boolean metricsSent) {
+    statusValues.put(METRICS_SENT, metricsSent);
     statusValues.put(LAST_UPDATE, new Date());
+    record();
   }
 
   public void addConnectionError(String errorMessage) {
