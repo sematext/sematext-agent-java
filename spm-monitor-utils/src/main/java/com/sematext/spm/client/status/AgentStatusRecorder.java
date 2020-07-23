@@ -38,6 +38,7 @@ public class AgentStatusRecorder {
 
   private static final Log LOG = LogFactory.getLog(AgentStatusRecorder.class);
   private static final long CONNECTION_OK_EXPIRY_TIME_MS = 5 * 60 * 1000;
+  private static final long MAX_STATUS_FILE_UPDATE_INTERVAL_MS = 5 * 60 * 1000;
 
   public enum ConnectionStatus {
     OK,
@@ -82,8 +83,11 @@ public class AgentStatusRecorder {
   private String subType;
   private Integer processOrdinal;
   private Map<StatusField, Object> statusValues = new TreeMap<StatusField, Object>(statusFieldComparator);
+  private Map<StatusField, Object> previouslyRecordedStatusValues =
+      new TreeMap<StatusField, Object>(statusFieldComparator);
   
   private File statusFile;
+  private long lastStatusFileSaveTime = 0l;
   
   private long lastConnectionOkStatusTime = 0l;
   
@@ -164,20 +168,79 @@ public class AgentStatusRecorder {
   }
   
   private void record() {
-    StringBuffer content = new StringBuffer(100);
-    for (StatusField key : statusValues.keySet()) {
-      content.append(key.getDisplayName());
-      content.append("=");
-      // raw serialization for now, but consider serializing e.g. errors differently
-      content.append(statusValues.get(key));
-      content.append(MonitorUtil.LINE_SEPARATOR);
+    // first decide if recording is necessary (in case nothing changed)
+    if (timeForStatusFileUpdate() || statusValuesChanged()) {
+      StringBuffer content = new StringBuffer(100);
+      for (StatusField key : statusValues.keySet()) {
+        content.append(key.getDisplayName());
+        content.append("=");
+        // raw serialization for now, but consider serializing e.g. errors differently
+        content.append(statusValues.get(key));
+        content.append(MonitorUtil.LINE_SEPARATOR);
+      }
+      
+      lastStatusFileSaveTime = System.currentTimeMillis();
+      copyNewStatusValuesToPreviousHolder();
+      
+      try {
+        FileUtil.write(content.toString(), statusFile);
+      } catch (IOException e) {
+        LOG.error("Can't write to status file", e);
+      }
     }
     
-    try {
-      FileUtil.write(content.toString(), statusFile);
-    } catch (IOException e) {
-      LOG.error("Can't write to status file", e);
+  }
+
+  private void copyNewStatusValuesToPreviousHolder() {
+    previouslyRecordedStatusValues.clear();
+    
+    for (StatusField field : statusValues.keySet()) {
+      Object value = statusValues.get(field);
+      
+      if (value instanceof Map) {
+        Map<String, Long> mapCopy = new HashMap<String, Long>();
+        mapCopy.putAll((Map<String, Long>) value);
+        previouslyRecordedStatusValues.put(field, mapCopy);
+      } else {
+        previouslyRecordedStatusValues.put(field, value);
+      }
     }
+  }
+
+  private boolean statusValuesChanged() {
+    if (previouslyRecordedStatusValues == null || previouslyRecordedStatusValues.size() < statusValues.size()) {
+      return true;
+    }
+    
+    for (StatusField field : statusValues.keySet()) {
+      if (field == StatusField.LAST_UPDATE) {
+        // we ignore this one 
+        continue;
+      }
+      
+      Object oldValue = previouslyRecordedStatusValues.get(field);
+      Object newValue = statusValues.get(field);
+      
+      if (newValue instanceof Map) {
+        Map<String, Long> oldErrors = (Map<String, Long>) oldValue;
+        Map<String, Long> newErrors = (Map<String, Long>) newValue;
+        
+        if (oldErrors.size() < newErrors.size()) {
+          // we'll consider there is a change in errors map only if new error was added, not if existing error had
+          // its timestamp updated; separately we have max 5 min interval for recording the file regardless of changes,
+          // so even the updates in error timestamp will be stored in max 5 min
+          return true;
+        }
+      } else if (!newValue.equals(oldValue)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  private boolean timeForStatusFileUpdate() {
+    return (System.currentTimeMillis() - MAX_STATUS_FILE_UPDATE_INTERVAL_MS) > lastStatusFileSaveTime;
   }
 
   private File getStatusFile() {
