@@ -26,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
+import com.sematext.spm.client.status.AgentStatusRecorder;
+import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
 
 /**
  * Handles creation of single connection to some DB, knows how to reconnect in case of problems, takes care of
@@ -158,7 +160,14 @@ public class DbConnectionManager {
         throw new IllegalStateException("DriverManager.getConnection didn't produce connection or error for " +
                                             "url: " + dbUrl + ", user: " + user);
       }
+      
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
+      }
     } catch (Throwable thr) {
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
+      }
       if (consecutiveConnErrors == 0) {
         // print stacktrace only for first error, no need to fill logs with pile of exactly the same exception traces
         LOG.error("Error while creating DB connection to url:" + dbUrl + ", user: " + user +

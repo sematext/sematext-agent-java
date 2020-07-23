@@ -22,7 +22,6 @@ package com.sematext.spm.client;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -90,11 +89,7 @@ public class HeartbeatStatsCollector extends MultipleStatsCollector<Integer> {
 
   @Override
   protected Collection<Integer> getSlice(Map<String, Object> outerMetrics) throws StatsCollectionFailedException {
-    if (CollectionStats.CURRENT_RUN_GATHERED_LINES.get() > 0) {
-      return HEARTBEAT;
-    } else {
-      return NO_HEARTBEAT;
-    }
+    return CollectionStats.CURRENT_RUN_GATHERED_LINES.get() > 0 ? HEARTBEAT : NO_HEARTBEAT;
   }
 
   @Override

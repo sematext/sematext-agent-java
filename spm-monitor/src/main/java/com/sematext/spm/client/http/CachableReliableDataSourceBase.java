@@ -19,12 +19,15 @@
  */
 package com.sematext.spm.client.http;
 
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.MonitorConfig;
 import com.sematext.spm.client.json.JsonDataSourceCachedFactory;
+import com.sematext.spm.client.status.AgentStatusRecorder;
+import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
 
 public class CachableReliableDataSourceBase<T, D extends DataProvider<T>> {
   private static final Log LOG = LogFactory.getLog(CachableReliableDataSourceBase.class);
@@ -124,6 +127,8 @@ public class CachableReliableDataSourceBase<T, D extends DataProvider<T>> {
       T newData = dataProvider.getData();
 
       if (newData == null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, "no data in response");
+        
         LOG.error("Error while fetching data with " + this.getClass().getCanonicalName() +
                       " for " + dataProvider + " - no String with response data could be created.");
 
@@ -138,8 +143,16 @@ public class CachableReliableDataSourceBase<T, D extends DataProvider<T>> {
 
       data.setData(newData);
 
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
+      }
+
       return;
     } catch (Throwable thr) {
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
+      }
+      
       LOG.error("Error while fetching data with " + this.getClass().getCanonicalName() +
                     " for " + dataProvider + ". Message: " + thr.getMessage());
 

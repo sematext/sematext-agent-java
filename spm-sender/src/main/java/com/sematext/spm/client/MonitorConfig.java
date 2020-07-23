@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.sematext.spm.client.status.AgentStatusRecorder;
+import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
 import com.sematext.spm.client.util.StringUtils;
 
 /**
@@ -75,6 +77,8 @@ public class MonitorConfig extends InMemoryConfig {
   private String metricCollectorsConfigValue;
 
   private TagAliasSender tagAliasSender;
+  
+  private AgentStatusRecorder statusRecorder;
 
   public MonitorConfig(String appToken, File monitorPropertiesFile, DataFormat format, Integer processOrdinal)
       throws ConfigurationFailedException {
@@ -86,6 +90,7 @@ public class MonitorConfig extends InMemoryConfig {
     this.monitorPropertiesFile = monitorPropertiesFile;
     this.processOrdinal = processOrdinal;
     this.format = format;
+    this.statusRecorder = new AgentStatusRecorder(appToken, monitorPropertiesFile, processOrdinal);
     loadConfig();
   }
 
@@ -379,5 +384,9 @@ public class MonitorConfig extends InMemoryConfig {
 
   public String getSubType() {
     return subType;
+  }
+
+  public AgentStatusRecorder getStatusRecorder() {
+    return statusRecorder;
   }
 }
