@@ -47,8 +47,6 @@ import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.sender.flume.SinkConstants;
 import com.sematext.spm.client.sender.flume.es.ProxyContext;
-import com.sematext.spm.client.status.AgentStatusRecorder;
-import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
 
 public class HttpInfluxClient extends InfluxClient {
   private static final Log logger = LogFactory.getLog(HttpInfluxClient.class);
@@ -61,6 +59,7 @@ public class HttpInfluxClient extends InfluxClient {
   private String fixedFullUrl;
   private String baseServerUrl;
   private RequestConfig requestConfig;
+  private boolean isMetricsEndpoint;
 
   public HttpInfluxClient(String baseServerUrl, String urlPath,
                           Map<String, String> urlParams, ProxyContext proxyContext) {
@@ -101,6 +100,8 @@ public class HttpInfluxClient extends InfluxClient {
 
     this.urlParams = urlParams;
     this.urlPath = urlPath;
+    
+    this.isMetricsEndpoint = urlPath.contains("db=metrics");
 
     initializeUrlVariables();
   }
@@ -168,7 +169,7 @@ public class HttpInfluxClient extends InfluxClient {
   }
 
   @Override
-  public void sendAndHandleResponse(String entity) throws EventDeliveryException {
+  public boolean sendAndHandleResponse(String entity) throws EventDeliveryException {
     try {
       // influxDB.write("database", "", InfluxDB.ConsistencyLevel.ONE, entity);
       int statusCode = 0;
@@ -211,11 +212,8 @@ public class HttpInfluxClient extends InfluxClient {
         }
       }
       
-      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
-        AgentStatusRecorder.GLOBAL_INSTANCE.updateMetricsSent(true);
-      }
-
       logger.info("Batch of size " + entity.length() + " chars successfully sent");
+      return sendingOk;
     } catch (EventDeliveryException ede) {
       throw ede;
     } catch (Throwable thr) {
@@ -224,6 +222,7 @@ public class HttpInfluxClient extends InfluxClient {
       if (thr.getMessage().contains("unable to parse")) {
         logger.warn("Data rejected by server: " + thr.getMessage());
         logger.warn("Data will not be resent since rejection was valid");
+        return false;
       } else {
         throw new EventDeliveryException("Data sending failed to endpoint " + fixedFullUrl, thr);
       }
@@ -261,6 +260,11 @@ public class HttpInfluxClient extends InfluxClient {
         (url.endsWith("&") || urlParamsString.startsWith("&") ? urlParamsString : "&" + urlParamsString)));
    
     return url;
+  }
+  
+  @Override
+  protected boolean isMetricsEndpoint() {
+    return isMetricsEndpoint;
   }
 
   @Override

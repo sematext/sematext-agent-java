@@ -47,6 +47,7 @@ import java.util.Map;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
+import com.sematext.spm.client.status.AgentStatusRecorder;
 
 public abstract class InfluxClient {
   private static final Log logger = LogFactory.getLog(InfluxClient.class);
@@ -96,10 +97,18 @@ public abstract class InfluxClient {
       bulkBuilder.delete(0, bulkBuilder.length());
     }
 
-    sendAndHandleResponse(entity);
+    boolean somethingSuccessfullySent = sendAndHandleResponse(entity);
+    
+    if (somethingSuccessfullySent && isMetricsEndpoint()) {
+      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateMetricsSent(true);
+      }
+    }
   }
 
-  protected abstract void sendAndHandleResponse(String entity) throws EventDeliveryException;
+  protected abstract boolean isMetricsEndpoint();
+
+  protected abstract boolean sendAndHandleResponse(String entity) throws EventDeliveryException;
 
   protected abstract void initializeUrlVariables();
 

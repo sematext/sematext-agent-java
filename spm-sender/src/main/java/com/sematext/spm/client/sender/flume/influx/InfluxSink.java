@@ -38,7 +38,6 @@ import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.sender.flume.SinkConstants;
 import com.sematext.spm.client.sender.flume.es.ProxyContext;
 import com.sematext.spm.client.sender.util.DynamicUrlParamSink;
-import com.sematext.spm.client.status.AgentStatusRecorder;
 
 /*CHECKSTYLE:OFF*/
 public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
@@ -134,10 +133,6 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
       sinkCounter.addToEventDrainSuccessCount(count);
       counterGroup.incrementAndGet("transaction.success");
     } catch (Throwable ex) {
-      if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
-        AgentStatusRecorder.GLOBAL_INSTANCE.updateMetricsSent(false);
-      }
-
       lastDataSendingTime = System.currentTimeMillis();
       try {
         txn.rollback();
