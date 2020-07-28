@@ -157,7 +157,8 @@ public class AgentStatusRecorder {
       return "";
     } else {
       String cause = extractErrorMessages(thr.getCause());
-      return thr.getClass().getName() + ":" + thr.getMessage() + ("".equals(cause) ? "" : " -> " + cause);
+      return thr.getClass().getName() + ":" + thr.getMessage().replaceAll("[\\t\\n\\r]+"," ") +
+          ("".equals(cause) ? "" : " -> " + cause);
     }
   }
   
