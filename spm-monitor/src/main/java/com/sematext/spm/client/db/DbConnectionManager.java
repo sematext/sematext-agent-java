@@ -166,7 +166,7 @@ public class DbConnectionManager {
       }
     } catch (Throwable thr) {
       if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
-        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr);
       }
       if (consecutiveConnErrors == 0) {
         // print stacktrace only for first error, no need to fill logs with pile of exactly the same exception traces

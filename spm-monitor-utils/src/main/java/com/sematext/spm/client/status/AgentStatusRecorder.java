@@ -146,6 +146,21 @@ public class AgentStatusRecorder {
     updateConnectionStatus(newStatus);
   }
 
+  public void updateConnectionStatus(ConnectionStatus newStatus, Throwable thr) {
+    Map<String, Long> connErrors = (Map<String, Long>) statusValues.get(StatusField.CONNECTION_ERRORS);
+    connErrors.put(extractErrorMessages(thr), System.currentTimeMillis());
+    updateConnectionStatus(newStatus);
+  }
+
+  private String extractErrorMessages(Throwable thr) {
+    if (thr == null) {
+      return "";
+    } else {
+      String cause = extractErrorMessages(thr.getCause());
+      return thr.getClass().getName() + ":" + thr.getMessage() + ("".equals(cause) ? "" : " -> " + cause);
+    }
+  }
+  
   public void updateMetricsCollected(boolean metricsCollected) {
     statusValues.put(StatusField.METRICS_COLLECTED, metricsCollected);
     statusValues.put(StatusField.LAST_UPDATE, System.currentTimeMillis());

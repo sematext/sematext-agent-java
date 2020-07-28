@@ -19,6 +19,9 @@
  */
 package com.sematext.spm.client.redis;
 
+import com.sematext.spm.client.status.AgentStatusRecorder;
+import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
+
 import redis.clients.jedis.Jedis;
 
 public final class RedisInfoSource {
@@ -48,7 +51,18 @@ public final class RedisInfoSource {
       if (password != null && !password.isEmpty()) {
         jedis.auth(password);
       }
-      String info = jedis.info();
+      
+      try {
+        String info = jedis.info();
+        if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+          AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
+        }
+      } catch (RuntimeException re) {
+        if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+          AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, re);
+        }
+        throw re;
+      }
       cachedInfo = RedisInfo.parse(info);
     }
     return cachedInfo;

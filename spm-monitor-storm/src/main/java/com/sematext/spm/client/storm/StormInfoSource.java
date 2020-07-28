@@ -21,6 +21,9 @@ package com.sematext.spm.client.storm;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
+import com.sematext.spm.client.status.AgentStatusRecorder;
+import com.sematext.spm.client.status.AgentStatusRecorder.ConnectionStatus;
+
 import org.apache.storm.generated.*;
 import org.apache.storm.thrift.TException;
 import org.apache.storm.thrift.protocol.TBinaryProtocol;
@@ -207,9 +210,18 @@ public final class StormInfoSource {
 
         cachedInfo = info;
 
+        if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+          AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
+        }
       } catch (TTransportException e) {
+        if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+          AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, e);
+        }
         LOG.error("Can't get info from Nimbus", e);
       } catch (TException e) {
+        if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
+          AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, e);
+        }
         LOG.error("Can't get info from Nimbus", e);
       } finally {
         tTransport.close();

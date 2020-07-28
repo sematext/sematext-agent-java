@@ -150,7 +150,7 @@ public class CachableReliableDataSourceBase<T, D extends DataProvider<T>> {
       return;
     } catch (Throwable thr) {
       if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
-        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr.getMessage());
+        AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.FAILED, thr);
       }
       
       LOG.error("Error while fetching data with " + this.getClass().getCanonicalName() +
