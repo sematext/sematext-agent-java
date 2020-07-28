@@ -52,8 +52,9 @@ public final class RedisInfoSource {
         jedis.auth(password);
       }
       
+      String info;
       try {
-        String info = jedis.info();
+        info = jedis.info();
         if (AgentStatusRecorder.GLOBAL_INSTANCE != null) {
           AgentStatusRecorder.GLOBAL_INSTANCE.updateConnectionStatus(ConnectionStatus.OK);
         }
