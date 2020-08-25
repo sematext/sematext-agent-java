@@ -78,6 +78,10 @@ fi
 # properties dir
 cp -r $SPM_HOME/properties $DIAG_DIR
 
+# status files
+mkdir $DIAG_DIR/status
+cp $SPM_HOME/spm-monitor/run/*.status $DIAG_DIR/status
+
 #
 du -h --max-depth=2 $SPM_HOME &> $DIAG_DIR/spm-du2.txt
 sudo lsof 2> /dev/null | grep spm &> $DIAG_DIR/lsof-spm.txt
