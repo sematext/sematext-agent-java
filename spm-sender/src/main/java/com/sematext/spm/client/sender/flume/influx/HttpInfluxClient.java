@@ -126,10 +126,13 @@ public class HttpInfluxClient extends InfluxClient {
           (proxyContext.getPassword() != null && !proxyContext.getPassword().trim().equals(""));
 
       if (useProxy) {
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(
-            new AuthScope(proxyContext.getHost(), proxyContext.getPort()),
-            useAuth ? new UsernamePasswordCredentials(proxyContext.getUsername(), proxyContext.getPassword()) : null);
+        CredentialsProvider credsProvider = null;
+        if (useAuth) {
+          credsProvider = new BasicCredentialsProvider();
+          credsProvider.setCredentials(
+              new AuthScope(proxyContext.getHost(), proxyContext.getPort()),
+              new UsernamePasswordCredentials(proxyContext.getUsername(), proxyContext.getPassword()));
+        }
 
         CloseableHttpClient client = HttpClients.custom()
             .setSslcontext(sslContext)
