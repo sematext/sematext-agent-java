@@ -72,10 +72,14 @@ public class DbObservation extends ObservationBean<DbAttributeObservation, Map<S
         Map<String, ?> context = Collections.emptyMap();
         value = attributeObservation.getValue(this, data, context);
       } catch (StatsCollectionFailedException e) {
-        LOG.info("Failed to extract stats value, attribute name: " + attributeObservation.getAttributeName() +
-                      ", message: " + e.getMessage());
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to extract stats value, attribute name: " + attributeObservation.getAttributeName() +
+                        ", message: " + e.getMessage());
+        }
       } catch (RuntimeException re) {
-        LOG.info("Failed to extract stats value, attribute name: " + attributeObservation.getAttributeName(), re);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to extract stats value, attribute name: " + attributeObservation.getAttributeName(), re);
+        }
       }
       stats.setAttribute(attributeObservation.getFinalName(), value);
     }

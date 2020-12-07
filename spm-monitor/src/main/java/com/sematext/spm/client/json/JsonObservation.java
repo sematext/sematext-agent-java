@@ -69,10 +69,15 @@ public class JsonObservation extends ObservationBean<JsonAttributeObservation, O
         Map<String, ?> context = Collections.emptyMap();
         value = attributeObservation.getValue(this, data, context, jsonDataNodePath);
       } catch (StatsCollectionFailedException e) {
-        LOG.debug("Failed to extract stats value, attribute name: " + attributeObservation.getAttributeName() +
-                      ", message: " + e.getMessage());
+        // changed level to debug, otherwise we would write a ton of data into logs
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to extract stats value, attribute name: " + attributeObservation.getAttributeName() +
+                        ", message: " + e.getMessage());
+        }
       } catch (RuntimeException re) {
-        LOG.debug("Failed to extract stats value, attribute name: " + attributeObservation.getAttributeName(), re);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to extract stats value, attribute name: " + attributeObservation.getAttributeName(), re);
+        }
       }
       stats.setAttribute(attributeObservation.getFinalName(), value);
     }

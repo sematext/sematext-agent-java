@@ -222,13 +222,17 @@ public class MBeanObservation extends ObservationBean<MBeanAttributeObservation,
       try {
         value = attributeObservation.getValue(this, mbeanServer, context, discoveredObject);
       } catch (StatsCollectionFailedException e) {
-        LOG.info("Failed to extract stats value, name: " + name + ", attribute name: " +
-                      attributeObservation.getAttributeName() + " object name: " + discoveredObject.getObjectName() +
-                      ", message: " + e.getMessage());
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to extract stats value, name: " + name + ", attribute name: " +
+                        attributeObservation.getAttributeName() + " object name: " + discoveredObject.getObjectName() +
+                        ", message: " + e.getMessage());
+        }
       } catch (RuntimeException re) {
-        LOG.info("Failed to extract stats value, name: " + name + ", attribute name: " +
-                      attributeObservation.getAttributeName() + " object name: " + discoveredObject.getObjectName() +
-                      ", message: " + re.getMessage());
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Failed to extract stats value, name: " + name + ", attribute name: " +
+                        attributeObservation.getAttributeName() + " object name: " + discoveredObject.getObjectName() +
+                        ", message: " + re.getMessage());
+        }
       }
       stats.setAttribute(attributeObservation.getFinalName(), value);
     }
