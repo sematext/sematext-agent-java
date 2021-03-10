@@ -28,7 +28,7 @@ import com.sematext.spm.client.jmx.JmxExtractorUtil;
 import com.sematext.spm.client.observation.CalculationFunction;
 
 public class CalculateSegmentsCount implements CalculationFunction {
-  private static final String SEGMENTS_COUNT_REGEXP = "( |\\()_{1}[0-9]+\\(";
+  private static final String SEGMENTS_COUNT_REGEXP = "( |\\()_{1}[0-9a-z]+\\(";
   private static final Pattern SEGMENTS_COUNT_PATTERN = Pattern.compile(SEGMENTS_COUNT_REGEXP);
   
   @Override
@@ -56,6 +56,11 @@ public class CalculateSegmentsCount implements CalculationFunction {
         
         // solr 8.5.2
         // ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_0(8.5.2):C3:[diagnostics={java.vendor=Oracle Corporation, os=Linux, java.version=1.8.0_151, java.vm.version=25.151-b12, lucene.version=8.5.2, os.arch=amd64, java.runtime.version=1.8.0_151-b12, source=flush, os.version=4.4.0-31-generic, timestamp=1603261473913}]:[attributes={Lucene50StoredFieldsFormat.mode=BEST_SPEED}]) Uninverting(_2(8.5.2):C4:[diagnostics={java.vendor=Oracle Corporation, os=Linux, java.version=1.8.0_151, java.vm.version=25.151-b12, lucene.version=8.5.2, os.arch=amd64, java.runtime.version=1.8.0_151-b12, source=flush, os.version=4.4.0-31-generic, timestamp=1603261550321}]:[attributes={Lucene50StoredFieldsFormat.mode=BEST_SPEED}])))
+        
+        // solr 8.7 contains a garbage char, we'll remove it
+        // ExitableDirectoryReader(&#8203;UninvertingDirectoryReader(&#8203;Uninverting(&#8203;_0(&#8203;8.7.0):C18:[diagnostics={java.vendor=Oracle Corporation, os=Linux, java.version=1.8.0_151, java.vm.version=25.151-b12, lucene.version=8.7.0, os.arch=amd64, java.runtime.version=1.8.0_151-b12, source=flush, os.version=4.4.0-31-generic, timestamp=1615308345608}]:[attributes={Lucene87StoredFieldsFormat.mode=BEST_SPEED}] :id=ay6mz9t5crdj71gwkxi2nbkd4) Uninverting(&#8203;_1(&#8203;8.7.0):C5:[diagnostics={java.vendor=Oracle Corporation, os=Linux, java.version=1.8.0_151, java.vm.version=25.151-b12, lucene.version=8.7.0, os.arch=amd64, java.runtime.version=1.8.0_151-b12, source=flush, os.version=4.4.0-31-generic, timestamp=1615308355555}]:[attributes={Lucene87StoredFieldsFormat.mode=BEST_SPEED}] :id=ay6mz9t5crdj71gwkxi2nbkdh) Uninverting(&#8203;_2(&#8203;8.7.0):C3:[diagnostics={java.vendor=Oracle Corporation, os=Linux, java.version=1.8.0_151, java.vm.version=25.151-b12, lucene.version=8.7.0, os.arch=amd64, java.runtime.version=1.8.0_151-b12, source=flush, os.version=4.4.0-31-generic, timestamp=1615308358485}]:[attributes={Lucene87StoredFieldsFormat.mode=BEST_SPEED}] :id=ay6mz9t5crdj71gwkxi2nbke2)))
+        
+        reader = reader.replace("&#8203;", "");
         
         Matcher matcher = SEGMENTS_COUNT_PATTERN.matcher(reader);
         int count = 0;
