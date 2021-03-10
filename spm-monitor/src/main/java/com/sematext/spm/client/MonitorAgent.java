@@ -31,6 +31,7 @@ import com.sematext.spm.client.Sender.MonitorType;
 import com.sematext.spm.client.command.BasicCommandPollingSetup.CommandPollingRunner;
 import com.sematext.spm.client.jmx.JmxServiceContext;
 import com.sematext.spm.client.monitor.SourceConfigProperties;
+import com.sematext.spm.client.sender.SenderUtil;
 import com.sematext.spm.client.tracing.agent.impl.AgentInitializer;
 import com.sematext.spm.client.util.PropertiesReader;
 
@@ -234,8 +235,12 @@ public final class MonitorAgent {
     startMetricsMetainfoSenderThread(metricsConfig);
 
     //we init logs only for applications, we want to see all messages 1 place
-    LogFactory.init(metricsConfig.getLogBasedir(), metricsConfig.getLogMaxFileSize(), metricsConfig
-        .getLogMaxBackups(), metricsConfig.getLogLevel(), DataFormat.PLAIN_TEXT, processOrdinal);
+    if (SenderUtil.isInContainer() || SenderUtil.isInKubernetes()) {
+      LogFactory.initStdoutLogger(metricsConfig.getLogLevel(), DataFormat.PLAIN_TEXT);
+    } else {
+      LogFactory.initFileLogger(metricsConfig.getLogBasedir(), metricsConfig.getLogMaxFileSize(), metricsConfig
+          .getLogMaxBackups(), metricsConfig.getLogLevel(), DataFormat.PLAIN_TEXT, processOrdinal);
+    }
 
     log.info("Monitor threads started for " + propsFile.getName());
 

@@ -27,6 +27,7 @@ import com.sematext.spm.client.DataFormat;
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.MonitorUtil;
+import com.sematext.spm.client.sender.SenderUtil;
 import com.sematext.spm.client.tracing.agent.config.DefaultServiceConfigurer;
 import com.sematext.spm.client.tracing.agent.config.ServiceLocator;
 import com.sematext.spm.client.tracing.agent.sampling.Stats;
@@ -114,9 +115,13 @@ public class AgentInitializer {
       Integer processOrdinal = MonitorUtil
           .obtainMonitorLock(monitorArgs.getToken(), monitorArgs.getJvmName(), monitorArgs.getSubType());
 
-      LogFactory.init(ServiceLocator.getConfig().getLogPath(), 1024 * 1024 * 100, 10,
-                      System.getProperty("spm.tracing.loglevel", "INFO"), DataFormat.PLAIN_TEXT,
-                      processOrdinal);
+      if (SenderUtil.isInContainer() || SenderUtil.isInKubernetes()) {
+        LogFactory.initStdoutLogger(System.getProperty("spm.tracing.loglevel", "INFO"), DataFormat.PLAIN_TEXT);
+      } else {
+        LogFactory.initFileLogger(ServiceLocator.getConfig().getLogPath(), 1024 * 1024 * 100, 10,
+            System.getProperty("spm.tracing.loglevel", "INFO"), DataFormat.PLAIN_TEXT,
+            processOrdinal);
+      }
     }
 
     startFifo();

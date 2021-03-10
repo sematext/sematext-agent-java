@@ -51,7 +51,15 @@ public final class LogFactory {
     dumpBufferedLogEntries();
   }
 
-  public static synchronized void init(String basedir, long maxFileSize, int maxBackups, String logLevelParam,
+  public static synchronized void initStdoutLogger(String logLevelParam, DataFormat format) {
+    current = new StdOutLogWriter();
+
+    setLoggingLevel(System.getProperty("spm.monitor.loglevel", logLevelParam));
+
+    dumpBufferedLogEntries();
+  }
+
+  public static synchronized void initFileLogger(String basedir, long maxFileSize, int maxBackups, String logLevelParam,
                                        DataFormat format, Integer processOrdinal) {
     String logFileName = String.format("spm-monitor-%s.%s", processOrdinal, format.getFileExtension());
     RollingFileLogger newCurrent = new RollingFileLogger();
