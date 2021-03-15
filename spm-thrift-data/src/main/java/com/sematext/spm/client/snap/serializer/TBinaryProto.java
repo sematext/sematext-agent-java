@@ -41,8 +41,8 @@ public final class TBinaryProto {
   }
 
   public static <T extends TBase> void read(T obj, InputStream is) {
-    TBinaryProtocol proto = new TBinaryProtocol(new TIOStreamTransport(is));
     try {
+      TBinaryProtocol proto = new TBinaryProtocol(new TIOStreamTransport(is));
       obj.read(proto);
     } catch (TException e) {
       throw new IllegalStateException("Can't read thrift object.", e);
@@ -54,8 +54,8 @@ public final class TBinaryProto {
   }
 
   public static <T extends TBase> List<T> readList(Class<T> klass, InputStream is) {
-    TBinaryProtocol proto = new TBinaryProtocol(new TIOStreamTransport(is));
     try {
+      TBinaryProtocol proto = new TBinaryProtocol(new TIOStreamTransport(is));
       TList thriftList = proto.readListBegin();
       List<T> list = new ArrayList<T>();
       for (int i = 0; i < thriftList.size; i++) {
@@ -72,8 +72,8 @@ public final class TBinaryProto {
 
   public static <T extends TBase> byte[] toByteArray(T obj) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    TBinaryProtocol proto = new TBinaryProtocol(new TIOStreamTransport(baos));
     try {
+      TBinaryProtocol proto = new TBinaryProtocol(new TIOStreamTransport(baos));
       obj.write(proto);
     } catch (TException e) {
       throw new IllegalStateException("Can't write thrift object.", e);
@@ -83,8 +83,8 @@ public final class TBinaryProto {
 
   public static <T extends TBase> byte[] toByteArray(List<T> list) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    TBinaryProtocol proto = new TBinaryProtocol(new TIOStreamTransport(baos));
     try {
+      TBinaryProtocol proto = new TBinaryProtocol(new TIOStreamTransport(baos));
       proto.writeListBegin(new TList(TType.STRUCT, list.size()));
       for (T obj : list) {
         obj.write(proto);

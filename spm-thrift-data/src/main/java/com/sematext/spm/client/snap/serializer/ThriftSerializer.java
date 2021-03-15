@@ -24,11 +24,21 @@ import org.apache.thrift.TBase;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.transport.TTransportException;
 
 public class ThriftSerializer<T extends TBase> implements Serializer<T> {
-  private final TDeserializer deserializer = new TDeserializer(new TBinaryProtocol.Factory());
-  private final TSerializer serializer = new TSerializer(new TBinaryProtocol.Factory());
+  private final TDeserializer deserializer;
+  private final TSerializer serializer;
 
+  public ThriftSerializer() {
+    try {
+      deserializer = new TDeserializer(new TBinaryProtocol.Factory());
+      serializer = new TSerializer(new TBinaryProtocol.Factory());
+    } catch (TTransportException tte) {
+      throw new RuntimeException(tte);
+    }
+  }
+  
   @Override
   public byte[] serialize(T object) throws Exception {
     synchronized (serializer) {
