@@ -13,7 +13,7 @@
     <tracing.agent.lib.scope>compile</tracing.agent.lib.scope>
     <tracing.agent.impl.lib.scope>compile</tracing.agent.impl.lib.scope>
     <sender.lib.scope>compile</sender.lib.scope>
-    <elasticsearch.version>1.1.0</elasticsearch.version>
+    <elasticsearch.version>6.8.13</elasticsearch.version>
   </properties>
 
   <artifactId>spm-client-common-libs-parent</artifactId>
