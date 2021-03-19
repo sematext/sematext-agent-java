@@ -13,7 +13,6 @@
     <tracing.agent.lib.scope>compile</tracing.agent.lib.scope>
     <tracing.agent.impl.lib.scope>compile</tracing.agent.impl.lib.scope>
     <sender.lib.scope>compile</sender.lib.scope>
-    <elasticsearch.version>1.1.0</elasticsearch.version>
   </properties>
 
   <artifactId>spm-client-common-libs-parent</artifactId>
@@ -262,68 +261,6 @@
       <scope>${common.lib.scope}</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
-      <version>${elasticsearch.version}</version>
-      <scope>${common.lib.scope}</scope>
-      <optional>true</optional>
-      <exclusions>
-        <exclusion>
-          <groupId>com.spatial4j</groupId>
-          <artifactId>spatial4j</artifactId>
-        </exclusion>
-
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-analyzers-common</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-codecs</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-queries</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-memory</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-highlighter</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-queryparser</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-sandbox</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-suggest</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-misc</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-join</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-grouping</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-spatial</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
 
 
     <!-- LOGGING -->
