@@ -19,46 +19,27 @@
  */
 package com.sematext.spm.client.sender.util;
 
-import org.apache.flume.Event;
+import org.apache.flume.Context;
+import org.apache.flume.EventDeliveryException;
+import org.apache.flume.sink.AbstractSink;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-
-import com.sematext.spm.client.Log;
-import com.sematext.spm.client.LogFactory;
-
-public class HttpBinaryPostSink extends HttpPostSink {
-  private static final Log LOG = LogFactory.getLog(HttpBinaryPostSink.class);
+/** kept as no-op just for backward compatibility */
+public class HttpBinaryPostSink extends AbstractSink implements DynamicUrlParamSink {
+  @Override
+  public Status process() throws EventDeliveryException {
+    return Status.READY;
+  }
 
   @Override
-  protected void post(List<Event> events) throws IOException {
-    final HttpURLConnection c = (HttpURLConnection) new URL(getFullUrlParamsString()).openConnection();
-    c.setRequestProperty("Content-Type", getContentType());
-    c.setDoInput(true);
-    c.setDoOutput(true);
+  public void configure(Context arg0) {
+  }
 
-    final OutputStream os = c.getOutputStream();
-    final DataOutputStream daos = new DataOutputStream(os);
-    for (final Event event : events) {
-      daos.writeInt(event.getBody().length);
-      daos.write(event.getBody());
-    }
+  @Override
+  public void updateAdditionalUrlParam(String key, String value) {
+  }
 
-    int rc = c.getResponseCode() - 200;
-    if (rc >= 0 && rc < 100) {
-      LOG.info(events.size() + " are posted to url " + getUrl() + " successfully, response code: " + c.getResponseCode()
-                   + ".");
-    } else {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(
-            events.size() + " can't be posted to url " + getUrl() + ", response code: " + c.getResponseCode() + ".");
-      }
-
-      throw new IOException("Non success http response: " + c.getResponseCode() + ".");
-    }
+  @Override
+  public long getLastEventTakeTimestamp() {
+    return System.currentTimeMillis();
   }
 }

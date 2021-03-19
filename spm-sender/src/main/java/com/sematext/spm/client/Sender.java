@@ -150,8 +150,6 @@ public final class Sender {
         agent.start();
         LOG.info("Created and started flume agent for : " + ref.getConfig().getTokens());
 
-        agent.setAppToken(TOKEN);
-
         AGENTS.put(senderType, agent);
         SOURCES.put(senderType, (EmbeddedSource) agent.createAndStartSource());
         CONFIG_REFS.put(senderType, ref);
