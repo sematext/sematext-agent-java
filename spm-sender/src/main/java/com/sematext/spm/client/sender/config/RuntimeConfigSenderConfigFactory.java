@@ -69,19 +69,12 @@ public class RuntimeConfigSenderConfigFactory extends BaseSenderConfigFactory {
         senderSinkClass = HttpBinaryPostSink.class.getCanonicalName();
       } else if (senderType == SenderType.STATS || senderType == SenderType.METRICS_METAINFO
           || senderType == SenderType.TAG_ALIASES) {
-        // senderSinkClass = CustomElasticSearchSink.class.getCanonicalName();
         senderSinkClass = InfluxSink.class.getCanonicalName();
       } else {
         throw new IllegalArgumentException("Unsupported senderType: " + senderType);
       }
     } else {
-      // old logic, probably can be removed after sender is merged with monitor
-      if ("binary".equals(properties.get("SPM_MONITOR_LOG_FORMAT"))) {
-        senderSinkClass = HttpBinaryPostSink.class.getCanonicalName();
-      } else {
-        // senderSinkClass = CustomElasticSearchSink.class.getCanonicalName();
-        senderSinkClass = InfluxSink.class.getCanonicalName();
-      }
+      senderSinkClass = InfluxSink.class.getCanonicalName();
     }
     properties.put("spm_sender_sink_class", senderSinkClass);
 

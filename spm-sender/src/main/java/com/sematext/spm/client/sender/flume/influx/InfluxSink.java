@@ -35,8 +35,8 @@ import java.util.Map;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
+import com.sematext.spm.client.sender.flume.ProxyContext;
 import com.sematext.spm.client.sender.flume.SinkConstants;
-import com.sematext.spm.client.sender.flume.es.ProxyContext;
 import com.sematext.spm.client.sender.util.DynamicUrlParamSink;
 
 /*CHECKSTYLE:OFF*/

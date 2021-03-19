@@ -50,8 +50,6 @@ import java.util.TreeSet;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
-import com.sematext.spm.client.sender.flume.es.CustomElasticSearchRestClient;
-import com.sematext.spm.client.sender.flume.es.CustomElasticSearchSink;
 import com.sematext.spm.client.sender.flume.influx.InfluxSink;
 import com.sematext.spm.client.sender.util.DynamicUrlParamSink;
 
@@ -279,14 +277,6 @@ public class SenderEmbeddedAgent {
     }
   }
 
-  public void setAppToken(String appTokensParam) {
-    if (!appTokensParam.equals(appTokens)) {
-      this.appTokens = appTokensParam;
-      LOGGER.info("Setting app tokens: " + this.appTokens + ", received as param: " + appTokensParam);
-      sink.updateAdditionalUrlParam(CustomElasticSearchRestClient.URL_PARAM_TOKEN, this.appTokens);
-    }
-  }
-
   private static enum State {
     NEW(),
     STOPPED(),
@@ -335,9 +325,7 @@ public class SenderEmbeddedAgent {
 
   public Status getSinkStatus() {
     if (sink != null) {
-      if (sink instanceof CustomElasticSearchSink) {
-        return ((CustomElasticSearchSink) sink).getLastSinkProcessStatus();
-      } else if (sink instanceof InfluxSink) {
+      if (sink instanceof InfluxSink) {
         return ((InfluxSink) sink).getLastSinkProcessStatus();
       }
     }

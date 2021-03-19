@@ -22,8 +22,6 @@ package com.sematext.spm.client.sender.bootstrap;
 import com.google.common.collect.Maps;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.flume.sink.elasticsearch.ElasticSearchSinkConstants;
-import org.apache.flume.sink.elasticsearch.client.ElasticSearchClientFactory;
 
 import java.io.File;
 import java.util.Map;
@@ -32,13 +30,10 @@ import java.util.Properties;
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.MonitorUtil;
-import com.sematext.spm.client.sender.SenderUtil;
 import com.sematext.spm.client.sender.config.Configuration;
 import com.sematext.spm.client.sender.config.SenderConfig;
 import com.sematext.spm.client.sender.flume.SenderEmbeddedAgent;
 import com.sematext.spm.client.sender.flume.SinkConstants;
-import com.sematext.spm.client.sender.flume.es.CustomElasticSearchRestClient;
-import com.sematext.spm.client.sender.flume.es.CustomElasticSearchSink;
 import com.sematext.spm.client.sender.flume.influx.InfluxClient;
 import com.sematext.spm.client.sender.flume.influx.InfluxSink;
 import com.sematext.spm.client.util.FileUtil;
@@ -153,9 +148,6 @@ public final class SenderFlumeAgentFactory {
     properties.put("http.post.sink.batch.size", "100");
 
     populateInfluxSinkProperties(properties, senderConfig, receiverUrl, endpointPath);
-
-    // for now just fill all, but one day allow users to choose which sink should output the data
-    populateEsSinkProperties(properties, senderConfig, monitorPropertiesFile, monitorProperties, receiverUrl, endpointPath);
   }
 
   private static void populateInfluxSinkProperties(Map<String, String> properties, SenderConfig senderConfig,
@@ -172,48 +164,6 @@ public final class SenderFlumeAgentFactory {
                      senderConfig.getProxyPort() != null ? String.valueOf(senderConfig.getProxyPort()) : null);
       properties.put(InfluxSink.PROXY_USERNAME, senderConfig.getProxyUser());
       properties.put(InfluxSink.PROXY_PASSWORD, senderConfig.getProxyPassword());
-    }
-  }
-
-  public static void populateEsSinkProperties(Map<String, String> properties, SenderConfig senderConfig,
-                                              File monitorPropertiesFile, Properties monitorProperties,
-                                              String receiverHost, String contextRoot) {
-    // sink properties
-    properties.put(ElasticSearchSinkConstants.HOSTNAMES, receiverHost);
-    properties.put(CustomElasticSearchSink.ES_CONTEXT_ROOT_PARAM, contextRoot);
-
-    // properties.put(ElasticSearchSinkConstants.INDEX_NAME, "%{appTokens}");
-    // properties.put(ElasticSearchSinkConstants.INDEX_TYPE, "%{hostname}");
-    properties.put(ElasticSearchSinkConstants.INDEX_NAME, "spm-receiver");
-    properties.put(ElasticSearchSinkConstants.CLIENT_TYPE, ElasticSearchClientFactory.RestClient);
-    properties
-        .put(ElasticSearchSinkConstants.INDEX_NAME_BUILDER, "org.apache.flume.sink.elasticsearch.SimpleIndexNameBuilder");
-    properties
-        .put(ElasticSearchSinkConstants.SERIALIZER, "com.sematext.spm.client.sender.flume.sink.elasticsearch.ElasticSearchDynamicSerializer");
-
-    // interceptor config for SPM agent
-    // cpCtx.put("interceptors", "hostInterceptor eventTimestampInterceptor");
-    // properties.put("interceptors", "hostInterceptor");
-    // properties.put("interceptors.hostInterceptor.type", "com.sematext.spm.client.sender.flume.interceptor.SenderHostnameInterceptorBuilder");
-    // cpCtx.put("interceptors.eventTimestampInterceptor.type", "com.sematext.spm.client.sender.flume.interceptor.EventTimestampAppenderInterceptor$Builder");
-    // NOTE: hostname interceptor not used anymore since we try to optimize creation of bulk URLs (recreate only when hostname changes)
-
-    properties.put(CustomElasticSearchRestClient.URL_PARAM_HOST, SenderUtil
-        .calculateHostParameterValue());
-    properties.put(CustomElasticSearchRestClient.URL_PARAM_DOCKER_HOSTNAME, SenderUtil.getDockerHostname());
-    properties.put(CustomElasticSearchRestClient.URL_PARAM_CONTAINER_HOSTNAME, MonitorUtil
-        .getContainerHostname(monitorPropertiesFile, monitorProperties, SenderUtil.isInContainer()));
-
-    // properties.put(CustomElasticSearchRestClient.URL_PARAM_VERSION, MonitorAgent.class.getPackage().getSpecificationVersion());
-    properties.put(CustomElasticSearchRestClient.URL_PARAM_VERSION, SenderFlumeAgentFactory.class.getPackage()
-        .getSpecificationVersion());
-
-    if (senderConfig.getProxyHost() != null) {
-      properties.put(CustomElasticSearchSink.PROXY_HOST, senderConfig.getProxyHost());
-      properties.put(CustomElasticSearchSink.PROXY_PORT,
-                     senderConfig.getProxyPort() != null ? String.valueOf(senderConfig.getProxyPort()) : null);
-      properties.put(CustomElasticSearchSink.PROXY_USERNAME, senderConfig.getProxyUser());
-      properties.put(CustomElasticSearchSink.PROXY_PASSWORD, senderConfig.getProxyPassword());
     }
   }
 }
