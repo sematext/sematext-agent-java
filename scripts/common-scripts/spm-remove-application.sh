@@ -37,23 +37,37 @@ if [ -z "$TOKEN" ]; then
   exit 1
 fi
 
-service spm-monitor stop
-
 if [ -z "$JVMNAME" ]; then
-  rm -R $SPM_HOME/spm-monitor/logs/standalone/*$TOKEN*
-  rm -R $SPM_HOME/spm-monitor/logs/applications/*$TOKEN*
-  rm -R $SPM_HOME/spm-monitor/conf/*$TOKEN*
-  rm -R $SPM_HOME/spm-monitor/flume/*/dataDirs/*$TOKEN*
-  rm -R $SPM_HOME/spm-monitor/flume/*/checkpointDir/*$TOKEN*  
+  service spm-monitor stop
+
+  rm -R $SPM_HOME/spm-monitor/logs/standalone/*$TOKEN* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/logs/applications/*$TOKEN* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/logs/telegraf/*$TOKEN* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/conf/*$TOKEN* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/telegraf/*$TOKEN* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-sender/conf/*$TOKEN* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/flume/*/dataDirs/*$TOKEN* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/flume/*/checkpointDir/*$TOKEN* > /dev/null 2>&1
+
+  service spm-monitor start
 else
-  rm -R $SPM_HOME/spm-monitor/logs/standalone/*$TOKEN-$JVMNAME*
-  rm -R $SPM_HOME/spm-monitor/logs/applications/$TOKEN/$JVMNAME/*
-  rm -R $SPM_HOME/spm-monitor/conf/*$TOKEN-$JVMNAME*
-  rm -R $SPM_HOME/spm-monitor/flume/*/dataDirs/$TOKEN/$JVMNAME/*
-  rm -R $SPM_HOME/spm-monitor/flume/*/checkpointDir/$TOKEN/$JVMNAME/*
+  # make sure the service exists before stopping it
+  systemctl daemon-reload
+  service spm-monitor-config-$TOKEN-$JVMNAME stop
+
+  rm -R $SPM_HOME/spm-monitor/logs/standalone/*$TOKEN-$JVMNAME* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/logs/applications/$TOKEN/$JVMNAME/* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/logs/telegraf/*$TOKEN*$JVMNAME* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/conf/*$TOKEN-$JVMNAME* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/telegraf/*$TOKEN-$JVMNAME* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-sender/conf/*$TOKEN-$JVMNAME* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/flume/*/dataDirs/$TOKEN/$JVMNAME/* > /dev/null 2>&1
+  rm -R $SPM_HOME/spm-monitor/flume/*/checkpointDir/$TOKEN/$JVMNAME/* > /dev/null 2>&1
+
+  # regenerate services after the script file is removed
+  systemctl daemon-reload
 fi
 
-service spm-monitor start
 
 echo
 echo "Done"
