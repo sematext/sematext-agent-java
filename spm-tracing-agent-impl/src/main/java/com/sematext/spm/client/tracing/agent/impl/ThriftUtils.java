@@ -22,6 +22,7 @@ package com.sematext.spm.client.tracing.agent.impl;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.transport.TTransportException;
 
 public final class ThriftUtils {
   private ThriftUtils() {
@@ -30,7 +31,11 @@ public final class ThriftUtils {
   private static final ThreadLocal<TSerializer> BINARY_PROTOCOL_SERIALIZER = new ThreadLocal<TSerializer>() {
     @Override
     protected TSerializer initialValue() {
-      return new TSerializer(new TBinaryProtocol.Factory());
+      try {
+        return new TSerializer(new TBinaryProtocol.Factory());
+      } catch (TTransportException tte) {
+        throw new RuntimeException(tte);
+      }
     }
   };
 
@@ -41,7 +46,11 @@ public final class ThriftUtils {
   private static final ThreadLocal<TDeserializer> THRIFT_DESERIALIZER = new ThreadLocal<TDeserializer>() {
     @Override
     protected TDeserializer initialValue() {
-      return new TDeserializer(new TBinaryProtocol.Factory());
+      try {
+        return new TDeserializer(new TBinaryProtocol.Factory());
+      } catch (TTransportException tte) {
+        throw new RuntimeException(tte);
+      }
     }
   };
 
