@@ -19,6 +19,9 @@
  */
 package com.sematext.spm.client.json;
 
+import com.sematext.spm.client.JsonFunction;
+import com.sematext.spm.client.JsonFunctionFactory;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -56,7 +59,13 @@ public final class JsonUtilFunctionEvaluator {
     } else if ("avg".equals(function)) {
       result = summarizeElements(node, elementCollection) / elementCollection.size();
     } else {
-      throw new UnsupportedOperationException(String.format("Unknown function %s", node));
+      // check if there is a function class, run it if there is
+      JsonFunction calcFunction = JsonFunctionFactory.getFunction(function);
+      if (function != null) {
+        return calcFunction.toString(elementCollection);
+      } else {
+        throw new UnsupportedOperationException(String.format("Unknown function %s", node));
+      }
     }
     return result;
   }

@@ -161,7 +161,6 @@ class FunctionReturnValue extends ReturnValue {
   private ReturnValue nestedReturnValue;
   
   public static boolean applies(String expression) {
-    // just substring supported for now
     return expression != null && (isSubstring(expression) || isCast(expression) ||
         JsonPathExpressionParser.isFunction(expression));
   }
