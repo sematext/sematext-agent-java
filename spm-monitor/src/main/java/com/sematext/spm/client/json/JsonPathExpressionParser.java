@@ -21,6 +21,8 @@ package com.sematext.spm.client.json;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.sematext.spm.client.JsonFunction;
+import com.sematext.spm.client.JsonFunctionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,18 @@ public final class JsonPathExpressionParser {
 
   public static boolean isFunction(String node) {
     // no support for functions with args for now
-    return node.replaceAll(" ", "").endsWith("()");
+    String funcTrimmed = node.replaceAll(" ", "");
+    if (funcTrimmed.endsWith("()")) {
+      return true;
+    }
+
+    // also check if there is a Java class that is implemented as a function
+    try {
+      JsonFunction func = JsonFunctionFactory.getFunction(funcTrimmed);
+      return func != null;
+    } catch (UnsupportedOperationException e) {
+      return false;
+    }
   }
 
   public static boolean isPlaceholder(String value) {
