@@ -62,19 +62,7 @@ public final class JsonPathExpressionParser {
   }
 
   public static boolean isFunction(String node) {
-    // no support for functions with args for now
-    String funcTrimmed = node.replaceAll(" ", "");
-    if (funcTrimmed.endsWith("()")) {
-      return true;
-    }
-
-    // also check if there is a Java class that is implemented as a function
-    try {
-      JsonFunction func = JsonFunctionFactory.getFunction(funcTrimmed);
-      return func != null;
-    } catch (UnsupportedOperationException e) {
-      return false;
-    }
+    return node.replaceAll(" ", "").endsWith("()");
   }
 
   public static boolean isPlaceholder(String value) {
