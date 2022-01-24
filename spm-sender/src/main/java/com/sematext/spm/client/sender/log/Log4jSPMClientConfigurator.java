@@ -19,8 +19,9 @@
  */
 package com.sematext.spm.client.sender.log;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Filter;
 
 import java.util.Enumeration;
 
@@ -36,6 +37,6 @@ public final class Log4jSPMClientConfigurator {
       logger.removeAllAppenders();
     }
 
-    LogManager.getRootLogger().addAppender(new SPMMonitorLogAppender());
+    LogManager.getRootLogger().addAppender(new SPMMonitorLogAppender("SPMMonitorLogAppender", null, null, true));
   }
 }
