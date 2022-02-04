@@ -20,23 +20,28 @@
 package com.sematext.spm.client.sender.log;
 
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
-import java.util.Enumeration;
+import java.util.Map;
 
 public final class Log4jSPMClientConfigurator {
   private Log4jSPMClientConfigurator() {
   }
 
   public static void configure() {
-    Enumeration loggers = LogManager.getCurrentLoggers();
-    LogManager.getRootLogger().removeAllAppenders();
-    while (loggers.hasMoreElements()) {
-      final Logger logger = (Logger) loggers.nextElement();
-      logger.removeAllAppenders();
+    final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+    final Configuration config = ctx.getConfiguration();
+    Map<String, LoggerConfig> loggers = config.getLoggers();
+    for (String name : loggers.keySet()){
+      LoggerConfig loggerConfig = loggers.get(name);
+      for (String appender : loggerConfig.getAppenders().keySet()) {
+        loggerConfig.removeAppender(appender);
+      }
     }
-
-    LogManager.getRootLogger().addAppender(new SPMMonitorLogAppender("SPMMonitorLogAppender", null, null, true));
+    ctx.updateLoggers();
+    ctx.getRootLogger().addAppender(new SPMMonitorLogAppender("SPMMonitorLogAppender", null, null, true));
+    ctx.updateLoggers();
   }
 }
