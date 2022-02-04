@@ -43,7 +43,7 @@ public class SPMMonitorLogAppender extends AbstractAppender {
   }
 
   @Override
-  protected void append(LogEvent evt) {
+  public void append(LogEvent evt) {
     if (evt.getLevel() == Level.TRACE) {
       if (evt.getThrown() == null) {
         LOG.trace(evt.getMessage());
