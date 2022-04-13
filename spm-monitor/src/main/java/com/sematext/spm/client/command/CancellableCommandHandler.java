@@ -68,11 +68,6 @@ public final class CancellableCommandHandler {
 
     if (command.getType() == TCommandType.CANCEL) {
       final TCancelRequest request = new TCancelRequest();
-      try {
-        ThriftUtils.binaryProtocolDeserializer().deserialize(request, command.getRequest());
-      } catch (TException e) {
-        throw new IllegalStateException("Can't deserialize cancel command.", e);
-      }
 
       LOG.info("Got cancel request for command " + request.getId() + ".");
 

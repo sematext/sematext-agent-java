@@ -358,9 +358,6 @@ public class CommandPollingTest {
 
     startLatch.await(5, TimeUnit.SECONDS);
 
-    TCommand cancelC1 = new TCommand(TCommandType.CANCEL, 2);
-    cancelC1.setRequest(ThriftUtils.binaryProtocolSerializer().serialize(new TCancelRequest(1)));
-
     server.pendingCommands = Arrays.asList(cancelC1);
 
     TCommandResponse response = server.responses.poll(5, TimeUnit.SECONDS);
