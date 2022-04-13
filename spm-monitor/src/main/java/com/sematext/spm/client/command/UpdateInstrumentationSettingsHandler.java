@@ -61,24 +61,13 @@ public class UpdateInstrumentationSettingsHandler implements CommandHandler {
         state.put(behDescription, behState);
       }
 
-      final TracingAgentControl agentControl = ServiceLocator.getTracingAgentControl();
-
-      agentControl.getInstrumentationSettings().update(state);
-      final boolean isStateApplied = agentControl.applyInstrumentationSettings();
-
-      log.info(
-          "Instrumentation settings " + (isStateApplied ? "Successfully applied" : "Not applied - tracing disabled"));
+      log.info("Instrumentation settings Not applied - tracing disabled");
 
       final TCommandResponse response = new TCommandResponse();
-      if (isStateApplied) {
-        response.setStatus(TCommandResponseStatus.SUCCESS);
-        response.setId(command.getId());
-      } else {
-        response.setStatus(TCommandResponseStatus.FAILURE);
-        response.setId(command.getId());
-        response.setFailureReason("Tracing is disabled");
-      }
 
+      response.setStatus(TCommandResponseStatus.FAILURE);
+      response.setId(command.getId());
+      response.setFailureReason("Tracing is disabled");
       callback.respond(response);
 
       return null;
