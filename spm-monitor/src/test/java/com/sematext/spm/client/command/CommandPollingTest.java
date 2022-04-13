@@ -54,7 +54,6 @@ import com.sematext.spm.client.monitor.thrift.TCommandResponse;
 import com.sematext.spm.client.monitor.thrift.TCommandResponseStatus;
 import com.sematext.spm.client.monitor.thrift.TCommandType;
 import com.sematext.spm.client.snap.serializer.TBinaryProto;
-import com.sematext.spm.client.tracing.agent.impl.ThriftUtils;
 
 @RunWith(DataProviderRunner.class)
 public class CommandPollingTest {

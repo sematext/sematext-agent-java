@@ -31,7 +31,6 @@ import com.sematext.spm.client.monitor.thrift.TCommand;
 import com.sematext.spm.client.monitor.thrift.TCommandResponse;
 import com.sematext.spm.client.monitor.thrift.TCommandResponseStatus;
 import com.sematext.spm.client.monitor.thrift.TCommandType;
-import com.sematext.spm.client.tracing.agent.impl.ThriftUtils;
 import com.sematext.spm.client.util.Preconditions;
 
 public final class CancellableCommandHandler {

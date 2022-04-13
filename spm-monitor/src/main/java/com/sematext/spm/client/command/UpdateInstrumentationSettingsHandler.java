@@ -31,9 +31,6 @@ import com.sematext.spm.client.monitor.thrift.TCommandResponse;
 import com.sematext.spm.client.monitor.thrift.TCommandResponseStatus;
 import com.sematext.spm.client.monitor.thrift.TInstrumentedMethodState;
 import com.sematext.spm.client.monitor.thrift.TUpdateInstrumentationSettings;
-import com.sematext.spm.client.tracing.agent.TracingAgentControl;
-import com.sematext.spm.client.tracing.agent.config.ServiceLocator;
-import com.sematext.spm.client.tracing.agent.impl.ThriftUtils;
 import com.sematext.spm.client.unlogger.dynamic.BehaviorDescription;
 import com.sematext.spm.client.unlogger.dynamic.BehaviorState;
 
