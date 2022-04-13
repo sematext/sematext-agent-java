@@ -116,8 +116,6 @@
               <artifactSet>
                 <excludes>
                   <exclude>com.sematext.spm:spm-monitor-utils</exclude>
-                  <exclude>com.sematext.spm:spm-tracing-agent</exclude>
-                  <exclude>com.sematext.spm:spm-tracing-agent-impl</exclude>
                   <exclude>com.sematext.spm:spm-monitor-starter</exclude>
                   <exclude>org.javassist:javassist</exclude>
                   <exclude>org.eclipse.collections:eclipse-collections-api</exclude>

@@ -37,26 +37,6 @@
 
     <dependency>
       <groupId>com.sematext.spm</groupId>
-      <artifactId>spm-tracing-agent</artifactId>
-      <version>${project.version}</version>
-      <scope>${tracing.agent.lib.scope}</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sematext.spm</groupId>
-      <artifactId>spm-tracing-agent-impl</artifactId>
-      <version>${project.version}</version>
-      <scope>${tracing.agent.impl.lib.scope}</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.sematext.spm</groupId>
-          <artifactId>spm-thrift-data</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sematext.spm</groupId>
       <artifactId>spm-monitor-utils</artifactId>
       <version>${project.version}</version>
       <scope>${common.lib.scope}</scope>
