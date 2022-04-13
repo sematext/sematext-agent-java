@@ -11,8 +11,6 @@
 
   <properties>
     <common.lib.scope>compile</common.lib.scope>
-    <tracing.agent.lib.scope>provided</tracing.agent.lib.scope>
-    <tracing.agent.impl.lib.scope>provided</tracing.agent.impl.lib.scope>
     <sender.lib.scope>provided</sender.lib.scope>
   </properties>
 

@@ -131,9 +131,6 @@
                 <goal>single</goal>
               </goals>
               <configuration>
-                <descriptors>
-                  <descriptor>/../spm-monitor-parent/src/main/assembly/monitor-with-tracing-agent-dist.xml</descriptor>
-                </descriptors>
                 <archive>
                   <manifestEntries>
                     <Premain-Class>com.sematext.spm.client.MonitorAgentWrapper</Premain-Class>

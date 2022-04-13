@@ -10,8 +10,6 @@
 
   <properties>
     <common.lib.scope>provided</common.lib.scope>
-    <tracing.agent.lib.scope>compile</tracing.agent.lib.scope>
-    <tracing.agent.impl.lib.scope>compile</tracing.agent.impl.lib.scope>
     <sender.lib.scope>compile</sender.lib.scope>
   </properties>
 
