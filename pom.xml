@@ -118,9 +118,6 @@
         <module>spm-transfer</module>
         <module>spm-monitor-redis</module>
         <module>spm-monitor-storm</module>
-        <module>spm-tracing-agent</module>
-        <module>spm-tracing-testing</module>
-        <module>spm-tracing-agent-impl</module>
         <module>spm-monitor-haproxy</module>
     </modules>
 
