@@ -358,7 +358,7 @@ public class CommandPollingTest {
 
     startLatch.await(5, TimeUnit.SECONDS);
 
-    server.pendingCommands = Arrays.asList(cancelC1);
+    server.pendingCommands = Arrays.asList();
 
     TCommandResponse response = server.responses.poll(5, TimeUnit.SECONDS);
     assertNotNull(response);
