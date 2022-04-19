@@ -36,7 +36,7 @@ podRetention: never()) {
         container('maven') {
           sh """
             cd sematext-agent-java
-            mvn --batch-mode clean install -DskipTests
+            mvn --batch-mode clean install -DskipTests -e
             """
         }
       }
