@@ -16,7 +16,7 @@
       <outputDirectory>/</outputDirectory>
 
       <includes>
-        <include>com.sematext.spm:${artifactId}:jar:shaded-bootstrap:*</include>
+        <include>com.sematext.spm:${project.artifactId}:jar:shaded-bootstrap:*</include>
       </includes>
     </dependencySet>
 
@@ -33,7 +33,7 @@
       <outputDirectory>monitor-libs</outputDirectory>
 
       <includes>
-        <include>com.sematext.spm:${artifactId}:jar:shaded-impl:*</include>
+        <include>com.sematext.spm:${project.artifactId}:jar:shaded-impl:*</include>
       </includes>
     </dependencySet>
   </dependencySets>

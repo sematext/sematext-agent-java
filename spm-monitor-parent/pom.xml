@@ -91,7 +91,7 @@
                   <excludes>
                     <exclude>org.eclipse.collections:eclipse-collections-api</exclude>
                     <exclude>org.eclipse.collections:eclipse-collections</exclude>
-                    <exclude>com.sematext.spm:${artifactId}</exclude>
+                    <exclude>com.sematext.spm:${project.artifactId}</exclude>
                     <exclude>org.apache.thrift:libthrift</exclude>
                     <exclude>org.slf4j:slf4j-api</exclude>
                     <exclude>org.slf4j:slf4j-log4j12</exclude>
