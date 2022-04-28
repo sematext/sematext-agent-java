@@ -124,6 +124,9 @@
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.4</version>
           <configuration>
+            <descriptors>
+              <descriptor>/../spm-monitor-parent/src/main/assembly/dist.xml</descriptor>
+            </descriptors>
             <archive>
               <manifestEntries>
                 <Premain-Class>com.sematext.spm.client.MonitorAgentWrapper</Premain-Class>
