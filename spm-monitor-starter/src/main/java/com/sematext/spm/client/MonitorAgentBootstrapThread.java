@@ -114,8 +114,8 @@ public class MonitorAgentBootstrapThread extends Thread {
       System.out.println("Monitor config file is : " + monitorConfigFile);
       Properties monitorProps = MonitorUtil.loadMonitorProperties(monitorConfigFile);
 
-      if(monitorProps == null) {
-        System.out.println("Unable to open monitor config file.");
+      if(monitorProps == null){
+        System.out.println("Unable to open monitor config file: " + monitorConfigFile);
         return;
       }
 
