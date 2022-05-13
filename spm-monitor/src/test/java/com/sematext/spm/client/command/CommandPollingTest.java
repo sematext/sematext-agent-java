@@ -24,6 +24,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
 
+import com.sematext.spm.client.util.ThriftUtils;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -358,9 +359,12 @@ public class CommandPollingTest {
 
     startLatch.await(5, TimeUnit.SECONDS);
 
-    server.pendingCommands = Arrays.asList();
+    TCommand cancelC1 = new TCommand(TCommandType.CANCEL, 2);
+    cancelC1.setRequest(ThriftUtils.binaryProtocolSerializer().serialize(new TCancelRequest(1)));
 
-    TCommandResponse response = server.responses.poll(5, TimeUnit.SECONDS);
+    server.pendingCommands = Arrays.asList(cancelC1);
+
+    TCommandResponse response = server.responses.poll(10, TimeUnit.SECONDS);
     assertNotNull(response);
     assertEquals(response.getId(), 2);
     assertEquals(response.getStatus(), TCommandResponseStatus.SUCCESS);
