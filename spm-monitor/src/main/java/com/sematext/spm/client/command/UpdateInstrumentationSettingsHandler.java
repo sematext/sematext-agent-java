@@ -19,6 +19,7 @@
  */
 package com.sematext.spm.client.command;
 
+import com.sematext.spm.client.util.ThriftUtils;
 import org.apache.thrift.TException;
 
 import java.util.HashMap;
@@ -41,6 +42,15 @@ public class UpdateInstrumentationSettingsHandler implements CommandHandler {
   @Override
   public Cancellable handle(TCommand command, ResponseCallback callback) {
     final TUpdateInstrumentationSettings thriftSettings = new TUpdateInstrumentationSettings();
+    try {
+      ThriftUtils.binaryProtocolDeserializer().deserialize(thriftSettings, command.getRequest());
+    } catch (TException e) {
+      log.error("Can't update instrumentation settings.", e);
+      final TCommandResponse response = new TCommandResponse(TCommandResponseStatus.FAILURE, command.getId());
+      response.setFailureReason(e.getMessage());
+      callback.respond(response);
+      return null;
+    }
     final Map<BehaviorDescription, BehaviorState> state = new HashMap<BehaviorDescription, BehaviorState>();
 
     try {
