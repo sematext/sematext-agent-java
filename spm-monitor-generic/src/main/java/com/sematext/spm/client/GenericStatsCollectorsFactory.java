@@ -74,19 +74,17 @@ import com.sematext.spm.client.json.JsonUtil;
 import com.sematext.spm.client.jvm.JvmNotifBasedGcStatsCollector;
 import com.sematext.spm.client.observation.AttributeObservation;
 import com.sematext.spm.client.observation.ObservationBean;
-import com.sematext.spm.client.tracing.TracingMonitorConfigurator;
 import com.sematext.spm.client.util.CollectionUtils.FunctionT;
 import com.sematext.spm.client.yaml.YamlConfigLoader;
 
 public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsCollector<?>> {
   private static final Log LOG = LogFactory.getLog(GenericStatsCollectorsFactory.class);
-  private final TracingMonitorConfigurator tracingConf = new TracingMonitorConfigurator();
 
   public static final Cache<String, StatsCollector<?>> EXISTING_COLLECTORS_MAP = CacheBuilder.newBuilder()
       .maximumSize(300000)
       .expireAfterAccess(30, TimeUnit.MINUTES)
       .build();
-  
+
   private static final int MAX_PCTLS_DEFINITIONS = 10;
   private static int CURRENT_COUNT_PCTLS_DEFINITIONS = 0;
 
@@ -126,23 +124,6 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
                                                                                              .getProperty("SPM_MONITOR_SEND_JVM_NAME", "false")
                                                                                              .trim()).trim()));
 
-      if (MonitorUtil.MONITOR_RUNTIME_SETUP_JAVAAGENT.get()) {
-        boolean tracingEnabled = "true".equalsIgnoreCase(MonitorUtil.stripQuotes(monitorProperties
-                                                                                     .getProperty("SPM_MONITOR_TRACING_ENABLED", "false")
-                                                                                     .trim()).trim());
-
-        if (tracingEnabled) {
-          try {
-            // always configure, it collects only if right settings are present though (handles it internally)
-            tracingConf
-                .configure(monitorConfig, currentCollectors, collectors, Serializer.INFLUX, appToken, subType, jvmName);
-          } catch (Throwable thr) {
-            // don't propagate, just continue
-            LOG.error("Error while configuring tracing conf", thr);
-          }
-        }
-      }
-
       CURRENT_COUNT_PCTLS_DEFINITIONS = 0;
 
       LOG.info("Loading configs for collectors: " + types);
@@ -167,7 +148,7 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
       }
 
       collectors = groupCollectorsByTags(collectors, monitorConfig);
-      
+
       // as last collector add HeartbeatCollector
       updateCollector(currentCollectors, collectors, HeartbeatStatsCollector.class, jvmName,
           new FunctionT<String, HeartbeatStatsCollector, StatsCollectorBadConfigurationException>() {
@@ -176,7 +157,7 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
               return new HeartbeatStatsCollector(Serializer.INFLUX, appToken, jvmName, subType);
             }
           });
-      
+
       int collectorsCount = StatsCollector.getCollectorsCount(collectors);
       if (collectorsCount < 50) {
         LOG.info("Created " + collectors.size() + " collectors : " + collectors);
@@ -657,7 +638,7 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
 
     // replace all monitor properties placeholders with real values from properties file
     // NOTE: assumption is that it is ok if behavior will be undefined when two props have the same variants (ST_PROP
-    // and SPM_PROP) because order of execution would affect the end result 
+    // and SPM_PROP) because order of execution would affect the end result
     for (Object property : monitorProperties.keySet()) {
       String propertyValue = MonitorUtil.stripQuotes(monitorProperties.getProperty(String.valueOf(property), "").trim())
           .trim();
@@ -791,7 +772,7 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
           }
         }
 
-        // check if everything resolved too        
+        // check if everything resolved too
         if (!col.getGenericExtractor().isAllConfigTagsResolved()) {
           nonGroupableCollectors.add(sc);
         } else {

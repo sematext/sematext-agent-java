@@ -188,9 +188,6 @@ public final class BasicCommandPollingSetup {
           .addHandler(TCommandType.PING, new PingCommandHandler())
           .addHandler(TCommandType.PROFILE, new ProfileCommandHandler(ctx))
           .addHandler(TCommandType.GET_INSTRUMENTED_METHODS, new GetInstrumentedMethodsHandler())
-          .addHandler(TCommandType.ENABLE_TRACING, new EnableTracingHandler())
-          .addHandler(TCommandType.DISABLE_TRACING, new DisableTracingHandler())
-          .addHandler(TCommandType.IS_TRACING_ENABLED, new IsTracingEnabledHandler())
           .addHandler(TCommandType.UPDATE_INSTRUMENTATION_SETTINGS, new UpdateInstrumentationSettingsHandler())
           .proxy(senderConfig.proxyHost, senderConfig.proxyPort, senderConfig.proxyUsername, senderConfig.proxyPassword)
           .build();

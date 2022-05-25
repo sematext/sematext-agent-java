@@ -36,13 +36,11 @@ import com.sematext.spm.client.StatsCollector;
 import com.sematext.spm.client.StatsCollectorBadConfigurationException;
 import com.sematext.spm.client.StatsCollectorsFactory;
 import com.sematext.spm.client.jmx.configurator.JvmJmxBasedMonitorConfigurator;
-import com.sematext.spm.client.tracing.TracingMonitorConfigurator;
 import com.sematext.spm.client.util.CollectionUtils.FunctionT;
 
 public class StormSupervisorStatsCollectorsFactory extends StatsCollectorsFactory<StatsCollector<?>> {
   private static final Log LOG = LogFactory.getLog(StormSupervisorStatsCollectorsFactory.class);
   private final JvmJmxBasedMonitorConfigurator jvmJmxConf = new JvmJmxBasedMonitorConfigurator();
-  private final TracingMonitorConfigurator tracingConf = new TracingMonitorConfigurator();
 
   public Collection<? extends StatsCollector<?>> create(Properties monitorProperties,
                                                         List<? extends StatsCollector<?>> currentCollectors,
@@ -57,23 +55,6 @@ public class StormSupervisorStatsCollectorsFactory extends StatsCollectorsFactor
 
       // first read available JVM data from Jmx
       jvmJmxConf.configure(Collections.EMPTY_MAP, monitorConfig, currentCollectors, collectors);
-
-      if (MonitorUtil.MONITOR_RUNTIME_SETUP_JAVAAGENT.get()) {
-        boolean tracingEnabled = "true".equalsIgnoreCase(MonitorUtil.stripQuotes(monitorProperties
-                                                                                     .getProperty("SPM_MONITOR_TRACING_ENABLED", "false")
-                                                                                     .trim()).trim());
-
-        if (tracingEnabled) {
-          try {
-            // always configure, it collects only if right settings are present though (handles it internally)
-            tracingConf
-                .configure(monitorConfig, currentCollectors, collectors, Serializer.INFLUX, appToken, subType, jvmName);
-          } catch (Throwable thr) {
-            // don't propagate, just continue
-            LOG.error("Error while configuring tracing conf", thr);
-          }
-        }
-      }
 
       // as last collector add HeartbeatCollector
       updateCollector(currentCollectors, collectors, HeartbeatStatsCollector.class, jvmName,

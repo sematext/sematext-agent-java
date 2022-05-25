@@ -29,7 +29,7 @@
       <dependency>
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-core</artifactId>
-          <version>2.17.0</version>
+          <version>2.17.2</version>
           <scope>compile</scope>
       </dependency>
   </dependencies>
@@ -59,7 +59,6 @@
                 <artifactSet>
                   <excludes>
                     <exclude>com.sematext.spm:spm-monitor-utils</exclude>
-                    <exclude>com.sematext.spm:spm-tracing-agent</exclude>
                     <exclude>com.sematext.spm:spm-monitor-starter</exclude>
                     <exclude>org.javassist:javassist</exclude>
                     <exclude>org.eclipse.collections:eclipse-collections-api</exclude>
@@ -86,14 +85,13 @@
                 <artifactSet>
                   <includes>
                     <include>com.sematext.spm:spm-monitor-utils</include>
-                    <include>com.sematext.spm:spm-tracing-agent</include>
                     <include>com.sematext.spm:spm-monitor-starter</include>
                     <include>org.javassist:javassist</include>
                   </includes>
                   <excludes>
                     <exclude>org.eclipse.collections:eclipse-collections-api</exclude>
                     <exclude>org.eclipse.collections:eclipse-collections</exclude>
-                    <exclude>com.sematext.spm:${artifactId}</exclude>
+                    <exclude>com.sematext.spm:${project.artifactId}</exclude>
                     <exclude>org.apache.thrift:libthrift</exclude>
                     <exclude>org.slf4j:slf4j-api</exclude>
                     <exclude>org.slf4j:slf4j-log4j12</exclude>
@@ -102,15 +100,6 @@
                   </excludes>
                 </artifactSet>
                 <filters>
-                  <filter>
-                    <artifact>com.sematext.spm:spm-tracing-agent</artifact>
-                    <excludes>
-                      <exclude>org/**</exclude>
-                      <exclude>com/sematext/spm/client/tracing/thrift/**</exclude>
-                      <exclude>com/sematext/spm/client/monitor/thrift/**</exclude>
-                      <exclude>com/sematext/spm/client/snap/**</exclude>
-                    </excludes>
-                  </filter>
                   <filter>
                     <artifact>com.sematext.spm:spm-monitor-utils</artifact>
                     <excludes>
@@ -134,6 +123,21 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.4</version>
+          <configuration>
+            <descriptors>
+              <descriptor>/../spm-monitor-parent/src/main/assembly/dist.xml</descriptor>
+            </descriptors>
+            <archive>
+              <manifestEntries>
+                <Premain-Class>com.sematext.spm.client.MonitorAgentWrapper</Premain-Class>
+                <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                <!-- these are from old sender jar -->
+                <Specification-Version>${project.version}</Specification-Version>
+                <mode>development</mode>
+                <url>${project.url}</url>
+              </manifestEntries>
+            </archive>
+          </configuration>
           <executions>
             <execution>
               <id>create-distro</id>
@@ -141,22 +145,6 @@
               <goals>
                 <goal>single</goal>
               </goals>
-              <configuration>
-                <descriptors>
-                  <descriptor>/../spm-monitor-parent/src/main/assembly/monitor-with-tracing-agent-dist.xml</descriptor>
-                </descriptors>
-                <archive>
-                  <manifestEntries>
-                    <Premain-Class>com.sematext.spm.client.MonitorAgentWrapper</Premain-Class>
-                    <Can-Retransform-Classes>true</Can-Retransform-Classes>
-
-                    <!-- these are from old sender jar -->
-                    <Specification-Version>${project.version}</Specification-Version>
-                    <mode>development</mode>
-                    <url>${project.url}</url>
-                  </manifestEntries>
-                </archive>
-              </configuration>
             </execution>
           </executions>
         </plugin>

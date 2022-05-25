@@ -19,6 +19,7 @@
  */
 package com.sematext.spm.client.command;
 
+import com.sematext.spm.client.util.ThriftUtils;
 import org.apache.thrift.TException;
 
 import java.util.HashMap;
@@ -31,9 +32,6 @@ import com.sematext.spm.client.monitor.thrift.TCommandResponse;
 import com.sematext.spm.client.monitor.thrift.TCommandResponseStatus;
 import com.sematext.spm.client.monitor.thrift.TInstrumentedMethodState;
 import com.sematext.spm.client.monitor.thrift.TUpdateInstrumentationSettings;
-import com.sematext.spm.client.tracing.agent.TracingAgentControl;
-import com.sematext.spm.client.tracing.agent.config.ServiceLocator;
-import com.sematext.spm.client.tracing.agent.impl.ThriftUtils;
 import com.sematext.spm.client.unlogger.dynamic.BehaviorDescription;
 import com.sematext.spm.client.unlogger.dynamic.BehaviorState;
 
@@ -53,7 +51,6 @@ public class UpdateInstrumentationSettingsHandler implements CommandHandler {
       callback.respond(response);
       return null;
     }
-
     final Map<BehaviorDescription, BehaviorState> state = new HashMap<BehaviorDescription, BehaviorState>();
 
     try {
@@ -64,24 +61,13 @@ public class UpdateInstrumentationSettingsHandler implements CommandHandler {
         state.put(behDescription, behState);
       }
 
-      final TracingAgentControl agentControl = ServiceLocator.getTracingAgentControl();
-
-      agentControl.getInstrumentationSettings().update(state);
-      final boolean isStateApplied = agentControl.applyInstrumentationSettings();
-
-      log.info(
-          "Instrumentation settings " + (isStateApplied ? "Successfully applied" : "Not applied - tracing disabled"));
+      log.info("Instrumentation settings Not applied - tracing disabled");
 
       final TCommandResponse response = new TCommandResponse();
-      if (isStateApplied) {
-        response.setStatus(TCommandResponseStatus.SUCCESS);
-        response.setId(command.getId());
-      } else {
-        response.setStatus(TCommandResponseStatus.FAILURE);
-        response.setId(command.getId());
-        response.setFailureReason("Tracing is disabled");
-      }
 
+      response.setStatus(TCommandResponseStatus.FAILURE);
+      response.setId(command.getId());
+      response.setFailureReason("Tracing is disabled");
       callback.respond(response);
 
       return null;

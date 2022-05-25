@@ -19,6 +19,7 @@
  */
 package com.sematext.spm.client.command;
 
+import com.sematext.spm.client.util.ThriftUtils;
 import org.apache.thrift.TException;
 
 import java.util.Map;
@@ -31,7 +32,6 @@ import com.sematext.spm.client.monitor.thrift.TCommand;
 import com.sematext.spm.client.monitor.thrift.TCommandResponse;
 import com.sematext.spm.client.monitor.thrift.TCommandResponseStatus;
 import com.sematext.spm.client.monitor.thrift.TCommandType;
-import com.sematext.spm.client.tracing.agent.impl.ThriftUtils;
 import com.sematext.spm.client.util.Preconditions;
 
 public final class CancellableCommandHandler {
@@ -69,12 +69,12 @@ public final class CancellableCommandHandler {
 
     if (command.getType() == TCommandType.CANCEL) {
       final TCancelRequest request = new TCancelRequest();
+
       try {
         ThriftUtils.binaryProtocolDeserializer().deserialize(request, command.getRequest());
       } catch (TException e) {
         throw new IllegalStateException("Can't deserialize cancel command.", e);
       }
-
       LOG.info("Got cancel request for command " + request.getId() + ".");
 
       final Cancellable cancellable = cancellableHandlers.get(request.getId());

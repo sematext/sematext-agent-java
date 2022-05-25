@@ -30,7 +30,7 @@
       <outputDirectory>monitor-libs</outputDirectory>
 
       <includes>
-        <include>com.sematext.spm:${artifactId}</include>
+        <include>com.sematext.spm:${project.artifactId}</include>
       </includes>
     </dependencySet>
   </dependencySets>

@@ -24,6 +24,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
 
+import com.sematext.spm.client.util.ThriftUtils;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -54,7 +55,6 @@ import com.sematext.spm.client.monitor.thrift.TCommandResponse;
 import com.sematext.spm.client.monitor.thrift.TCommandResponseStatus;
 import com.sematext.spm.client.monitor.thrift.TCommandType;
 import com.sematext.spm.client.snap.serializer.TBinaryProto;
-import com.sematext.spm.client.tracing.agent.impl.ThriftUtils;
 
 @RunWith(DataProviderRunner.class)
 public class CommandPollingTest {

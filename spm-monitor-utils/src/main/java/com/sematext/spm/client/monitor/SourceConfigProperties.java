@@ -23,6 +23,5 @@ public final class SourceConfigProperties {
   private SourceConfigProperties() {
   }
 
-  public static final String SPM_MONITOR_TRACING_ENABLED = "SPM_MONITOR_TRACING_ENABLED";
   public static final String SPM_MONITOR_PROFILER_DISABLED = "SPM_MONITOR_PROFILER_DISABLED";
 }
