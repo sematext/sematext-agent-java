@@ -10,8 +10,6 @@
 
   <properties>
     <common.lib.scope>provided</common.lib.scope>
-    <tracing.agent.lib.scope>compile</tracing.agent.lib.scope>
-    <tracing.agent.impl.lib.scope>compile</tracing.agent.impl.lib.scope>
     <sender.lib.scope>compile</sender.lib.scope>
   </properties>
 
@@ -27,26 +25,6 @@
       <artifactId>spm-transfer</artifactId>
       <version>${project.version}</version>
       <scope>${common.lib.scope}</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.sematext.spm</groupId>
-          <artifactId>spm-thrift-data</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sematext.spm</groupId>
-      <artifactId>spm-tracing-agent</artifactId>
-      <version>${project.version}</version>
-      <scope>${tracing.agent.lib.scope}</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sematext.spm</groupId>
-      <artifactId>spm-tracing-agent-impl</artifactId>
-      <version>${project.version}</version>
-      <scope>${tracing.agent.impl.lib.scope}</scope>
       <exclusions>
         <exclusion>
           <groupId>com.sematext.spm</groupId>
@@ -314,7 +292,7 @@
       <dependency>
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-core</artifactId>
-          <version>2.17.0</version>
+          <version>2.17.2</version>
           <scope>compile</scope>
       </dependency>
   </dependencies>

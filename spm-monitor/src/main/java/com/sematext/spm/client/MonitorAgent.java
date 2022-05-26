@@ -32,7 +32,6 @@ import com.sematext.spm.client.command.BasicCommandPollingSetup.CommandPollingRu
 import com.sematext.spm.client.jmx.JmxServiceContext;
 import com.sematext.spm.client.monitor.SourceConfigProperties;
 import com.sematext.spm.client.sender.SenderUtil;
-import com.sematext.spm.client.tracing.agent.impl.AgentInitializer;
 import com.sematext.spm.client.util.PropertiesReader;
 
 /**
@@ -207,24 +206,6 @@ public final class MonitorAgent {
 
     Sender.initialize(monitorArgs.getToken(), monitorArgs.getJvmName(), monitorArgs
         .getSubType(), MonitorType.APPLICATION);
-
-    try {
-      boolean tracingEnabled = "true".equalsIgnoreCase(props.get(SourceConfigProperties.SPM_MONITOR_TRACING_ENABLED));
-      if (tracingEnabled) {
-        log.info("Tracing enabled for " + propsFile.getName());
-      } else {
-        log.info("Tracing disabled for " + propsFile.getName());
-      }
-
-      // can't initialize tracing for any kind of standalone monitor
-      if (inst == null) {
-        log.info("Tracing permanently disabled for standalone monitor for " + propsFile.getName());
-      } else {
-        AgentInitializer.init(agentArgs, inst, tracingEnabled, false);
-      }
-    } catch (Exception e) {
-      throw new ConfigurationFailedException("Can't initialize tracing agent for " + propsFile.getName(), e);
-    }
 
     final MonitorConfig metricsConfig = getMonitorConfig(null, monitorArgs, inst, DataFormat.PLAIN_TEXT, processOrdinal);
     if (metricsConfig == null) {
