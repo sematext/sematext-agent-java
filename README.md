@@ -30,18 +30,18 @@ The [How-to Guide](/docs/how-to.md) describes how to configure the App Agent in 
 To build Sematext App Agent you need:
 
 1) Linux based Operating System
-2) Java 1.6+
+2) Java 1.6 - 1.8
 3) Maven
 4) Thrift compiler v0.12.0
     * Steps to install Thrift in Debian based systems
         ```bash
           sudo apt-get install automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
-          wget http://www.us.apache.org/dist/thrift/0.12.0/thrift-0.12.0.tar.gz
-          tar xfz thrift-0.12.0.tar.gz
-          cd thrift-0.12.0 && ./configure --enable-libs=no  && sudo make install
+          wget https://dlcdn.apache.org/thrift/0.18.1/thrift-0.18.1.tar.gz
+          tar xfz thrift-0.18.1.tar.gz
+          cd thrift-0.18.1 && ./configure --enable-libs=no  && sudo make install
         ```
 5) fpm package manager
-    * For steps to install fpm refer [https://fpm.readthedocs.io/en/latest/installing.html](https://fpm.readthedocs.io/en/latest/installing.html)
+    * For steps to install fpm refer [https://fpm.readthedocs.io/en/v1.15.1/installation.html#installing-fpm](https://fpm.readthedocs.io/en/v1.15.1/installation.html#installing-fpm)
 
 After cloning the repo, executing `build.sh` will build the packages for multiple Linux distributions.
 
@@ -52,6 +52,10 @@ Docker image building for Sematext App Agent is triggered by Maven target:
 ```bash
 $ sudo mvn clean install dockerfile:build
 ```
+
+#### Troubleshooting
+
+when building the image, if `software-properties-common` package fails, could be because the Docker installation is `snap` instead of `apt` version. To install the `apt` version, follow [this](https://docs.docker.com/engine/install/ubuntu/) to install the correct one.
 
 If Docker daemon is listening on TCP socket, you can set `DOCKER_HOST` environment variable and start
 the build with regular user:
