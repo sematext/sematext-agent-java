@@ -15,6 +15,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.12.1</version>
+    </dependency>
+    <dependency>
       <groupId>com.sematext.spm</groupId>
       <artifactId>spm-monitor</artifactId>
       <version>${project.version}</version>
