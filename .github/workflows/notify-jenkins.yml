@@ -20,6 +20,6 @@ jobs:
         uses: appleboy/jenkins-action@master
         with:
           url: "https://jenkins.new.test.sematext.com"
-          user: "machine@sematext.com"
+          user: "machine"
           token: ${{secrets.JENKINS_TOKEN}}
           job: "sematext-agent-java"
