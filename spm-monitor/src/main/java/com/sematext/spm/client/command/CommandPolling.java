@@ -66,7 +66,8 @@ public final class CommandPolling {
   private String proxyHost;
   private int proxyPort;
   private String proxyUsername;
-  private String proxyPassword;
+  private String proxyPassword; 
+  private boolean proxySecure;
   private long pollingInterval;
   private int retriesCount = 5;
   private TimeUnit pollingIntervalTimeUnit;
@@ -115,11 +116,12 @@ public final class CommandPolling {
       return this;
     }
 
-    public Builder proxy(String proxyHost, int port, String username, String password) {
+    public Builder proxy(String proxyHost, int port, String username, String password, boolean secure) {
       polling.proxyHost = proxyHost;
       polling.proxyPort = port;
       polling.proxyUsername = username;
       polling.proxyPassword = password;
+      polling.proxySecure = secure;
       return this;
     }
 

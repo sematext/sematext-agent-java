@@ -128,6 +128,8 @@ public final class SenderUtil {
             .setProperty("proxy_user_name", tmpProps.getProperty("proxy_user_name"));
         INSTALLATION_PROPERTIES
             .setProperty("proxy_password", tmpProps.getProperty("proxy_password"));
+        INSTALLATION_PROPERTIES
+            .setProperty("proxy_secure", tmpProps.getProperty("proxy_secure"));
       }
     } catch (Throwable thr) {
       LOG.error("Error while reading properties files!", thr);

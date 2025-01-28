@@ -56,7 +56,8 @@ public abstract class BaseSenderConfigFactory implements SenderConfigFactory {
                           !properties.get("proxy_port").trim().equals("") ?
                           Integer.valueOf(properties.get("proxy_port").trim()) : null).
         setProxyUser(properties.get("proxy_user_name")).
-        setProxyPassword(properties.get("proxy_password"));
+        setProxyPassword(properties.get("proxy_password")).
+        setProxySecure(Boolean.parseBoolean(properties.get("proxy_secure")));
 
     postProcess(builder);
 

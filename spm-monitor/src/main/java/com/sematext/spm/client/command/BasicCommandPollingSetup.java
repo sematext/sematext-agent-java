@@ -54,6 +54,7 @@ public final class BasicCommandPollingSetup {
     int proxyPort;
     String proxyUsername;
     String proxyPassword;
+    boolean proxySecure;
     String hostnameAlias;
     String hostname;
     String receiverUrl;
@@ -70,6 +71,7 @@ public final class BasicCommandPollingSetup {
       }
       config.proxyUsername = properties.get("proxy_user_name");
       config.proxyPassword = properties.get("proxy_password");
+      config.proxySecure = Boolean.parseBoolean(properties.get("proxy_secure"));
       config.hostnameAlias = properties.get("hostname_alias");
       config.receiverUrl = properties.get("server_base_url");
       if (config.receiverUrl == null) {
@@ -192,7 +194,7 @@ public final class BasicCommandPollingSetup {
           .addHandler(TCommandType.DISABLE_TRACING, new DisableTracingHandler())
           .addHandler(TCommandType.IS_TRACING_ENABLED, new IsTracingEnabledHandler())
           .addHandler(TCommandType.UPDATE_INSTRUMENTATION_SETTINGS, new UpdateInstrumentationSettingsHandler())
-          .proxy(senderConfig.proxyHost, senderConfig.proxyPort, senderConfig.proxyUsername, senderConfig.proxyPassword)
+          .proxy(senderConfig.proxyHost, senderConfig.proxyPort, senderConfig.proxyUsername, senderConfig.proxyPassword, senderConfig.proxySecure)
           .build();
 
       polling.start();

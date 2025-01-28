@@ -48,6 +48,7 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
   public static final String PROXY_PORT = "proxyPort";
   public static final String PROXY_USERNAME = "proxyUsername";
   public static final String PROXY_PASSWORD = "proxyPassword";
+  public static final String PROXY_SECURE = "proxySecure";
 
   private static final Log logger = LogFactory.getLog(InfluxSink.class);
 
@@ -175,6 +176,7 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
     proxyContext.setPort(context.getInteger(PROXY_PORT, null));
     proxyContext.setUsername(context.getString(PROXY_USERNAME, null));
     proxyContext.setPassword(context.getString(PROXY_PASSWORD, null));
+    proxyContext.setSecure(context.getBoolean(PROXY_SECURE, false));
 
     String version = context.getString(InfluxClient.URL_PARAM_VERSION);
     String contentType = context.getString(SinkConstants.URL_PARAM_CONTENT_TYPE);

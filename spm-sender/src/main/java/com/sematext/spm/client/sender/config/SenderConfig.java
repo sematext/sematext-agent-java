@@ -38,6 +38,7 @@ public final class SenderConfig {
   private String contentType;
   private String flumeSubdir;
   private String sinkClass;
+  private Boolean proxySecure;
 
   private long creationTime = System.currentTimeMillis();
 
@@ -72,6 +73,10 @@ public final class SenderConfig {
     return proxyPassword;
   }
 
+  public Boolean isProxySecure() {
+    return proxySecure;
+  }
+
   public String getContentType() {
     return contentType;
   }
@@ -97,6 +102,7 @@ public final class SenderConfig {
     if (proxyPassword != null ? !proxyPassword.equals(that.proxyPassword) : that.proxyPassword != null) return false;
     if (proxyPort != null ? !proxyPort.equals(that.proxyPort) : that.proxyPort != null) return false;
     if (proxyUser != null ? !proxyUser.equals(that.proxyUser) : that.proxyUser != null) return false;
+    if (proxySecure != null ? !proxySecure.equals(that.proxySecure) : that.proxySecure != null) return false;
     if (receiverUrl != null ? !receiverUrl.equals(that.receiverUrl) : that.receiverUrl != null) return false;
     if (metricsEndpoint != null ? !metricsEndpoint.equals(that.metricsEndpoint) : that.metricsEndpoint != null) return false;
     if (tagAliasesEndpoint != null ? !tagAliasesEndpoint.equals(that.tagAliasesEndpoint) : that.tagAliasesEndpoint != null) return false;
@@ -118,6 +124,7 @@ public final class SenderConfig {
     result = 31 * result + (proxyPort != null ? proxyPort.hashCode() : 0);
     result = 31 * result + (proxyUser != null ? proxyUser.hashCode() : 0);
     result = 31 * result + (proxyPassword != null ? proxyPassword.hashCode() : 0);
+    result = 31 * result + (proxySecure != null ? proxySecure.hashCode() : 0);
     return result;
   }
   /*CHECKSTYLE:ON*/
@@ -135,6 +142,7 @@ public final class SenderConfig {
         ", proxyPort=" + proxyPort +
         ", proxyUser='" + proxyUser + '\'' +
         ", proxyPassword='" + proxyPassword + '\'' +
+        ", proxySecure=" + proxySecure +
         ", sinkClass=\'" + sinkClass + '\'' +
         '}';
   }
@@ -194,6 +202,11 @@ public final class SenderConfig {
 
     public Builder setProxyPassword(String proxyPassword) {
       this.config.proxyPassword = proxyPassword;
+      return this;
+    }
+
+    public Builder setProxySecure(Boolean proxySecure) {
+      this.config.proxySecure = proxySecure;
       return this;
     }
 

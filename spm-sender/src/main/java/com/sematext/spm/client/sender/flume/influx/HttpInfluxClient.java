@@ -140,7 +140,8 @@ public class HttpInfluxClient extends InfluxClient {
             .setDefaultCredentialsProvider(credsProvider)
             .build();
 
-        HttpHost proxy = new HttpHost(proxyContext.getHost(), proxyContext.getPort(), useHttps ? "https" : "http");
+        HttpHost proxy = new HttpHost(proxyContext.getHost(), proxyContext.getPort(), 
+            proxyContext.isSecure() ? "https" : "http");
         requestConfig = getRequestConfig(proxy);
 
         return client;
