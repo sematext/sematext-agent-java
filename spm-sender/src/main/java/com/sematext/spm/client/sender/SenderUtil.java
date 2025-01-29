@@ -77,11 +77,11 @@ public final class SenderUtil {
   private static final String K8S_CLUSTER_ENV_NAME = "SEMATEXT_K8S_CLUSTER";
   private static String k8sPodName, k8sNamespace, k8sCluster;
   
-  private static final String PROXY_HOST_ENV_NAME = "PROXY_HOST";
-  private static final String PROXY_PORT_ENV_NAME = "PROXY_PORT";
-  private static final String PROXY_USERNAME_ENV_NAME = "PROXY_USER_NAME";
-  private static final String PROXY_PASSWORD_ENV_NAME = "PROXY_PASSWORD";
-  private static final String PROXY_SECURE_ENV_NAME = "PROXY_SECURE";
+  public static final String PROXY_HOST_ENV_NAME = "PROXY_HOST";
+  public static final String PROXY_PORT_ENV_NAME = "PROXY_PORT";
+  public static final String PROXY_USERNAME_ENV_NAME = "PROXY_USER_NAME";
+  public static final String PROXY_PASSWORD_ENV_NAME = "PROXY_PASSWORD";
+  public static final String PROXY_SECURE_ENV_NAME = "PROXY_SECURE";
   private static String proxyHost, proxyPort, proxyUsername, proxyPassword, proxySecure;
 
   private static boolean inContainer = false;
@@ -196,11 +196,11 @@ public final class SenderUtil {
   }
 
   private static void loadProxyProperties() {
-    String proxyHost = System.getenv("PROXY_HOST");
-    String proxyPort = System.getenv("PROXY_PORT");
-    String proxyUsername = System.getenv("PROXY_USER_NAME");
-    String proxyPassword = System.getenv("PROXY_PASSWORD");
-    String proxySecure = System.getenv("PROXY_SECURE");
+    proxyHost = System.getenv(PROXY_HOST_ENV_NAME);
+    proxyPort = System.getenv(PROXY_PORT_ENV_NAME); 
+    proxyUsername = System.getenv(PROXY_USERNAME_ENV_NAME);
+    proxyPassword = System.getenv(PROXY_PASSWORD_ENV_NAME);
+    proxySecure = System.getenv(PROXY_SECURE_ENV_NAME);
 
     if (proxyHost != null && !proxyHost.trim().isEmpty()) {
       INSTALLATION_PROPERTIES.setProperty("proxy_host", proxyHost);
