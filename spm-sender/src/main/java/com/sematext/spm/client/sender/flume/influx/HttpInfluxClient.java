@@ -95,7 +95,7 @@ public class HttpInfluxClient extends InfluxClient {
     // print proxy context
     logger.info("Using proxy settings in HttpInfluxClient: " + proxyContext.getHost() + ", port: " + proxyContext.getPort() 
         + (proxyContext.isSecure() ? ", secure" : ", not secure")
-        + (proxyContext.getUsername() != null ? ", with authentication" : ", without authentication"));
+        + (proxyContext.getUsername() != null && !proxyContext.getUsername().isEmpty()? ", with authentication" : ", without authentication"));
     httpClient = createHttpClient(proxyContext);
 
     this.urlParams = urlParams;
