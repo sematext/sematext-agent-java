@@ -88,10 +88,10 @@ public final class SenderUtil {
   private static boolean inKubernetes = false;
 
   static {
-    loadProxyProperties();
     loadInstallationProperties();
     loadContainerProperties();
     loadKubernetesProperties();
+    loadProxyProperties();
   }
 
   public static void loadInstallationProperties() {
