@@ -217,8 +217,6 @@ public final class SenderUtil {
     if (proxySecure != null && !proxySecure.trim().isEmpty()) {
       INSTALLATION_PROPERTIES.setProperty("proxy_secure", proxySecure);
     }
-
-    LOG.info("bora Proxy properties: " + INSTALLATION_PROPERTIES.toString());
   }
 
   private static void checkEnvForNull(String name, String value) {

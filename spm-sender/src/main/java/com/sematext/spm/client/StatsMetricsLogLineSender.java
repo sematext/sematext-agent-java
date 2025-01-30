@@ -107,7 +107,7 @@ public class StatsMetricsLogLineSender implements StatsLogLineBuilder<String, St
 
     int totalCollectorsCount = StatsCollector.getCollectorsCount(statsCollectors);
     LOG.info(
-        "bora Collectors collecting time: " + TOTAL_COLLECTING_TIME + ", total time: " + (System.currentTimeMillis() - t0));
+        "Collectors collecting time: " + TOTAL_COLLECTING_TIME + ", total time: " + (System.currentTimeMillis() - t0));
     LOG.info("Collectors count: " + statsCollectors.size() + ", total collectors count: " + totalCollectorsCount);
     if (LOG.isDebugEnabled() && totalCollectorsCount < 500) {
       LOG.debug("Collecting time by collectors:\n" + sortByValues(collectingTimePerCollector));
