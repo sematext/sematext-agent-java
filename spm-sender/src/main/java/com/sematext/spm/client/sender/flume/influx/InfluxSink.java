@@ -193,6 +193,8 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
     proxyContext.setPassword(proxyPassword != null ? proxyPassword : context.getString(PROXY_PASSWORD, null));
     proxyContext.setSecure(proxySecureStr != null ? Boolean.parseBoolean(proxySecureStr) : context.getBoolean(PROXY_SECURE, false));
 
+    logger.info("bora Proxy context in InfluxSink: " + proxyContext.toString());
+
     String version = context.getString(InfluxClient.URL_PARAM_VERSION);
     String contentType = context.getString(SinkConstants.URL_PARAM_CONTENT_TYPE);
     if (version != null) {

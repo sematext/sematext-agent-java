@@ -92,6 +92,8 @@ public class HttpInfluxClient extends InfluxClient {
 
     this.baseServerUrl = baseServerUrl;
 
+    // print proxy context
+    logger.info("bora Proxy context in HttpInfluxClient: " + proxyContext.getHost() + " " + proxyContext.getPort() + " " + proxyContext.getUsername() + " " + proxyContext.getPassword());
     httpClient = createHttpClient(proxyContext);
 
     this.urlParams = urlParams;
