@@ -38,6 +38,7 @@ import com.sematext.spm.client.LogFactory;
 import com.sematext.spm.client.sender.flume.ProxyContext;
 import com.sematext.spm.client.sender.flume.SinkConstants;
 import com.sematext.spm.client.sender.util.DynamicUrlParamSink;
+import com.sematext.spm.client.sender.SenderUtil;
 
 /*CHECKSTYLE:OFF*/
 public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
@@ -48,6 +49,7 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
   public static final String PROXY_PORT = "proxyPort";
   public static final String PROXY_USERNAME = "proxyUsername";
   public static final String PROXY_PASSWORD = "proxyPassword";
+  public static final String PROXY_SECURE = "proxySecure";
 
   private static final Log logger = LogFactory.getLog(InfluxSink.class);
 
@@ -171,10 +173,25 @@ public class InfluxSink extends AbstractSink implements DynamicUrlParamSink {
     influxHost = context.getString(INFLUX_SERVER);
     urlPath = context.getString(INFLUX_ENDPOINT_PATH);
 
-    proxyContext.setHost(context.getString(PROXY_HOST, null));
-    proxyContext.setPort(context.getInteger(PROXY_PORT, null));
-    proxyContext.setUsername(context.getString(PROXY_USERNAME, null));
-    proxyContext.setPassword(context.getString(PROXY_PASSWORD, null));
+    String proxyHost = System.getenv(SenderUtil.PROXY_HOST_ENV_NAME);
+    Integer proxyPort = null;
+    try {
+      String portStr = System.getenv(SenderUtil.PROXY_PORT_ENV_NAME);
+      if (portStr != null) {
+        proxyPort = Integer.parseInt(portStr);
+      }
+    } catch (NumberFormatException e) {
+      logger.warn("Invalid PROXY_PORT environment variable value", e);
+    }
+    String proxyUsername = System.getenv(SenderUtil.PROXY_USERNAME_ENV_NAME);
+    String proxyPassword = System.getenv(SenderUtil.PROXY_PASSWORD_ENV_NAME);
+    String proxySecureStr = System.getenv(SenderUtil.PROXY_SECURE_ENV_NAME);
+
+    proxyContext.setHost(proxyHost != null ? proxyHost : context.getString(PROXY_HOST, null));
+    proxyContext.setPort(proxyPort != null ? proxyPort : context.getInteger(PROXY_PORT, null));
+    proxyContext.setUsername(proxyUsername != null ? proxyUsername : context.getString(PROXY_USERNAME, null));
+    proxyContext.setPassword(proxyPassword != null ? proxyPassword : context.getString(PROXY_PASSWORD, null));
+    proxyContext.setSecure(proxySecureStr != null ? Boolean.parseBoolean(proxySecureStr) : context.getBoolean(PROXY_SECURE, false));
 
     String version = context.getString(InfluxClient.URL_PARAM_VERSION);
     String contentType = context.getString(SinkConstants.URL_PARAM_CONTENT_TYPE);

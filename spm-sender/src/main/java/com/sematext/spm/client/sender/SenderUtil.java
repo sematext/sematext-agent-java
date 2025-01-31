@@ -76,6 +76,13 @@ public final class SenderUtil {
   private static final String K8S_NAMESPACE_ENV_NAME = "SEMATEXT_K8S_NAMESPACE";
   private static final String K8S_CLUSTER_ENV_NAME = "SEMATEXT_K8S_CLUSTER";
   private static String k8sPodName, k8sNamespace, k8sCluster;
+  
+  public static final String PROXY_HOST_ENV_NAME = "PROXY_HOST";
+  public static final String PROXY_PORT_ENV_NAME = "PROXY_PORT";
+  public static final String PROXY_USERNAME_ENV_NAME = "PROXY_USER_NAME";
+  public static final String PROXY_PASSWORD_ENV_NAME = "PROXY_PASSWORD";
+  public static final String PROXY_SECURE_ENV_NAME = "PROXY_SECURE";
+  private static String proxyHost, proxyPort, proxyUsername, proxyPassword, proxySecure;
 
   private static boolean inContainer = false;
   private static boolean inKubernetes = false;
@@ -84,6 +91,7 @@ public final class SenderUtil {
     loadInstallationProperties();
     loadContainerProperties();
     loadKubernetesProperties();
+    loadProxyProperties();
   }
 
   public static void loadInstallationProperties() {
@@ -128,6 +136,8 @@ public final class SenderUtil {
             .setProperty("proxy_user_name", tmpProps.getProperty("proxy_user_name"));
         INSTALLATION_PROPERTIES
             .setProperty("proxy_password", tmpProps.getProperty("proxy_password"));
+        INSTALLATION_PROPERTIES
+            .setProperty("proxy_secure", tmpProps.getProperty("proxy_secure"));
       }
     } catch (Throwable thr) {
       LOG.error("Error while reading properties files!", thr);
@@ -182,6 +192,30 @@ public final class SenderUtil {
       checkEnvForNull(K8S_NAMESPACE_ENV_NAME, k8sNamespace);
       checkEnvForNull(K8S_CLUSTER_ENV_NAME, k8sCluster);
       inKubernetes = true;
+    }
+  }
+
+  private static void loadProxyProperties() {
+    proxyHost = System.getenv(PROXY_HOST_ENV_NAME);
+    proxyPort = System.getenv(PROXY_PORT_ENV_NAME); 
+    proxyUsername = System.getenv(PROXY_USERNAME_ENV_NAME);
+    proxyPassword = System.getenv(PROXY_PASSWORD_ENV_NAME);
+    proxySecure = System.getenv(PROXY_SECURE_ENV_NAME);
+
+    if (proxyHost != null && !proxyHost.trim().isEmpty()) {
+      INSTALLATION_PROPERTIES.setProperty("proxy_host", proxyHost);
+    }
+    if (proxyPort != null && !proxyPort.trim().isEmpty()) {
+      INSTALLATION_PROPERTIES.setProperty("proxy_port", proxyPort);
+    }
+    if (proxyUsername != null && !proxyUsername.trim().isEmpty()) {
+      INSTALLATION_PROPERTIES.setProperty("proxy_user_name", proxyUsername);
+    }
+    if (proxyPassword != null && !proxyPassword.trim().isEmpty()) {
+      INSTALLATION_PROPERTIES.setProperty("proxy_password", proxyPassword);
+    }
+    if (proxySecure != null && !proxySecure.trim().isEmpty()) {
+      INSTALLATION_PROPERTIES.setProperty("proxy_secure", proxySecure);
     }
   }
 

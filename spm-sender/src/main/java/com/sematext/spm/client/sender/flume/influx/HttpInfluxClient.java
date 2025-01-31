@@ -63,15 +63,11 @@ public class HttpInfluxClient extends InfluxClient {
 
   public HttpInfluxClient(String baseServerUrl, String urlPath,
                           Map<String, String> urlParams, ProxyContext proxyContext) {
-    boolean useHttps = false;
-
     if (!baseServerUrl.contains("http://") && !baseServerUrl.contains("https://")) {
       baseServerUrl = "http://" + baseServerUrl;
     }
 
     if (baseServerUrl.contains("https://")) {
-      useHttps = true;
-
       // when https is used without specifying port, we have to append port 443 manually (otherwise
       // "connection refused" errors can happen
       String tmp = baseServerUrl.substring("https://".length());
@@ -96,7 +92,11 @@ public class HttpInfluxClient extends InfluxClient {
 
     this.baseServerUrl = baseServerUrl;
 
-    httpClient = createHttpClient(useHttps, proxyContext);
+    // print proxy context
+    logger.info("Using proxy settings in HttpInfluxClient: " + proxyContext.getHost() + ", port: " + proxyContext.getPort() 
+        + (proxyContext.isSecure() ? ", secure" : ", not secure")
+        + (proxyContext.getUsername() != null && !proxyContext.getUsername().isEmpty()? ", with authentication" : ", without authentication"));
+    httpClient = createHttpClient(proxyContext);
 
     this.urlParams = urlParams;
     this.urlPath = urlPath;
@@ -106,7 +106,7 @@ public class HttpInfluxClient extends InfluxClient {
     initializeUrlVariables();
   }
 
-  private HttpClient createHttpClient(boolean useHttps, ProxyContext proxyContext) {
+  private HttpClient createHttpClient(ProxyContext proxyContext) {
     try {
       TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
         @Override
@@ -140,7 +140,8 @@ public class HttpInfluxClient extends InfluxClient {
             .setDefaultCredentialsProvider(credsProvider)
             .build();
 
-        HttpHost proxy = new HttpHost(proxyContext.getHost(), proxyContext.getPort(), useHttps ? "https" : "http");
+        HttpHost proxy = new HttpHost(proxyContext.getHost(), proxyContext.getPort(), 
+            proxyContext.isSecure() ? "https" : "http");
         requestConfig = getRequestConfig(proxy);
 
         return client;

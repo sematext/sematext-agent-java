@@ -40,6 +40,9 @@ function parse_param {
       elif [ "$CURRENT_PARAM_NAME" == "proxy-password" ]; then
         PROXY_PASSWORD_PARAM_SET=true
         PROXY_PASSWORD_PARAM=$CURRENT_PARAM_VALUE
+      elif [ "$CURRENT_PARAM_NAME" == "proxy-secure" ]; then
+        PROXY_SECURE_PARAM_SET=true
+        PROXY_SECURE_PARAM=$CURRENT_PARAM_VALUE
       else
         ADDITIONAL_PARAMS[${#ADDITIONAL_PARAMS[@]}]="$CURRENT_PARAM_NAME=$CURRENT_PARAM_VALUE"
       fi
@@ -166,6 +169,18 @@ function setup_env {
         sed -i -e "s/.*proxy_password.*/proxy_password=$PROXY_PASSWORD_PARAM/" $SPM_HOME/properties/tracing.properties
       else
         echo "proxy_password=$PROXY_PASSWORD_PARAM" >> $SPM_HOME/properties/tracing.properties
+      fi
+    fi
+    if [ "true" == "$PROXY_SECURE_PARAM_SET" ]; then
+      if `grep proxy_secure $SPM_HOME/properties/agent.properties > /dev/null 2>&1`; then
+        sed -i -e "s/.*proxy_secure.*/proxy_secure=$PROXY_SECURE_PARAM/" $SPM_HOME/properties/agent.properties
+      else
+        echo "proxy_secure=$PROXY_SECURE_PARAM" >> $SPM_HOME/properties/agent.properties
+      fi
+      if `grep proxy_secure $SPM_HOME/properties/tracing.properties > /dev/null 2>&1`; then
+        sed -i -e "s/.*proxy_secure.*/proxy_secure=$PROXY_SECURE_PARAM/" $SPM_HOME/properties/tracing.properties
+      else
+        echo "proxy_secure=$PROXY_SECURE_PARAM" >> $SPM_HOME/properties/tracing.properties
       fi
     fi
 }

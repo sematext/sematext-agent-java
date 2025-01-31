@@ -164,6 +164,7 @@ public final class SenderFlumeAgentFactory {
                      senderConfig.getProxyPort() != null ? String.valueOf(senderConfig.getProxyPort()) : null);
       properties.put(InfluxSink.PROXY_USERNAME, senderConfig.getProxyUser());
       properties.put(InfluxSink.PROXY_PASSWORD, senderConfig.getProxyPassword());
+      properties.put(InfluxSink.PROXY_SECURE, String.valueOf(senderConfig.isProxySecure()));
     }
   }
 }

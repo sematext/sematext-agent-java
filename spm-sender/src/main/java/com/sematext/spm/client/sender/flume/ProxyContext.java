@@ -24,6 +24,7 @@ public class ProxyContext {
   private Integer port;
   private String username;
   private String password;
+  private boolean secure;
 
   public String getHost() {
     return host;
@@ -55,5 +56,13 @@ public class ProxyContext {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public boolean isSecure() {
+    return secure;
+  }
+
+  public void setSecure(boolean secure) {
+    this.secure = secure;
   }
 }
