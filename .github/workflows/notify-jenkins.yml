@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Run
-        uses: appleboy/jenkins-action@master
+        uses: appleboy/jenkins-action@f4313d631abbe39d10e70546f4a7a173da034801
         with:
           url: "https://jenkins.new.test.sematext.com"
           user: "machine@sematext.com"
