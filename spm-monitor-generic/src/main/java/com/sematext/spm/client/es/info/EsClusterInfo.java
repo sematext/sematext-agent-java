@@ -84,6 +84,22 @@ public final class EsClusterInfo {
 
   private static final Map<String, String> ES_VERSION_MAP = new UnifiedMap<String, String>();
 
+
+  /*
+   *  References:  
+   * - Node roles: https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html#node-roles  
+   * - Data tiers: https://www.elastic.co/guide/en/elasticsearch/reference/current/data-tiers.html  
+   * - ILM overview: https://www.elastic.co/guide/en/elasticsearch/reference/current/overview-index-lifecycle-management.html  
+   */
+  private static final Set<Character> DATA_HOSTING_ROLES = Set.of(
+    'd', // data (general data node)
+    'h', // data_hot (hot tier) - stores frequently accessed data
+    'w', // data_warm (warm tier) - stores less frequently accessed data    
+    'c', // data_cold (cold tier) - stores infrequently accessed data  
+    'f', // data_frozen (frozen tier) - stores rarely accessed data with reduced compute  
+    's', // transform - can store data for transform operations  
+  );
+
   private EsClusterInfo() {
   }
 
@@ -568,8 +584,12 @@ public final class EsClusterInfo {
               String role = (String) node.get("r");
               LOG.info("Found node " + nodeId + " with role: " + role);
 
-              if (role.toLowerCase().contains("d")) {
-                return true;
+              if (role != null) {
+                for (char c: role.toLowerCase().toCharArray()) {
+                  if (DATA_HOSTING_ROLES.contains(c)) {
+                    return true;
+                  }
+                }
               }
             }
           }
