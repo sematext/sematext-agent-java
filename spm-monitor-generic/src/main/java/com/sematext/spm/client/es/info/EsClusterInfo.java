@@ -22,6 +22,8 @@ package com.sematext.spm.client.es.info;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -84,21 +86,21 @@ public final class EsClusterInfo {
 
   private static final Map<String, String> ES_VERSION_MAP = new UnifiedMap<String, String>();
 
-
   /*
    *  References:  
    * - Node roles: https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html#node-roles  
    * - Data tiers: https://www.elastic.co/guide/en/elasticsearch/reference/current/data-tiers.html  
    * - ILM overview: https://www.elastic.co/guide/en/elasticsearch/reference/current/overview-index-lifecycle-management.html  
    */
-  private static final Set<Character> DATA_HOSTING_ROLES = Set.of(
-    'd', // data (general data node)
-    'h', // data_hot (hot tier) - stores frequently accessed data
-    'w', // data_warm (warm tier) - stores less frequently accessed data    
-    'c', // data_cold (cold tier) - stores infrequently accessed data  
-    'f', // data_frozen (frozen tier) - stores rarely accessed data with reduced compute  
-    's', // transform - can store data for transform operations  
-  );
+  private static final Set<Character> DATA_HOSTING_ROLES = new HashSet<Character>(
+      Arrays.asList(
+          'd', // data (general data node)
+          'h', // data_hot (hot tier) - stores frequently accessed data
+          'w', // data_warm (warm tier) - stores less frequently accessed data
+          'c', // data_cold (cold tier) - stores infrequently accessed data
+          'f', // data_frozen (frozen tier) - rarely accessed data with reduced compute
+          's' // transform - can store data for transform operations
+      ));
 
   private EsClusterInfo() {
   }
@@ -585,7 +587,7 @@ public final class EsClusterInfo {
               LOG.info("Found node " + nodeId + " with role: " + role);
 
               if (role != null) {
-                for (char c: role.toLowerCase().toCharArray()) {
+                for (char c : role.toLowerCase().toCharArray()) {
                   if (DATA_HOSTING_ROLES.contains(c)) {
                     return true;
                   }
