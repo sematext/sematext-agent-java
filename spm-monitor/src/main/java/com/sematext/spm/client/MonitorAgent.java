@@ -31,6 +31,7 @@ import com.sematext.spm.client.Sender.MonitorType;
 import com.sematext.spm.client.command.BasicCommandPollingSetup.CommandPollingRunner;
 import com.sematext.spm.client.jmx.JmxServiceContext;
 import com.sematext.spm.client.monitor.SourceConfigProperties;
+import com.sematext.spm.client.profiling.PyroscopeInitializer;
 import com.sematext.spm.client.sender.SenderUtil;
 import com.sematext.spm.client.tracing.agent.impl.AgentInitializer;
 import com.sematext.spm.client.util.PropertiesReader;
@@ -224,6 +225,12 @@ public final class MonitorAgent {
       }
     } catch (Exception e) {
       throw new ConfigurationFailedException("Can't initialize tracing agent for " + propsFile.getName(), e);
+    }
+
+    try {
+      PyroscopeInitializer.initialize(props);
+    } catch (Exception e) {
+      log.error("Failed to initialize Pyroscope profiling for " + propsFile.getName(), e);
     }
 
     final MonitorConfig metricsConfig = getMonitorConfig(null, monitorArgs, inst, DataFormat.PLAIN_TEXT, processOrdinal);
