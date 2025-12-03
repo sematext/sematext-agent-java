@@ -90,8 +90,8 @@ public class RedisStatsCollector extends SingleStatsCollector {
 
     statValues.setMetrics(new UnifiedMap<String, Object>());
     statValues.getMetrics().put("memory.used", extractors.get(0).extract(info));
-    statValues.getMetrics().put("redis.memory.used.max", extractors.get(1).extract(info));
-    statValues.getMetrics().put("redis.memory.used.rss", extractors.get(2).extract(info));
+    statValues.getMetrics().put("memory.used.max", extractors.get(1).extract(info));
+    statValues.getMetrics().put("memory.used.rss", extractors.get(2).extract(info));
     statValues.getMetrics().put("clients.connected", extractors.get(3).extract(info));
     statValues.getMetrics().put("replication.slaves.connected", extractors.get(4).extract(info));
     statValues.getMetrics().put("replication.master.last.io.seconds.ago", extractors.get(5).extract(info));
