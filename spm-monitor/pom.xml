@@ -63,6 +63,13 @@
           <scope>compile</scope>
       </dependency>
 
+      <dependency>
+          <groupId>io.pyroscope</groupId>
+          <artifactId>agent</artifactId>
+          <version>0.13.0</version>
+          <scope>compile</scope>
+      </dependency>
+
       <!--<dependency>-->
     <!--<groupId>com.sematext.spm</groupId>-->
     <!--<artifactId>spm-transfer</artifactId>-->
