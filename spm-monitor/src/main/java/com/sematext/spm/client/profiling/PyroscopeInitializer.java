@@ -111,7 +111,7 @@ public final class PyroscopeInitializer {
       return Splitter.on(',')
           .trimResults()
           .omitEmptyStrings()
-          .withKeyValueSeparator('=')
+          .withKeyValueSeparator("=")
           .split(labelsString);
     } catch (Exception e) {
       LOG.warn("Failed to parse Pyroscope labels from: " + labelsString, e);
