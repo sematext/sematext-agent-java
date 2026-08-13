@@ -168,6 +168,12 @@ public abstract class AttributeObservation<T> {
       }
     }
 
+    if (MetricTypeMismatchDetector.isEnabled()) {
+      // measurement is the value as read from the source, which is what tells whether metric's type is correct
+      MetricTypeMismatchDetector.getInstance().check(parentObservation == null ? null : parentObservation.getName(),
+                                                     finalName, metricType, measurement);
+    }
+
     return getValueHolder(parentObservation).getValue(measurement);
   }
 
