@@ -74,6 +74,7 @@ import com.sematext.spm.client.json.JsonUtil;
 import com.sematext.spm.client.jvm.JvmNotifBasedGcStatsCollector;
 import com.sematext.spm.client.observation.AttributeObservation;
 import com.sematext.spm.client.observation.ObservationBean;
+import com.sematext.spm.client.solr.SolrEndpoint;
 import com.sematext.spm.client.tracing.TracingMonitorConfigurator;
 import com.sematext.spm.client.util.CollectionUtils.FunctionT;
 import com.sematext.spm.client.yaml.YamlConfigLoader;
@@ -649,11 +650,28 @@ public class GenericStatsCollectorsFactory extends StatsCollectorsFactory<StatsC
 
   private static final Map<String, Long> FILE_TO_LAST_MODIFIED = new HashMap<String, Long>();
   private static final Map<String, StatsExtractorConfig<?>> FILE_TO_LAST_CREATED_CONFIG_BEAN_MAP = new HashMap<String, StatsExtractorConfig<?>>();
+  private static boolean solrEndpointHintLogged;
 
   private StatsExtractorConfig<?> getStatsExtractorConfig(File configFile, String configFileContent,
                                                           Properties monitorProperties, MonitorConfig monitorConfig)
       throws ConfigurationFailedException {
     String fileKey = configFile.getAbsolutePath();
+
+    if (SolrEndpoint.isNeededBy(configFileContent)) {
+      // finding the endpoint costs a JMX call, so it is done only when the config object has to be built
+      if (Long.valueOf(configFile.lastModified()).equals(FILE_TO_LAST_MODIFIED.get(fileKey))) {
+        return FILE_TO_LAST_CREATED_CONFIG_BEAN_MAP.get(fileKey);
+      }
+      configFileContent = SolrEndpoint.fillPlaceholders(configFileContent, monitorConfig);
+      if (configFileContent == null) {
+        if (!solrEndpointHintLogged) {
+          LOG.info("Can't find Solr's HTTP endpoint, set " + SolrEndpoint.HOSTPORT_PROPERTY +
+                       " in the monitor properties to collect Solr 10+ metrics");
+          solrEndpointHintLogged = true;
+        }
+        return null;
+      }
+    }
 
     // replace all monitor properties placeholders with real values from properties file
     // NOTE: assumption is that it is ok if behavior will be undefined when two props have the same variants (ST_PROP
