@@ -113,6 +113,8 @@ public final class SolrEndpoint {
       if (!systemPropertiesWarned) {
         LOG.warn("Can't read Solr's system properties over JMX", thr);
         systemPropertiesWarned = true;
+      } else {
+        LOG.debug("Can't read Solr's system properties over JMX", thr);
       }
       return null;
     }
@@ -210,7 +212,6 @@ public final class SolrEndpoint {
     }
     return sysProps;
   }
-
 
   private static String property(Properties props, String name) {
     String value = MonitorUtil.getPropertyFromAnyNameVariant(props, name, null);
