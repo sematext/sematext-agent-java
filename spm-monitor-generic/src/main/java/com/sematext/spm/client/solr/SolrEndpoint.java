@@ -21,11 +21,14 @@ package com.sematext.spm.client.solr;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
+import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.TabularData;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
@@ -42,6 +45,8 @@ import com.sematext.spm.client.jmx.JmxServiceContext;
  */
 public final class SolrEndpoint {
   private static final Log LOG = LogFactory.getLog(SolrEndpoint.class);
+
+  private static boolean systemPropertiesWarned;
 
   public static final String HOSTPORT_PROPERTY = "SPM_MONITOR_SOLR_NODE_HOSTPORT";
   public static final String USERNAME_PROPERTY = "SPM_MONITOR_SOLR_NODE_BASICAUTH_USERNAME";
@@ -105,7 +110,10 @@ public final class SolrEndpoint {
       return fromSystemProperties(systemProperties(wrapper.getMbeanServerConnection()),
                                   ctx == null ? null : jmxHost(ctx.getUrl()));
     } catch (Throwable thr) {
-      LOG.warn("Can't read Solr's system properties over JMX", thr);
+      if (!systemPropertiesWarned) {
+        LOG.warn("Can't read Solr's system properties over JMX", thr);
+        systemPropertiesWarned = true;
+      }
       return null;
     }
   }
@@ -188,11 +196,21 @@ public final class SolrEndpoint {
     return colon == -1 ? hostPort : hostPort.substring(0, colon);
   }
 
-  private static Map<String, String> systemProperties(MBeanServerConnection conn) throws Exception {
-    RuntimeMXBean runtime = ManagementFactory.newPlatformMXBeanProxy(conn, ManagementFactory.RUNTIME_MXBEAN_NAME,
-                                                                     RuntimeMXBean.class);
-    return runtime.getSystemProperties();
+  /**
+   * Reads the attribute directly: Solr's security policy grants getAttribute over JMX but not the isInstanceOf
+   * check an MXBean proxy makes first.
+   */
+  static Map<String, String> systemProperties(MBeanServerConnection conn) throws Exception {
+    TabularData table = (TabularData) conn.getAttribute(new ObjectName(ManagementFactory.RUNTIME_MXBEAN_NAME),
+                                                        "SystemProperties");
+    Map<String, String> sysProps = new HashMap<String, String>();
+    for (Object row : table.values()) {
+      CompositeData entry = (CompositeData) row;
+      sysProps.put(String.valueOf(entry.get("key")), String.valueOf(entry.get("value")));
+    }
+    return sysProps;
   }
+
 
   private static String property(Properties props, String name) {
     String value = MonitorUtil.getPropertyFromAnyNameVariant(props, name, null);

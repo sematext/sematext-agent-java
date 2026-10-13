@@ -22,9 +22,16 @@ package com.sematext.spm.client.solr;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.management.ManagementFactory;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.management.MBeanServerConnection;
 
 import com.sematext.spm.client.http.ServerInfo;
 
@@ -192,5 +199,29 @@ public class SolrEndpointTest {
     Map<String, String> sysProps = props("solr.port.listen", "8983", "solr.host.bind", "0.0.0.0");
 
     Assert.assertEquals("http://[fd00::5]:8983", SolrEndpoint.fromSystemProperties(sysProps, "[fd00::5]"));
+  }
+
+  @Test
+  public void testReadsSystemPropertiesWithoutIsInstanceOf() throws Exception {
+    // Solr's security policy allows getAttribute over JMX but not isInstanceOf
+    final MBeanServerConnection platform = ManagementFactory.getPlatformMBeanServer();
+    MBeanServerConnection solrLike = (MBeanServerConnection) Proxy.newProxyInstance(
+        getClass().getClassLoader(), new Class[] {MBeanServerConnection.class}, new InvocationHandler() {
+          @Override
+          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if (method.getName().equals("isInstanceOf")) {
+              throw new SecurityException("access denied isInstanceOf");
+            }
+            try {
+              return method.invoke(platform, args);
+            } catch (InvocationTargetException e) {
+              throw e.getCause();
+            }
+          }
+        });
+
+    Map<String, String> sysProps = SolrEndpoint.systemProperties(solrLike);
+
+    Assert.assertEquals(System.getProperty("java.version"), sysProps.get("java.version"));
   }
 }
