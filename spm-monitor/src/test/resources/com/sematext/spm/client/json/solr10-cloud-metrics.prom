@@ -1,0 +1,223 @@
+# HELP solr_core_field_cache_entries Number of field cache entries
+# TYPE solr_core_field_cache_entries gauge
+solr_core_field_cache_entries{category="CACHE",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_field_cache_entries{category="CACHE",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_field_cache_entries{category="CACHE",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_field_cache_entries{category="CACHE",otel_scope_name="org.apache.solr"} 0.0
+# HELP solr_core_field_cache_size_bytes Size of field cache in bytes
+# TYPE solr_core_field_cache_size_bytes gauge
+solr_core_field_cache_size_bytes{category="CACHE",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_field_cache_size_bytes{category="CACHE",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_field_cache_size_bytes{category="CACHE",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_field_cache_size_bytes{category="CACHE",otel_scope_name="org.apache.solr"} 0.0
+# HELP solr_core_index_size_megabytes Index size for a Solr core
+# TYPE solr_core_index_size_megabytes gauge
+solr_core_index_size_megabytes{category="CORE",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.002956390380859375
+solr_core_index_size_megabytes{category="CORE",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0029850006103515625
+solr_core_index_size_megabytes{category="CORE",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0030307769775390625
+# HELP solr_core_indexsearcher_cache_lookups_total Number of cumulative cache lookup results (hits and misses)
+# TYPE solr_core_indexsearcher_cache_lookups_total counter
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 3.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 2.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 6.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard2"} 1.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard2"} 2.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard2"} 2.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard2"} 1.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard2"} 6.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 4.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 3.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 2.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="hit",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_lookups_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",result="miss",shard="shard1"} 6.0
+# HELP solr_core_indexsearcher_cache_ops_total Number of cumulative cache operations (inserts and evictions)
+# TYPE solr_core_indexsearcher_cache_ops_total counter
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="documentCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="documentCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="fieldValueCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="fieldValueCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="filterCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="filterCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="perSegFilter",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="perSegFilter",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="queryResultCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="queryResultCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 6.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="documentCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="documentCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 2.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="fieldValueCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="fieldValueCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="filterCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="filterCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="perSegFilter",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="perSegFilter",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="queryResultCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="queryResultCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 6.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="documentCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="documentCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="fieldValueCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="fieldValueCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="filterCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="filterCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="perSegFilter",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="perSegFilter",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="queryResultCache",ops="evictions",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_ops_total{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="queryResultCache",ops="inserts",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 6.0
+# HELP solr_core_indexsearcher_cache_size Current number cache entries
+# TYPE solr_core_indexsearcher_cache_size gauge
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 6.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 2.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 6.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_size{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 6.0
+# HELP solr_core_indexsearcher_cache_warmup_time_milliseconds Cache warmup time (most recent)
+# TYPE solr_core_indexsearcher_cache_warmup_time_milliseconds gauge
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 2.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard1_replica_n2",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col1",core="col1_shard2_replica_n1",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="documentCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="fieldValueCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="filterCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="perSegFilter",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_indexsearcher_cache_warmup_time_milliseconds{category="CACHE",collection="col2",core="col2_shard1_replica_n1",name="queryResultCache",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+# HELP solr_core_indexsearcher_index_docs Total number of docs in the index (including deletions)
+# TYPE solr_core_indexsearcher_index_docs gauge
+solr_core_indexsearcher_index_docs{category="SEARCHER",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_indexsearcher_index_docs{category="SEARCHER",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 2.0
+solr_core_indexsearcher_index_docs{category="SEARCHER",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3.0
+# HELP solr_core_indexsearcher_index_num_docs Number of live docs in the index
+# TYPE solr_core_indexsearcher_index_num_docs gauge
+solr_core_indexsearcher_index_num_docs{category="SEARCHER",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_indexsearcher_index_num_docs{category="SEARCHER",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 2.0
+solr_core_indexsearcher_index_num_docs{category="SEARCHER",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3.0
+# HELP solr_core_indexsearcher_open_warmup_time_milliseconds Time to warmup new searchers
+# TYPE solr_core_indexsearcher_open_warmup_time_milliseconds histogram
+solr_core_indexsearcher_open_warmup_time_milliseconds_bucket{category="SEARCHER",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",le="0.0"} 0
+solr_core_indexsearcher_open_warmup_time_milliseconds_bucket{category="SEARCHER",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",le="5.0"} 1
+solr_core_indexsearcher_open_warmup_time_milliseconds_bucket{category="SEARCHER",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",le="10.0"} 1
+solr_core_indexsearcher_open_warmup_time_milliseconds_count{category="SEARCHER",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1
+solr_core_indexsearcher_open_warmup_time_milliseconds_sum{category="SEARCHER",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 2.0
+solr_core_indexsearcher_open_warmup_time_milliseconds_count{category="SEARCHER",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1
+solr_core_indexsearcher_open_warmup_time_milliseconds_sum{category="SEARCHER",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 2.0
+solr_core_indexsearcher_open_warmup_time_milliseconds_count{category="SEARCHER",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1
+solr_core_indexsearcher_open_warmup_time_milliseconds_sum{category="SEARCHER",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+# HELP solr_core_requests_total HTTP Solr requests
+# TYPE solr_core_requests_total counter
+solr_core_requests_total{category="QUERY",collection="col1",core="col1_shard1_replica_n2",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3.0
+solr_core_requests_total{category="QUERY",collection="col1",core="col1_shard1_replica_n2",handler="/select",internal="true",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 10.0
+solr_core_requests_total{category="QUERY",collection="col1",core="col1_shard2_replica_n1",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 4.0
+solr_core_requests_total{category="QUERY",collection="col1",core="col1_shard2_replica_n1",handler="/select",internal="true",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 8.0
+solr_core_requests_total{category="QUERY",collection="col2",core="col2_shard1_replica_n1",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 6.0
+solr_core_requests_total{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 2.0
+solr_core_requests_total{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1.0
+solr_core_requests_total{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+# HELP solr_core_requests_errors_total HTTP Solr request errors
+# TYPE solr_core_requests_errors_total counter
+solr_core_requests_errors_total{category="QUERY",collection="col1",core="col1_shard1_replica_n2",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",source="client"} 1.0
+# HELP solr_core_requests_times_milliseconds HTTP Solr request times
+# TYPE solr_core_requests_times_milliseconds histogram
+solr_core_requests_times_milliseconds_count{category="QUERY",collection="col1",core="col1_shard1_replica_n2",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3
+solr_core_requests_times_milliseconds_sum{category="QUERY",collection="col1",core="col1_shard1_replica_n2",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 45.0
+solr_core_requests_times_milliseconds_count{category="QUERY",collection="col1",core="col1_shard1_replica_n2",handler="/select",internal="true",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 10
+solr_core_requests_times_milliseconds_sum{category="QUERY",collection="col1",core="col1_shard1_replica_n2",handler="/select",internal="true",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 21.0
+solr_core_requests_times_milliseconds_count{category="QUERY",collection="col1",core="col1_shard2_replica_n1",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 4
+solr_core_requests_times_milliseconds_sum{category="QUERY",collection="col1",core="col1_shard2_replica_n1",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 30.0
+solr_core_requests_times_milliseconds_count{category="QUERY",collection="col1",core="col1_shard2_replica_n1",handler="/select",internal="true",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 8
+solr_core_requests_times_milliseconds_sum{category="QUERY",collection="col1",core="col1_shard2_replica_n1",handler="/select",internal="true",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 17.0
+solr_core_requests_times_milliseconds_count{category="QUERY",collection="col2",core="col2_shard1_replica_n1",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 6
+solr_core_requests_times_milliseconds_sum{category="QUERY",collection="col2",core="col2_shard1_replica_n1",handler="/select",internal="false",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 5.0
+solr_core_requests_times_milliseconds_count{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 2
+solr_core_requests_times_milliseconds_sum{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 69.0
+solr_core_requests_times_milliseconds_count{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1
+solr_core_requests_times_milliseconds_sum{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 94.0
+solr_core_requests_times_milliseconds_count{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1
+solr_core_requests_times_milliseconds_sum{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",handler="/update",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 16.0
+# HELP solr_core_segments Number of segments in a Solr core
+# TYPE solr_core_segments gauge
+solr_core_segments{category="CORE",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_segments{category="CORE",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1.0
+solr_core_segments{category="CORE",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+# HELP solr_core_update_auto_commits_total Current number of auto commits
+# TYPE solr_core_update_auto_commits_total counter
+solr_core_update_auto_commits_total{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",type="auto_commits"} 0.0
+solr_core_update_auto_commits_total{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",type="soft_auto_commits"} 0.0
+solr_core_update_auto_commits_total{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2",type="auto_commits"} 0.0
+solr_core_update_auto_commits_total{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2",type="soft_auto_commits"} 0.0
+solr_core_update_auto_commits_total{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",type="auto_commits"} 0.0
+solr_core_update_auto_commits_total{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",type="soft_auto_commits"} 0.0
+# HELP solr_core_update_commit_ops_total Total number of commit operations
+# TYPE solr_core_update_commit_ops_total counter
+solr_core_update_commit_ops_total{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",ops="commits",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_update_commit_ops_total{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",ops="commits",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1.0
+solr_core_update_commit_ops_total{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",ops="commits",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+# HELP solr_core_update_commit_stats Metrics around commits
+# TYPE solr_core_update_commit_stats gauge
+solr_core_update_commit_stats{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",type="auto_commit_max_time"} 15000.0
+solr_core_update_commit_stats{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",type="soft_auto_commit_max_time"} 3000.0
+solr_core_update_commit_stats{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2",type="auto_commit_max_time"} 15000.0
+solr_core_update_commit_stats{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2",type="soft_auto_commit_max_time"} 3000.0
+solr_core_update_commit_stats{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",type="auto_commit_max_time"} 15000.0
+solr_core_update_commit_stats{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1",type="soft_auto_commit_max_time"} 3000.0
+# HELP solr_core_update_cumulative_ops Cumulative number of update commands processed. Cumulative can decrease from rollback command
+# TYPE solr_core_update_cumulative_ops gauge
+solr_core_update_cumulative_ops{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",ops="adds",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_update_cumulative_ops{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",ops="adds",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 2.0
+solr_core_update_cumulative_ops{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",ops="adds",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3.0
+# HELP solr_core_update_docs_pending_commit Current number of documents pending commit. Value is reset to 0 on commit.
+# TYPE solr_core_update_docs_pending_commit gauge
+solr_core_update_docs_pending_commit{category="UPDATE",collection="col1",core="col1_shard1_replica_n2",ops="docs_pending",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_update_docs_pending_commit{category="UPDATE",collection="col1",core="col1_shard2_replica_n1",ops="docs_pending",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_update_docs_pending_commit{category="UPDATE",collection="col2",core="col2_shard1_replica_n1",ops="docs_pending",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+# HELP solr_core_update_log_buffered_ops The current number of buffered operations
+# TYPE solr_core_update_log_buffered_ops gauge
+solr_core_update_log_buffered_ops{category="TLOG",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+solr_core_update_log_buffered_ops{category="TLOG",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 0.0
+solr_core_update_log_buffered_ops{category="TLOG",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 0.0
+# HELP solr_core_update_log_replay_logs_remaining The current number of tlogs remaining to be replayed
+# TYPE solr_core_update_log_replay_logs_remaining gauge
+solr_core_update_log_replay_logs_remaining{category="TLOG",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+solr_core_update_log_replay_logs_remaining{category="TLOG",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 1.0
+solr_core_update_log_replay_logs_remaining{category="TLOG",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 1.0
+# HELP solr_core_update_log_size_remaining_bytes The total size in bytes of all tlogs remaining to be replayed
+# TYPE solr_core_update_log_size_remaining_bytes gauge
+solr_core_update_log_size_remaining_bytes{category="TLOG",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 125.0
+solr_core_update_log_size_remaining_bytes{category="TLOG",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 166.0
+solr_core_update_log_size_remaining_bytes{category="TLOG",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 207.0
+# HELP solr_core_update_log_state The current state of the update log. Replaying (0), buffering (1), applying buffered (2), active (3)
+# TYPE solr_core_update_log_state gauge
+solr_core_update_log_state{category="TLOG",collection="col1",core="col1_shard1_replica_n2",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3.0
+solr_core_update_log_state{category="TLOG",collection="col1",core="col1_shard2_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard2"} 3.0
+solr_core_update_log_state{category="TLOG",collection="col2",core="col2_shard1_replica_n1",otel_scope_name="org.apache.solr",replica_type="NRT",shard="shard1"} 3.0

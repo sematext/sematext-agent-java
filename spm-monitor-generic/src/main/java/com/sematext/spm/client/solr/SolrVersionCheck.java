@@ -30,6 +30,7 @@ import javax.management.ObjectName;
 
 import com.sematext.spm.client.Log;
 import com.sematext.spm.client.LogFactory;
+import com.sematext.spm.client.http.ServerInfo;
 import com.sematext.spm.client.jmx.JmxMBeanServerConnectionWrapper;
 import com.sematext.spm.client.jmx.JmxServiceContext;
 import com.sematext.spm.client.observation.BaseVersionConditionCheck;
@@ -48,6 +49,29 @@ public class SolrVersionCheck extends BaseVersionConditionCheck {
 
   @Override
   protected String readVersion() {
+    String version = readVersionOverJmx();
+    if (version != null) {
+      return version;
+    }
+
+    // Solr 10 has no JMX metrics, so its version is only available over HTTP
+    version = readVersionOverHttp();
+    if (version != null) {
+      LOG.info("Detected Solr version over HTTP : " + version);
+      return version;
+    }
+
+    // in case we couldn't find the version, we'll assume "3" (because version is exposed in some way only from 4.0)
+    LOG.info("Solr version not recognized, returning version number (as fallback): 3");
+    return "3";
+  }
+
+  protected String readVersionOverHttp() {
+    ServerInfo serverInfo = SolrEndpoint.serverInfo(getMonitorConfig());
+    return SolrSystemInfo.version(SolrSystemInfo.fetch(serverInfo));
+  }
+
+  protected String readVersionOverJmx() {
     MBeanServerConnection conn = null;
     JmxMBeanServerConnectionWrapper wrapper = JmxMBeanServerConnectionWrapper.getInstance(
         JmxServiceContext.getContext(getMonitorConfig().getMonitorPropertiesFile()));
@@ -68,10 +92,7 @@ public class SolrVersionCheck extends BaseVersionConditionCheck {
         }
       }
     }
-
-    // in case we couldn't find the version, we'll assume "3" (because version is exposed in some way only from 4.0)
-    LOG.info("Solr version not recognized, returning version number (as fallback): 3");
-    return "3";
+    return null;
   }
 
   private String extract(MBeanServerConnection conn, String objectNamePattern, String attribName) {
